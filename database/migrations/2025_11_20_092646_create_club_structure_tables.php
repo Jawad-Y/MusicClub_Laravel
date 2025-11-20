@@ -23,8 +23,9 @@ return new class extends Migration
             $table->string('email', 150)->unique();
             $table->string('phone', 30)->nullable();
             $table->foreignId('role_id')->constrained('roles');
-            $table->string('status', 20)->default('active');
+            $table->string('status', 20)->default('active')->index();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         // 3) Departments
@@ -53,17 +54,26 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 6) Instruments
-        Schema::create('instruments', function (Blueprint $table) {
-            $table->id(); // instrument_id
-            $table->string('name', 100);
-            $table->string('type', 100);
-            $table->string('unique_code', 100)->unique();
-            $table->string('condition', 50)->default('good'); // good / needs_repair / maintenance_required
+        // 6) Instrument Types
+        Schema::create('instrument_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 50)->unique();
             $table->timestamps();
         });
 
-        // 7) User assignments (Department / Class / Instrument)
+        // 6) Instruments
+        Schema::create('instruments', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100);
+            $table->foreignId('instrument_type_id')->constrained('instrument_types');
+            $table->string('unique_code', 100)->unique();
+            $table->string('condition', 50)->default('good')->index();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+
+        // 7) User assignments (Department / Class)
         Schema::create('user_assignments', function (Blueprint $table) {
             $table->id(); // assignment_id
             $table->foreignId('user_id')->constrained('users');
@@ -81,7 +91,7 @@ return new class extends Migration
             $table->foreignId('class_id')->constrained('classes');
             $table->foreignId('trainer_id')->constrained('users');
             $table->string('subject', 200);
-            $table->date('date');
+            $table->date('date')->index();
             $table->time('start_time');
             $table->time('end_time');
             $table->string('location', 150)->nullable();
@@ -94,7 +104,7 @@ return new class extends Migration
             $table->id(); // attendance_id
             $table->foreignId('session_id')->constrained('training_sessions');
             $table->foreignId('trainee_id')->constrained('users');
-            $table->string('status', 20); // present / absent / late
+            $table->string('status', 20)->index(); // present / absent / late
             $table->string('confirmation', 20)->default('pending'); // accepted / declined / pending
             $table->timestamps();
         });
@@ -137,7 +147,7 @@ return new class extends Migration
             $table->string('title', 200);
             $table->text('description')->nullable();
             $table->string('file_url', 255)->nullable();
-            $table->foreignId('instrument_id')->nullable()->constrained('instruments');
+            $table->foreignId('instrument_type_id')->nullable()->constrained('instrument_types');
             $table->foreignId('uploaded_by')->constrained('users'); // trainer
             $table->dateTime('uploaded_at')->nullable();
             $table->timestamps();
@@ -240,7 +250,7 @@ return new class extends Migration
         Schema::dropIfExists('training_sessions');
         Schema::dropIfExists('user_assignments');
         Schema::dropIfExists('instruments');
-        Schema::dropIfExists('class_members');
+        Schema::dropIfExists('instrument_types');
         Schema::dropIfExists('classes');
         Schema::dropIfExists('departments');
         Schema::dropIfExists('users');
