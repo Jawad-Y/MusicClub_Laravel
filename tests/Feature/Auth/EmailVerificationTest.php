@@ -58,6 +58,7 @@ class EmailVerificationTest extends TestCase
 
     public function test_email_is_not_verified_with_invalid_user_id(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email_verified_at' => null,
         ]);
@@ -75,6 +76,7 @@ class EmailVerificationTest extends TestCase
 
     public function test_verified_user_is_redirected_to_dashboard_from_verification_prompt(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email_verified_at' => now(),
         ]);
@@ -86,6 +88,7 @@ class EmailVerificationTest extends TestCase
 
     public function test_already_verified_user_visiting_verification_link_is_redirected_without_firing_event_again(): void
     {
+        /** @var User $user */
         $user = User::factory()->create([
             'email_verified_at' => now(),
         ]);
