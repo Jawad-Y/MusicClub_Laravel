@@ -1,8 +1,8 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
-* @see \Laravel\Fortify\Http\Controllers\PasswordController::update
- * @see vendor/laravel/fortify/src/Http/Controllers/PasswordController.php:22
- * @route '/user/password'
+* @see \Laravel\Fortify\Http\Controllers\ProfileInformationController::update
+ * @see vendor/laravel/fortify/src/Http/Controllers/ProfileInformationController.php:21
+ * @route '/user/profile-information'
  */
 export const update = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(options),
@@ -11,22 +11,22 @@ export const update = (options?: RouteQueryOptions): RouteDefinition<'put'> => (
 
 update.definition = {
     methods: ["put"],
-    url: '/user/password',
+    url: '/user/profile-information',
 } satisfies RouteDefinition<["put"]>
 
 /**
-* @see \Laravel\Fortify\Http\Controllers\PasswordController::update
- * @see vendor/laravel/fortify/src/Http/Controllers/PasswordController.php:22
- * @route '/user/password'
+* @see \Laravel\Fortify\Http\Controllers\ProfileInformationController::update
+ * @see vendor/laravel/fortify/src/Http/Controllers/ProfileInformationController.php:21
+ * @route '/user/profile-information'
  */
 update.url = (options?: RouteQueryOptions) => {
     return update.definition.url + queryParams(options)
 }
 
 /**
-* @see \Laravel\Fortify\Http\Controllers\PasswordController::update
- * @see vendor/laravel/fortify/src/Http/Controllers/PasswordController.php:22
- * @route '/user/password'
+* @see \Laravel\Fortify\Http\Controllers\ProfileInformationController::update
+ * @see vendor/laravel/fortify/src/Http/Controllers/ProfileInformationController.php:21
+ * @route '/user/profile-information'
  */
 update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(options),
@@ -34,9 +34,9 @@ update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
 })
 
     /**
-* @see \Laravel\Fortify\Http\Controllers\PasswordController::update
- * @see vendor/laravel/fortify/src/Http/Controllers/PasswordController.php:22
- * @route '/user/password'
+* @see \Laravel\Fortify\Http\Controllers\ProfileInformationController::update
+ * @see vendor/laravel/fortify/src/Http/Controllers/ProfileInformationController.php:21
+ * @route '/user/profile-information'
  */
     const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: update.url({
@@ -49,9 +49,9 @@ update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     })
 
             /**
-* @see \Laravel\Fortify\Http\Controllers\PasswordController::update
- * @see vendor/laravel/fortify/src/Http/Controllers/PasswordController.php:22
- * @route '/user/password'
+* @see \Laravel\Fortify\Http\Controllers\ProfileInformationController::update
+ * @see vendor/laravel/fortify/src/Http/Controllers/ProfileInformationController.php:21
+ * @route '/user/profile-information'
  */
         updateForm.put = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: update.url({
@@ -64,8 +64,6 @@ update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
         })
     
     update.form = updateForm
-const userPassword = {
-    update: Object.assign(update, update),
-}
+const ProfileInformationController = { update }
 
-export default userPassword
+export default ProfileInformationController

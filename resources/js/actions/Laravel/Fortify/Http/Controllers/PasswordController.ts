@@ -1,4 +1,4 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../wayfinder'
 /**
 * @see \Laravel\Fortify\Http\Controllers\PasswordController::update
  * @see vendor/laravel/fortify/src/Http/Controllers/PasswordController.php:22
@@ -64,8 +64,6 @@ update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
         })
     
     update.form = updateForm
-const userPassword = {
-    update: Object.assign(update, update),
-}
+const PasswordController = { update }
 
-export default userPassword
+export default PasswordController
