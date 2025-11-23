@@ -1,0 +1,73 @@
+run :
+    php artisan serve
+
+Migrations :
+    php artisan make:migration create_table_name_table
+    php artisan migrate
+    php artisan migrate:rollback
+    php artisan migrate:rollback --step=1
+    php artisan migrate:fresh
+    php artisan migrate:fresh --seed
+    php artisan migrate:status
+
+Models:
+    php artisan make:model ModelName
+    php artisan make:model ModelName -m         # with migration
+    php artisan make:model ModelName -mf        # with migration + factory
+    php artisan make:model ModelName -a         # with all (migration, factory, controller, seeder)
+
+Controllers
+    php artisan make:controller UserController
+    php artisan make:controller Api/UserController --api
+    php artisan make:controller UserController --model=User --resource
+
+Cache & Optimization
+    php artisan cache:clear
+    php artisan config:clear
+    php artisan route:clear
+    php artisan view:clear
+    php artisan optimize
+    php artisan config:cache
+
+##### GIT COMMANDS CHEAT SHEET #####
+
+# Setup
+git init
+git clone <repo-url>
+
+# Status
+git status
+git log --oneline
+
+# Branching
+git branch
+git checkout -b new-branch
+git checkout main
+
+# Staging & Commit
+git add .
+git commit -m "message"
+
+# Push & Pull
+git push origin main
+git push origin <branch>
+git pull origin main
+
+# Merging
+git merge <branch>
+
+# Stash
+git stash
+git stash pop
+
+# Undo
+git reset HEAD~1             # undo last commit (keep changes)
+git reset --hard HEAD~1      # undo commit & changes
+git checkout .               # discard local changes
+
+# Diff
+git diff
+
+# Remove file from repo
+git rm file.txt
+git rm -r folder
