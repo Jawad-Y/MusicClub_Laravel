@@ -13,7 +13,8 @@ class ClasController extends Controller
      */
     public function index()
     {
-        //
+        $classes = Clas::with(['department', 'classLeader'])->get();
+        return response()->json($classes);
     }
 
     /**
@@ -21,7 +22,16 @@ class ClasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'class_name' => 'required|string|max:255',
+            'department_id' => 'required|exists:departments,id',
+            'class_leader_id' => 'nullable|exists:users,id',
+        ]);
+
+        $clas = Clas::create($validated);
+        $clas->load(['department', 'classLeader']);
+
+        return response()->json($clas, 201);
     }
 
     /**
@@ -29,7 +39,9 @@ class ClasController extends Controller
      */
     public function show(Clas $clas)
     {
-        //
+        $clas->load(['department', 'classLeader', 'members']);
+
+        return response()->json($clas);
     }
 
     /**
@@ -37,7 +49,16 @@ class ClasController extends Controller
      */
     public function update(Request $request, Clas $clas)
     {
-        //
+        $validated = $request->validate([
+            'class_name' => 'sometimes|required|string|max:255',
+            'department_id' => 'sometimes|required|exists:departments,id',
+            'class_leader_id' => 'nullable|exists:users,id',
+        ]);
+
+        $clas->update($validated);
+        $clas->load(['department', 'classLeader']);
+
+        return response()->json($clas);
     }
 
     /**
@@ -45,6 +66,8 @@ class ClasController extends Controller
      */
     public function destroy(Clas $clas)
     {
-        //
+        $clas->delete();
+
+        return response()->json(null, 204);
     }
 }

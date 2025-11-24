@@ -13,7 +13,8 @@ class MembershipController extends Controller
      */
     public function index()
     {
-        //
+        $memberships = Membership::with(['user'])->get();
+        return response()->json($memberships);
     }
 
     /**
@@ -21,7 +22,17 @@ class MembershipController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'status' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $membership = Membership::create($validated);
+        $membership->load(['user']);
+
+        return response()->json($membership, 201);
     }
 
     /**
@@ -29,7 +40,8 @@ class MembershipController extends Controller
      */
     public function show(Membership $membership)
     {
-        //
+        $membership->load(['user']);
+        return response()->json($membership);
     }
 
     /**
@@ -37,7 +49,17 @@ class MembershipController extends Controller
      */
     public function update(Request $request, Membership $membership)
     {
-        //
+        $validated = $request->validate([
+            'user_id' => 'sometimes|required|exists:users,id',
+            'status' => 'sometimes|required|string|max:255',
+            'start_date' => 'sometimes|required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $membership->update($validated);
+        $membership->load(['user']);
+
+        return response()->json($membership);
     }
 
     /**
@@ -45,6 +67,8 @@ class MembershipController extends Controller
      */
     public function destroy(Membership $membership)
     {
-        //
+        $membership->delete();
+
+        return response()->json(null, 204);
     }
 }

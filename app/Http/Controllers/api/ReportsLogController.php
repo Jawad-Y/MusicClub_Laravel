@@ -13,7 +13,8 @@ class ReportsLogController extends Controller
      */
     public function index()
     {
-        //
+        $reportsLogs = ReportsLog::with(['creator'])->get();
+        return response()->json($reportsLogs);
     }
 
     /**
@@ -21,7 +22,16 @@ class ReportsLogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'created_by' => 'required|exists:users,id',
+            'type' => 'required|string|max:255',
+            'created_at_report' => 'required|date',
+        ]);
+
+        $reportsLog = ReportsLog::create($validated);
+        $reportsLog->load(['creator']);
+
+        return response()->json($reportsLog, 201);
     }
 
     /**
@@ -29,7 +39,8 @@ class ReportsLogController extends Controller
      */
     public function show(ReportsLog $reportsLog)
     {
-        //
+        $reportsLog->load(['creator']);
+        return response()->json($reportsLog);
     }
 
     /**
@@ -37,7 +48,16 @@ class ReportsLogController extends Controller
      */
     public function update(Request $request, ReportsLog $reportsLog)
     {
-        //
+        $validated = $request->validate([
+            'created_by' => 'sometimes|required|exists:users,id',
+            'type' => 'sometimes|required|string|max:255',
+            'created_at_report' => 'sometimes|required|date',
+        ]);
+
+        $reportsLog->update($validated);
+        $reportsLog->load(['creator']);
+
+        return response()->json($reportsLog);
     }
 
     /**
@@ -45,6 +65,8 @@ class ReportsLogController extends Controller
      */
     public function destroy(ReportsLog $reportsLog)
     {
-        //
+        $reportsLog->delete();
+
+        return response()->json(null, 204);
     }
 }
