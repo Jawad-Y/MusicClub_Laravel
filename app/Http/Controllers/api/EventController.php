@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Event;
-use Illuminate\Http\Request;
+use App\Models\Event;  // iporting the model
+use Illuminate\Http\Request;  // import request
 
 class EventController extends Controller
 {
@@ -13,7 +13,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        
+      return Event::all();
     }
 
     /**
@@ -21,7 +22,18 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // 1. VALIDATE INPUT   
+                //   'feild name' => 'rules'
+    $validated = $request->validate([
+        'title' => 'required|string|max:200',
+        'description' => 'nullable|string',
+        'date' => 'nullable|date',
+        'location' => 'nullable|string|max:150',
+        'created_by' => 'required|exists:users,id',
+    ]);
+
+    // 2. SAVE TO DATABASE
+    return Event::create($validated);
     }
 
     /**
@@ -29,7 +41,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        //
+        return Event::findOrFail($id);
     }
 
     /**
@@ -37,7 +49,21 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        //
+        //find event by if
+        $event = Event::findOrFail($id);
+        //checking validation
+$validated = $request->validate([
+    'title' => 'sometimes|string|max:200',
+    'description' => 'nullable|string',
+    'date' => 'nullable|date',
+    'location' => 'nullable|string|max:150',
+    'created_by' => 'sometimes|exists:users,id',
+]);
+  //updating the event weve craete by $validated info 
+$event->update($validated);
+
+return $event;
+
     }
 
     /**
@@ -45,6 +71,12 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        // 1. find the event by id
+        $event = Event::findOrFail($id);
+        //2. delete founded event 
+$event->delete();
+        //3. show sucess msg on frontend
+return response()->json(['message' => 'Event deleted successfully']);
+
     }
 }
