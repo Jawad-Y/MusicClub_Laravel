@@ -13,7 +13,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        return Event::all();
+        return response()->json(Event::all());
     }
 
     /**
@@ -31,7 +31,7 @@ class EventController extends Controller
 
         $event = Event::create($validated);
 
-        return $event;
+        return response()->json($event, 201);
     }
 
     /**
@@ -39,7 +39,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return $event;
+        return response()->json($event);
     }
 
     /**
@@ -57,7 +57,7 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return $event;
+        return response()->json($event);
     }
 
     /**
@@ -69,6 +69,6 @@ class EventController extends Controller
 
         return response()->json([
             'message' => 'Event deleted successfully'
-        ]);
+        ], 200);
     }
 }

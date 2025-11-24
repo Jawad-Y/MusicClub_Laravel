@@ -13,7 +13,7 @@ class TrainingSessionController extends Controller
      */
     public function index()
     {
-        return TrainingSession::all();
+        return response()->json(TrainingSession::all());
     }
 
     /**
@@ -32,8 +32,9 @@ class TrainingSessionController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $session = TrainingSession::create($validated);   
-        return $session;                                 
+        $session = TrainingSession::create($validated);
+
+        return response()->json($session, 201);
     }
 
     /**
@@ -41,7 +42,7 @@ class TrainingSessionController extends Controller
      */
     public function show(TrainingSession $trainingSession)
     {
-        return $trainingSession;
+        return response()->json($trainingSession);
     }
 
     /**
@@ -62,7 +63,7 @@ class TrainingSessionController extends Controller
 
         $trainingSession->update($validated);
 
-        return $trainingSession;
+        return response()->json($trainingSession);
     }
 
     /**
@@ -72,6 +73,6 @@ class TrainingSessionController extends Controller
     {
         $trainingSession->delete();
 
-        return response()->json(['message' => 'Training Session deleted successfully']);
+        return response()->json(['message' => 'Training Session deleted successfully'], 200);
     }
 }

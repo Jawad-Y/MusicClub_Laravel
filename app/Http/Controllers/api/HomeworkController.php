@@ -13,7 +13,7 @@ class HomeworkController extends Controller
      */
     public function index()
     {
-        return Homework::all();
+        return response()->json(Homework::all());
     }
 
     /**
@@ -30,7 +30,7 @@ class HomeworkController extends Controller
 
         $homework = Homework::create($validated);
 
-        return $homework;
+        return response()->json($homework, 201);
     }
 
     /**
@@ -38,7 +38,7 @@ class HomeworkController extends Controller
      */
     public function show(Homework $homework)
     {
-        return $homework;  
+        return response()->json($homework);
     }
 
     /**
@@ -53,9 +53,9 @@ class HomeworkController extends Controller
             'due_date'     => 'nullable|date',
         ]);
 
-        $homework->update($validated);  
+        $homework->update($validated);
 
-        return $homework;
+        return response()->json($homework);
     }
 
     /**
@@ -63,8 +63,10 @@ class HomeworkController extends Controller
      */
     public function destroy(Homework $homework)
     {
-        $homework->delete();  
+        $homework->delete();
 
-        return response()->json(['message' => 'Homework deleted successfully']);
+        return response()->json([
+            'message' => 'Homework deleted successfully'
+        ], 200);
     }
 }

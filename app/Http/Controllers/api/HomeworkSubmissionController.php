@@ -13,7 +13,7 @@ class HomeworkSubmissionController extends Controller
      */
     public function index()
     {
-        return HomeworkSubmission::all();
+        return response()->json(HomeworkSubmission::all());
     }
 
     /**
@@ -31,7 +31,7 @@ class HomeworkSubmissionController extends Controller
 
         $submission = HomeworkSubmission::create($validated);
 
-        return $submission;
+        return response()->json($submission, 201);
     }
 
     /**
@@ -39,7 +39,7 @@ class HomeworkSubmissionController extends Controller
      */
     public function show(HomeworkSubmission $homeworkSubmission)
     {
-        return $homeworkSubmission;
+        return response()->json($homeworkSubmission);
     }
 
     /**
@@ -57,7 +57,7 @@ class HomeworkSubmissionController extends Controller
 
         $homeworkSubmission->update($validated);
 
-        return $homeworkSubmission;
+        return response()->json($homeworkSubmission);
     }
 
     /**
@@ -67,6 +67,6 @@ class HomeworkSubmissionController extends Controller
     {
         $homeworkSubmission->delete();
 
-        return response()->json(['message' => 'Submission deleted successfully']);
+        return response()->json(['message' => 'Submission deleted successfully'], 200);
     }
 }
