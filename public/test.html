@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MusicClub - User API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 10px;
+            line-height: 1.4;
+        }
+        h1, h2 {
+            margin-bottom: 5px;
+        }
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            margin-top: 0;
+        }
+        label {
+            display: block;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            padding: 6px;
+            margin: 3px 0 8px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            cursor: pointer;
+        }
+        .row {
+            display: flex;
+            gap: 10px;
+        }
+        .row > div {
+            flex: 1;
+        }
+        pre {
+            background: #f7f7f7;
+            padding: 10px;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow: auto;
+            font-size: 13px;
+        }
+        .status {
+            margin-top: 5px;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: darkred;
+        }
+        small {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<h1>MusicClub - User API Test</h1>
+<p>
+    This page is used to test:
+    <strong>login, logout, and all User API endpoints</strong>
+    (index, show, store, update, destroy).
+</p>
+
+<!-- AUTH SECTION -->
+<div class="card">
+    <h2>Authentication (Login / Logout)</h2>
+
+    <label for="loginEmail">Email</label>
+    <input type="email" id="loginEmail" value="leader@example.com">
+
+    <label for="loginPassword">Password</label>
+    <input type="password" id="loginPassword" value="password">
+
+    <button id="loginBtn">Login & Get Token</button>
+    <button id="logoutBtn">Logout (Revoke Token)</button>
+
+    <p id="authStatus" class="status"></p>
+
+    <h3>Current Token</h3>
+    <pre id="tokenBox">(no token yet)</pre>
+
+    <h3>Current Authenticated User (from login response)</h3>
+    <pre id="authUserBox">(no user yet)</pre>
+</div>
+
+<!-- USER LIST SECTION -->
+<div class="card">
+    <h2>Get Users List (GET /api/users)</h2>
+    <button id="getUsersBtn">Load Users</button>
+    <p><small>Requires a valid token (any authenticated user).</small></p>
+    <pre id="usersResult"></pre>
+</div>
+
+<!-- SHOW USER SECTION -->
+<div class="card">
+    <h2>Show Single User (GET /api/users/{id})</h2>
+    <label for="showUserId">User ID</label>
+    <input type="number" id="showUserId" placeholder="Enter user ID (e.g. 1)">
+    <button id="showUserBtn">Show User</button>
+    <pre id="showUserResult"></pre>
+</div>
+
+<!-- CREATE USER SECTION -->
+<div class="card">
+    <h2>Create User (POST /api/users)</h2>
+    <p><small>Requires role: <strong>leader</strong> or <strong>individual affair</strong>.</small></p>
+
+    <label for="createFullName">Full Name</label>
+    <input type="text" id="createFullName" placeholder="Full name">
+
+    <label for="createEmail">Email</label>
+    <input type="email" id="createEmail" placeholder="Email">
+
+    <label for="createPhone">Phone</label>
+    <input type="text" id="createPhone" placeholder="Phone (optional)">
+
+    <label for="createRoleId">Role ID</label>
+    <input type="number" id="createRoleId" placeholder="Role ID (e.g. 1)">
+
+    <label for="createStatus">Status</label>
+    <select id="createStatus">
+        <option value="active" selected>active</option>
+        <option value="inactive">inactive</option>
+    </select>
+
+    <label for="createPassword">Password</label>
+    <input type="password" id="createPassword" placeholder="Password">
+
+    <button id="createUserBtn">Create User</button>
+    <pre id="createUserResult"></pre>
+</div>
+
+<!-- UPDATE USER SECTION -->
+<div class="card">
+    <h2>Update User (PUT /api/users/{id})</h2>
+    <p><small>Requires role: <strong>leader</strong> or <strong>individual affair</strong>.</small></p>
+
+    <label for="updateUserId">User ID to update</label>
+    <input type="number" id="updateUserId" placeholder="User ID">
+
+    <label for="updateFullName">Full Name</label>
+    <input type="text" id="updateFullName" placeholder="Full name">
+
+    <label for="updateEmail">Email</label>
+    <input type="email" id="updateEmail" placeholder="Email">
+
+    <label for="updatePhone">Phone</label>
+    <input type="text" id="updatePhone" placeholder="Phone (optional)">
+
+    <label for="updateRoleId">Role ID</label>
+    <input type="number" id="updateRoleId" placeholder="Role ID">
+
+    <label for="updateStatus">Status</label>
+    <select id="updateStatus">
+        <option value="active" selected>active</option>
+        <option value="inactive">inactive</option>
+    </select>
+
+    <label for="updatePassword">Password (leave empty to keep current)</label>
+    <input type="password" id="updatePassword" placeholder="New password (optional)">
+
+    <button id="updateUserBtn">Update User</button>
+    <pre id="updateUserResult"></pre>
+</div>
+
+<!-- DELETE USER SECTION -->
+<div class="card">
+    <h2>Delete User (DELETE /api/users/{id})</h2>
+    <p><small>Requires role: <strong>leader</strong> or <strong>individual affair</strong>.</small></p>
+
+    <label for="deleteUserId">User ID to delete</label>
+    <input type="number" id="deleteUserId" placeholder="User ID">
+
+    <button id="deleteUserBtn">Delete User</button>
+    <pre id="deleteUserResult"></pre>
+</div>
+
+<script>
+    // Base API URL (uses the same origin as this page)
+    const API_BASE = window.location.origin + '/api';
+
+    // Holds the current token in memory
+    let apiToken = null;
+
+    /**
+     * Helper: update token display on the page
+     */
+    function updateTokenDisplay() {
+        const tokenBox = document.getElementById('tokenBox');
+        if (apiToken) {
+            tokenBox.textContent = apiToken;
+        } else {
+            tokenBox.textContent = '(no token yet)';
+        }
+    }
+
+    /**
+     * Helper: update auth status message
+     */
+    function setAuthStatus(message, isError = false) {
+        const el = document.getElementById('authStatus');
+        el.textContent = message;
+        el.className = 'status ' + (isError ? 'error' : 'success');
+    }
+
+    /**
+     * Helper: try to parse JSON or fallback to text
+     */
+    async function parseResponse(response) {
+        const contentType = response.headers.get('Content-Type') || '';
+        if (contentType.includes('application/json')) {
+            return await response.json();
+        }
+        return await response.text();
+    }
+
+    /**
+     * Helper: build headers with optional Authorization
+     */
+    function buildHeaders(withAuth = false, isJson = true) {
+        const headers = {};
+        if (isJson) {
+            headers['Content-Type'] = 'application/json';
+        }
+        headers['Accept'] = 'application/json';
+
+        if (withAuth && apiToken) {
+            headers['Authorization'] = 'Bearer ' + apiToken;
+        }
+
+        return headers;
+    }
+
+    /**
+     * LOGIN: POST /api/login
+     */
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        setAuthStatus('Logging in...', false);
+
+        try {
+            const response = await fetch(API_BASE + '/login', {
+                method: 'POST',
+                headers: buildHeaders(false, true),
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await parseResponse(response);
+
+            if (!response.ok) {
+                apiToken = null;
+                updateTokenDisplay();
+                document.getElementById('authUserBox').textContent = '(no user yet)';
+
+                setAuthStatus('Login failed: ' + response.status, true);
+                console.error('Login error:', data);
+                return;
+            }
+
+            // Expecting: { status: true, token: "...", user: {...} }
+            apiToken = data.token;
+            updateTokenDisplay();
+
+            setAuthStatus('Login successful.', false);
+            document.getElementById('authUserBox').textContent = JSON.stringify(data.user, null, 2);
+
+            console.log('Login response:', data);
+        } catch (error) {
+            console.error('Login exception:', error);
+            setAuthStatus('Login error (check console).', true);
+        }
+    });
+
+    /**
+     * LOGOUT: POST /api/logout
+     */
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        if (!apiToken) {
+            setAuthStatus('No token set. Please login first.', true);
+            return;
+        }
+
+        setAuthStatus('Logging out...', false);
+
+        try {
+            const response = await fetch(API_BASE + '/logout', {
+                method: 'POST',
+                headers: buildHeaders(true, true),
+            });
+
+            const data = await parseResponse(response);
+
+            if (!response.ok) {
+                setAuthStatus('Logout failed: ' + response.status, true);
+                console.error('Logout error:', data);
+                return;
+            }
+
+            apiToken = null;
+            updateTokenDisplay();
+            document.getElementById('authUserBox').textContent = '(no user yet)';
+
+            setAuthStatus('Logout successful.', false);
+            console.log('Logout response:', data);
+        } catch (error) {
+            console.error('Logout exception:', error);
+            setAuthStatus('Logout error (check console).', true);
+        }
+    });
+
+    /**
+     * GET /api/users
+     */
+    document.getElementById('getUsersBtn').addEventListener('click', async () => {
+        const resultEl = document.getElementById('usersResult');
+        resultEl.textContent = 'Requesting /api/users...';
+
+        try {
+            const response = await fetch(API_BASE + '/users', {
+                method: 'GET',
+                headers: buildHeaders(true, false),
+            });
+
+            const data = await parseResponse(response);
+
+            resultEl.textContent =
+                'Status: ' + response.status + '\n\n' +
+                JSON.stringify(data, null, 2);
+
+            console.log('GET /users:', response.status, data);
+        } catch (error) {
+            console.error('GET /users error:', error);
+            resultEl.textContent = 'Error calling /api/users (check console).';
+        }
+    });
+
+    /**
+     * GET /api/users/{id}
+     */
+    document.getElementById('showUserBtn').addEventListener('click', async () => {
+        const id = document.getElementById('showUserId').value;
+        const resultEl = document.getElementById('showUserResult');
+
+        if (!id) {
+            resultEl.textContent = 'Please enter a user ID.';
+            return;
+        }
+
+        resultEl.textContent = 'Requesting /api/users/' + id + '...';
+
+        try {
+            const response = await fetch(API_BASE + '/users/' + id, {
+                method: 'GET',
+                headers: buildHeaders(true, false),
+            });
+
+            const data = await parseResponse(response);
+
+            resultEl.textContent =
+                'Status: ' + response.status + '\n\n' +
+                JSON.stringify(data, null, 2);
+
+            console.log('GET /users/' + id + ':', response.status, data);
+        } catch (error) {
+            console.error('GET /users/{id} error:', error);
+            resultEl.textContent = 'Error calling /api/users/' + id + ' (check console).';
+        }
+    });
+
+    /**
+     * POST /api/users
+     */
+    document.getElementById('createUserBtn').addEventListener('click', async () => {
+        const resultEl = document.getElementById('createUserResult');
+
+        if (!apiToken) {
+            resultEl.textContent = 'No token set. Please login as leader or individual affair.';
+            return;
+        }
+
+        const full_name = document.getElementById('createFullName').value;
+        const email     = document.getElementById('createEmail').value;
+        const phone     = document.getElementById('createPhone').value;
+        const role_id   = document.getElementById('createRoleId').value;
+        const status    = document.getElementById('createStatus').value;
+        const password  = document.getElementById('createPassword').value;
+
+        const payload = {
+            full_name,
+            email,
+            phone,
+            role_id: role_id ? parseInt(role_id) : null,
+            status,
+            password,
+        };
+
+        resultEl.textContent = 'Sending POST /api/users...';
+
+        try {
+            const response = await fetch(API_BASE + '/users', {
+                method: 'POST',
+                headers: buildHeaders(true, true),
+                body: JSON.stringify(payload),
+            });
+
+            const data = await parseResponse(response);
+
+            resultEl.textContent =
+                'Status: ' + response.status + '\n\n' +
+                JSON.stringify(data, null, 2);
+
+            console.log('POST /users:', response.status, data);
+        } catch (error) {
+            console.error('POST /users error:', error);
+            resultEl.textContent = 'Error calling POST /api/users (check console).';
+        }
+    });
+
+    /**
+     * PUT /api/users/{id}
+     */
+    document.getElementById('updateUserBtn').addEventListener('click', async () => {
+        const resultEl = document.getElementById('updateUserResult');
+
+        if (!apiToken) {
+            resultEl.textContent = 'No token set. Please login as leader or individual affair.';
+            return;
+        }
+
+        const id         = document.getElementById('updateUserId').value;
+        const full_name  = document.getElementById('updateFullName').value;
+        const email      = document.getElementById('updateEmail').value;
+        const phone      = document.getElementById('updatePhone').value;
+        const role_id    = document.getElementById('updateRoleId').value;
+        const status     = document.getElementById('updateStatus').value;
+        const password   = document.getElementById('updatePassword').value;
+
+        if (!id) {
+            resultEl.textContent = 'Please enter a user ID to update.';
+            return;
+        }
+
+        const payload = {
+            full_name,
+            email,
+            phone,
+            role_id: role_id ? parseInt(role_id) : null,
+            status,
+        };
+
+        if (password) {
+            payload.password = password;
+        }
+
+        resultEl.textContent = 'Sending PUT /api/users/' + id + '...';
+
+        try {
+            const response = await fetch(API_BASE + '/users/' + id, {
+                method: 'PUT',
+                headers: buildHeaders(true, true),
+                body: JSON.stringify(payload),
+            });
+
+            const data = await parseResponse(response);
+
+            resultEl.textContent =
+                'Status: ' + response.status + '\n\n' +
+                JSON.stringify(data, null, 2);
+
+            console.log('PUT /users/' + id + ':', response.status, data);
+        } catch (error) {
+            console.error('PUT /users/{id} error:', error);
+            resultEl.textContent = 'Error calling PUT /api/users/' + id + ' (check console).';
+        }
+    });
+
+    /**
+     * DELETE /api/users/{id}
+     */
+    document.getElementById('deleteUserBtn').addEventListener('click', async () => {
+        const resultEl = document.getElementById('deleteUserResult');
+
+        if (!apiToken) {
+            resultEl.textContent = 'No token set. Please login as leader or individual affair.';
+            return;
+        }
+
+        const id = document.getElementById('deleteUserId').value;
+
+        if (!id) {
+            resultEl.textContent = 'Please enter a user ID to delete.';
+            return;
+        }
+
+        resultEl.textContent = 'Sending DELETE /api/users/' + id + '...';
+
+        try {
+            const response = await fetch(API_BASE + '/users/' + id, {
+                method: 'DELETE',
+                headers: buildHeaders(true, false),
+            });
+
+            const data = await parseResponse(response);
+
+            resultEl.textContent =
+                'Status: ' + response.status + '\n\n' +
+                JSON.stringify(data, null, 2);
+
+            console.log('DELETE /users/' + id + ':', response.status, data);
+        } catch (error) {
+            console.error('DELETE /users/{id} error:', error);
+            resultEl.textContent = 'Error calling DELETE /api/users/' + id + ' (check console).';
+        }
+    });
+
+    // Initialize token display on page load
+    updateTokenDisplay();
+</script>
+
+</body>
+</html>
