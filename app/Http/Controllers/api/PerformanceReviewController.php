@@ -13,7 +13,8 @@ class PerformanceReviewController extends Controller
      */
     public function index()
     {
-        //
+        $performanceReviews = PerformanceReview::with(['trainee', 'trainer', 'session'])->get();
+        return response()->json($performanceReviews);
     }
 
     /**
@@ -21,7 +22,18 @@ class PerformanceReviewController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'trainee_id' => 'required|exists:users,id',
+            'trainer_id' => 'required|exists:users,id',
+            'session_id' => 'required|exists:training_sessions,id',
+            'rating' => 'required|integer|min:1|max:10',
+            'notes' => 'nullable|string',
+        ]);
+
+        $performanceReview = PerformanceReview::create($validated);
+        $performanceReview->load(['trainee', 'trainer', 'session']);
+
+        return response()->json($performanceReview, 201);
     }
 
     /**
@@ -29,7 +41,8 @@ class PerformanceReviewController extends Controller
      */
     public function show(PerformanceReview $performanceReview)
     {
-        //
+        $performanceReview->load(['trainee', 'trainer', 'session']);
+        return response()->json($performanceReview);
     }
 
     /**
@@ -37,7 +50,18 @@ class PerformanceReviewController extends Controller
      */
     public function update(Request $request, PerformanceReview $performanceReview)
     {
-        //
+        $validated = $request->validate([
+            'trainee_id' => 'sometimes|required|exists:users,id',
+            'trainer_id' => 'sometimes|required|exists:users,id',
+            'session_id' => 'sometimes|required|exists:training_sessions,id',
+            'rating' => 'sometimes|required|integer|min:1|max:10',
+            'notes' => 'nullable|string',
+        ]);
+
+        $performanceReview->update($validated);
+        $performanceReview->load(['trainee', 'trainer', 'session']);
+
+        return response()->json($performanceReview);
     }
 
     /**
@@ -45,6 +69,8 @@ class PerformanceReviewController extends Controller
      */
     public function destroy(PerformanceReview $performanceReview)
     {
-        //
+        $performanceReview->delete();
+
+        return response()->json(null, 204);
     }
 }
