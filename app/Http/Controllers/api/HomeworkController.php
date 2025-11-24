@@ -13,9 +13,7 @@ class HomeworkController extends Controller
      */
     public function index()
     {
-         // 1. get all homework
-return Homework::all();
-
+        return Homework::all();
     }
 
     /**
@@ -23,17 +21,16 @@ return Homework::all();
      */
     public function store(Request $request)
     {
-         // 1. validate input
-$validated = $request->validate([
-    'session_id'    => 'required|exists:training_sessions,id',
-    'assign_scope'  => 'required|string|max:20',
-    'description'   => 'required|string',
-    'due_date'      => 'nullable|date',
-]);
+        $validated = $request->validate([
+            'session_id'   => 'required|exists:training_sessions,id',
+            'assign_scope' => 'required|string|max:20',
+            'description'  => 'required|string',
+            'due_date'     => 'nullable|date',
+        ]);
 
-// 2. create homework
-return Homework::create($validated);
+        $homework = Homework::create($validated);
 
+        return $homework;
     }
 
     /**
@@ -41,7 +38,7 @@ return Homework::create($validated);
      */
     public function show(Homework $homework)
     {
-        return Homework::findOrFail($id);
+        return $homework;  
     }
 
     /**
@@ -49,23 +46,16 @@ return Homework::create($validated);
      */
     public function update(Request $request, Homework $homework)
     {
-         // 1. find homework by id
-$homework = Homework::findOrFail($id);
+        $validated = $request->validate([
+            'session_id'   => 'sometimes|exists:training_sessions,id',
+            'assign_scope' => 'sometimes|string|max:20',
+            'description'  => 'sometimes|string',
+            'due_date'     => 'nullable|date',
+        ]);
 
-// 2. validate new data
-$validated = $request->validate([
-    'session_id'    => 'sometimes|exists:training_sessions,id',
-    'assign_scope'  => 'sometimes|string|max:20',
-    'description'   => 'sometimes|string',
-    'due_date'      => 'nullable|date',
-]);
+        $homework->update($validated);  
 
-// 3. update homework
-$homework->update($validated);
-
-// 4. return updated homework
-return $homework;
-
+        return $homework;
     }
 
     /**
@@ -73,14 +63,8 @@ return $homework;
      */
     public function destroy(Homework $homework)
     {
-         // 1. find homework by id
-$homework = Homework::findOrFail($id);
+        $homework->delete();  
 
-// 2. delete it
-$homework->delete();
-
-// 3. message
-return response()->json(['message' => 'Homework deleted successfully']);
-
+        return response()->json(['message' => 'Homework deleted successfully']);
     }
 }

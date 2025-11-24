@@ -13,9 +13,7 @@ class TrainingSessionController extends Controller
      */
     public function index()
     {
-        // 1. get all sessions
         return TrainingSession::all();
-
     }
 
     /**
@@ -23,22 +21,19 @@ class TrainingSessionController extends Controller
      */
     public function store(Request $request)
     {
-        
-        // 1. validate input
-$validated = $request->validate([
-    'class_id'    => 'required|exists:classes,id',
-    'trainer_id'  => 'required|exists:users,id',
-    'subject'     => 'required|string|max:200',
-    'date'        => 'required|date',
-    'start_time'  => 'required',
-    'end_time'    => 'required',
-    'location'    => 'nullable|string|max:150',
-    'description' => 'nullable|string',
-]);
+        $validated = $request->validate([
+            'class_id'    => 'required|exists:classes,id',
+            'trainer_id'  => 'required|exists:users,id',
+            'subject'     => 'required|string|max:200',
+            'date'        => 'required|date',
+            'start_time'  => 'required',
+            'end_time'    => 'required',
+            'location'    => 'nullable|string|max:150',
+            'description' => 'nullable|string',
+        ]);
 
-// 2. create new session
-return TrainingSession::create($validated);
-
+        $session = TrainingSession::create($validated);   
+        return $session;                                 
     }
 
     /**
@@ -46,7 +41,7 @@ return TrainingSession::create($validated);
      */
     public function show(TrainingSession $trainingSession)
     {
-        return TrainingSession::findOrFail($id);
+        return $trainingSession;
     }
 
     /**
@@ -54,28 +49,20 @@ return TrainingSession::create($validated);
      */
     public function update(Request $request, TrainingSession $trainingSession)
     {
-        
-        // 1. find session by id
-$session = TrainingSession::findOrFail($id);
+        $validated = $request->validate([
+            'class_id'   => 'sometimes|exists:classes,id',
+            'trainer_id' => 'sometimes|exists:users,id',
+            'subject'    => 'sometimes|string|max:200',
+            'date'       => 'sometimes|date',
+            'start_time' => 'sometimes',
+            'end_time'   => 'sometimes',
+            'location'   => 'nullable|string|max:150',
+            'description'=> 'nullable|string',
+        ]);
 
-// 2. validate new data
-$validated = $request->validate([
-    'class_id'    => 'sometimes|exists:classes,id',
-    'trainer_id'  => 'sometimes|exists:users,id',
-    'subject'     => 'sometimes|string|max:200',
-    'date'        => 'sometimes|date',
-    'start_time'  => 'sometimes',
-    'end_time'    => 'sometimes',
-    'location'    => 'nullable|string|max:150',
-    'description' => 'nullable|string',
-]);
+        $trainingSession->update($validated);
 
-// 3. update session
-$session->update($validated);
-
-// 4. return updated session
-return $session;
-
+        return $trainingSession;
     }
 
     /**
@@ -83,15 +70,8 @@ return $session;
      */
     public function destroy(TrainingSession $trainingSession)
     {
-        
-         // 1. find session by id
-$session = TrainingSession::findOrFail($id);
+        $trainingSession->delete();
 
-// 2. delete session
-$session->delete();
-
-// 3. return success message
-return response()->json(['message' => 'Session deleted successfully']);
-    
+        return response()->json(['message' => 'Training Session deleted successfully']);
     }
 }

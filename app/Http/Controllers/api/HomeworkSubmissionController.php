@@ -13,9 +13,7 @@ class HomeworkSubmissionController extends Controller
      */
     public function index()
     {
-         // 1. get all submissions
-return HomeworkSubmission::all();
-
+        return HomeworkSubmission::all();
     }
 
     /**
@@ -23,18 +21,17 @@ return HomeworkSubmission::all();
      */
     public function store(Request $request)
     {
-         // 1. validate input
-$validated = $request->validate([
-    'homework_id'  => 'required|exists:homework,id',
-    'trainee_id'   => 'required|exists:users,id',
-    'file_url'     => 'nullable|string|max:255',
-    'notes'        => 'nullable|string',
-    'submitted_at' => 'nullable|date',
-]);
+        $validated = $request->validate([
+            'homework_id'  => 'required|exists:homework,id',
+            'trainee_id'   => 'required|exists:users,id',
+            'file_url'     => 'nullable|string|max:255',
+            'notes'        => 'nullable|string',
+            'submitted_at' => 'nullable|date',
+        ]);
 
-// 2. create submission
-return HomeworkSubmission::create($validated);
+        $submission = HomeworkSubmission::create($validated);
 
+        return $submission;
     }
 
     /**
@@ -42,7 +39,7 @@ return HomeworkSubmission::create($validated);
      */
     public function show(HomeworkSubmission $homeworkSubmission)
     {
-        return HomeworkSubmission::findOrFail($id);
+        return $homeworkSubmission;
     }
 
     /**
@@ -50,24 +47,17 @@ return HomeworkSubmission::create($validated);
      */
     public function update(Request $request, HomeworkSubmission $homeworkSubmission)
     {
-         // 1. find submission by id
-$submission = HomeworkSubmission::findOrFail($id);
+        $validated = $request->validate([
+            'homework_id'  => 'sometimes|exists:homework,id',
+            'trainee_id'   => 'sometimes|exists:users,id',
+            'file_url'     => 'nullable|string|max:255',
+            'notes'        => 'nullable|string',
+            'submitted_at' => 'nullable|date',
+        ]);
 
-// 2. validate new data
-$validated = $request->validate([
-    'homework_id'  => 'sometimes|exists:homework,id',
-    'trainee_id'   => 'sometimes|exists:users,id',
-    'file_url'     => 'nullable|string|max:255',
-    'notes'        => 'nullable|string',
-    'submitted_at' => 'nullable|date',
-]);
+        $homeworkSubmission->update($validated);
 
-// 3. update submission
-$submission->update($validated);
-
-// 4. return updated submission
-return $submission;
-
+        return $homeworkSubmission;
     }
 
     /**
@@ -75,14 +65,8 @@ return $submission;
      */
     public function destroy(HomeworkSubmission $homeworkSubmission)
     {
-         // 1. find submission by id
-$submission = HomeworkSubmission::findOrFail($id);
+        $homeworkSubmission->delete();
 
-// 2. delete it
-$submission->delete();
-
-// 3. message
-return response()->json(['message' => 'Submission deleted successfully']);
-
+        return response()->json(['message' => 'Submission deleted successfully']);
     }
 }
