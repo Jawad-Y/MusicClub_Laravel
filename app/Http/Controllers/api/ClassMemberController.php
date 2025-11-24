@@ -66,7 +66,6 @@ class ClassMemberController extends Controller
     public function destroy(ClassMember $classMember)
     {
         $classMember->delete();
-
         return response()->json(null, 204);
     }
 }
