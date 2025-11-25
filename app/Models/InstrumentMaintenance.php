@@ -9,6 +9,8 @@ use App\Models\Instrument;
 
 class InstrumentMaintenance extends Model
 {
+    protected $table = 'instrument_maintenance';
+    
     protected $fillable = [
         'instrument_id', 
         'description', 

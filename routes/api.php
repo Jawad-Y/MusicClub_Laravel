@@ -44,7 +44,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('departments', DepartmentController::class);
 
     // Class routes
-    Route::apiResource('classes', ClasController::class);
+    Route::apiResource('myclasses', ClasController::class)->parameters([
+    'myclasses' => 'myclasses'
+    ]);
 
     // Class member routes
     Route::apiResource('class-members', ClassMemberController::class);

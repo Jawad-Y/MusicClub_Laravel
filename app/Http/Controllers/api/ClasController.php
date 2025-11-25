@@ -17,9 +17,9 @@ class ClasController extends Controller
      */
     public function index(): JsonResponse
     {
-        $classes = Clas::with(['department', 'classLeader'])->get();
+        $myclasses = Clas::with(['department', 'classLeader'])->get();
         
-        return $this->success($classes);
+        return $this->success($myclasses);
     }
 
     /**
@@ -33,26 +33,26 @@ class ClasController extends Controller
             'class_leader_id' => 'nullable|exists:users,id',
         ]);
 
-        $clas = Clas::create($validated);
-        $clas->load(['department', 'classLeader']);
+        $myclasses = Clas::create($validated);
+        $myclasses->load(['department', 'classLeader']);
 
-        return $this->success($clas, 'Class created successfully', 201);
+        return $this->success($myclasses, 'Class created successfully', 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Clas $clas): JsonResponse
+    public function show(Clas $myclasses): JsonResponse
     {
-        $clas->load(['department', 'classLeader', 'members']);
+        $myclasses->load(['department', 'classLeader', 'members']);
 
-        return $this->success($clas);
+        return $this->success($myclasses);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Clas $clas): JsonResponse
+    public function update(Request $request, Clas $myclasses): JsonResponse
     {
         $validated = $request->validate([
             'class_name' => 'sometimes|required|string|max:255',
@@ -60,19 +60,19 @@ class ClasController extends Controller
             'class_leader_id' => 'nullable|exists:users,id',
         ]);
 
-        $clas->update($validated);
-        $clas->load(['department', 'classLeader']);
+        $myclasses->update($validated);
+        $myclasses->load(['department', 'classLeader']);
 
-        return $this->success($clas, 'Class updated successfully');
+        return $this->success($myclasses, 'Class updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Clas $clas): JsonResponse
+    public function destroy(Clas $myclasses): JsonResponse
     {
-        $clas->delete();
+        $myclasses->delete();
 
-        return $this->success(null, 'Class deleted successfully', 204);
+        return $this->success(null, 'Class deleted successfully');
     }
 }
