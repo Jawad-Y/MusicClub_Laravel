@@ -13,7 +13,7 @@ class SessionAttendanceController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(SessionAttendance::all());
     }
 
     /**
@@ -21,7 +21,16 @@ class SessionAttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'session_id'    => 'required|exists:training_sessions,id',
+            'trainee_id'    => 'required|exists:users,id',
+            'status'        => 'required|string',
+            'confirmation'  => 'nullable|string',
+        ]);
+
+        $attendance = SessionAttendance::create($validated);
+
+        return response()->json($attendance, 201);
     }
 
     /**
@@ -29,7 +38,7 @@ class SessionAttendanceController extends Controller
      */
     public function show(SessionAttendance $sessionAttendance)
     {
-        //
+        return response()->json($sessionAttendance);
     }
 
     /**
@@ -37,7 +46,16 @@ class SessionAttendanceController extends Controller
      */
     public function update(Request $request, SessionAttendance $sessionAttendance)
     {
-        //
+        $validated = $request->validate([
+            'session_id'    => 'sometimes|exists:training_sessions,id',
+            'trainee_id'    => 'sometimes|exists:users,id',
+            'status'        => 'sometimes|string',
+            'confirmation'  => 'sometimes|string',
+        ]);
+
+        $sessionAttendance->update($validated);
+
+        return response()->json($sessionAttendance);
     }
 
     /**
@@ -45,6 +63,8 @@ class SessionAttendanceController extends Controller
      */
     public function destroy(SessionAttendance $sessionAttendance)
     {
-        //
+        $sessionAttendance->delete();
+
+        return response()->json(['message' => 'Session Attendance deleted successfully'], 200);
     }
 }

@@ -13,7 +13,7 @@ class HomeworkController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Homework::all());
     }
 
     /**
@@ -21,7 +21,16 @@ class HomeworkController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'session_id'   => 'required|exists:training_sessions,id',
+            'assign_scope' => 'required|string|max:20',
+            'description'  => 'required|string',
+            'due_date'     => 'nullable|date',
+        ]);
+
+        $homework = Homework::create($validated);
+
+        return response()->json($homework, 201);
     }
 
     /**
@@ -29,7 +38,7 @@ class HomeworkController extends Controller
      */
     public function show(Homework $homework)
     {
-        //
+        return response()->json($homework);
     }
 
     /**
@@ -37,7 +46,16 @@ class HomeworkController extends Controller
      */
     public function update(Request $request, Homework $homework)
     {
-        //
+        $validated = $request->validate([
+            'session_id'   => 'sometimes|exists:training_sessions,id',
+            'assign_scope' => 'sometimes|string|max:20',
+            'description'  => 'sometimes|string',
+            'due_date'     => 'nullable|date',
+        ]);
+
+        $homework->update($validated);
+
+        return response()->json($homework);
     }
 
     /**
@@ -45,6 +63,10 @@ class HomeworkController extends Controller
      */
     public function destroy(Homework $homework)
     {
-        //
+        $homework->delete();
+
+        return response()->json([
+            'message' => 'Homework deleted successfully'
+        ], 200);
     }
 }
