@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
 use App\Models\Instrument;
 use App\Models\InstrumentMaintenance;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class InstrumentMaintenanceController extends Controller
 {
-    public function index(Request $request)
+    use ApiResponse;
+
+    public function index(Request $request): JsonResponse
     {
         $query = InstrumentMaintenance::query()->with('instrument');
 
@@ -35,87 +40,88 @@ class InstrumentMaintenanceController extends Controller
 
         $perPage = (int) ($request->per_page ?? 10);
 
-        return $query->orderBy('date', 'desc')->paginate($perPage);
+        $maintenances = $query->orderBy('date', 'desc')->paginate($perPage);
+
+        return $this->success($maintenances);
     }
 
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        return InstrumentMaintenance::with('instrument')->findOrFail($id);
+        $maintenance = InstrumentMaintenance::with('instrument')->findOrFail($id);
+        
+        return $this->success($maintenance);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $data = $request->validate([
-            'instrument_id' => 'required|exists:instruments,instrument_id',
+        $validated = $request->validate([
+            'instrument_id' => 'required|exists:instruments,id',
             'description' => 'required|string',
             'date' => 'required|date',
             'notes' => 'nullable|string',
             'status' => ['nullable', Rule::in(['pending','done'])],
         ]);
 
-        $maintenance = InstrumentMaintenance::create($data);
+        $maintenance = InstrumentMaintenance::create($validated);
+        $maintenance->load('instrument');
 
-        return response()->json($maintenance, 201);
+        return $this->success($maintenance, 'Maintenance record created successfully', 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $maintenance = InstrumentMaintenance::findOrFail($id);
 
-        $data = $request->validate([
-            'instrument_id' => 'sometimes|exists:instruments,instrument_id',
+        $validated = $request->validate([
+            'instrument_id' => 'sometimes|exists:instruments,id',
             'description' => 'sometimes|string',
             'date' => 'sometimes|date',
             'notes' => 'nullable|string',
             'status' => ['nullable', Rule::in(['pending','done'])],
         ]);
 
-        $maintenance->update($data);
+        $maintenance->update($validated);
+        $maintenance->load('instrument');
 
-        return response()->json($maintenance);
+        return $this->success($maintenance, 'Maintenance record updated successfully');
     }
 
-    public function destroy($id)
-    {
-        $maintenance = InstrumentMaintenance::findOrFail($id);
-        $maintenance->forceDelete();
-
-        return response()->json(['message' => 'Maintenance record deleted']);
-    }
-
-    public function softDelete($id)
+    public function destroy($id): JsonResponse
     {
         $maintenance = InstrumentMaintenance::findOrFail($id);
         $maintenance->delete();
 
-        return response()->json(['message' => 'Maintenance record soft-deleted']);
+        return $this->success(null, 'Maintenance record deleted successfully', 204);
     }
 
-    public function restore($id)
+    public function restore($id): JsonResponse
     {
         $maintenance = InstrumentMaintenance::withTrashed()->findOrFail($id);
         $maintenance->restore();
+        $maintenance->load('instrument');
 
-        return response()->json(['message' => 'Maintenance record restored', 'data' => $maintenance]);
+        return $this->success($maintenance, 'Maintenance record restored successfully');
     }
 
-    public function getByInstrument($instrument_id)
+    public function getByInstrument($instrument_id): JsonResponse
     {
-        return InstrumentMaintenance::with('instrument')
+        $maintenances = InstrumentMaintenance::with('instrument')
             ->where('instrument_id', $instrument_id)
             ->orderBy('date', 'desc')
             ->get();
+
+        return $this->success($maintenances);
     }
 
-    public function search(Request $request)
+    public function search(Request $request): JsonResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'q' => 'required|string',
             'per_page' => 'nullable|integer|min:1',
         ]);
 
-        $q = $request->q;
-        $perPage = (int) ($request->per_page ?? 10);
+        $q = $validated['q'];
+        $perPage = (int) ($validated['per_page'] ?? 10);
 
         $query = InstrumentMaintenance::with('instrument')
             ->where(function ($qself) use ($q) {
@@ -123,10 +129,12 @@ class InstrumentMaintenanceController extends Controller
                       ->orWhere('notes', 'LIKE', "%{$q}%");
             });
 
-        return $query->orderBy('date', 'desc')->paginate($perPage);
+        $maintenances = $query->orderBy('date', 'desc')->paginate($perPage);
+
+        return $this->success($maintenances);
     }
 
-    public function exportHistory(Request $request)
+    public function exportHistory(Request $request): JsonResponse
     {
         $query = InstrumentMaintenance::with('instrument');
 
@@ -152,7 +160,7 @@ class InstrumentMaintenanceController extends Controller
 
         $data = $query->orderBy('date', 'desc')->get();
 
-        return response()->json($data);
+        return $this->success($data);
     }
 }
 

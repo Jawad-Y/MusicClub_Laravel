@@ -1,95 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
 use App\Models\InstrumentType;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class InstrumentTypeController extends Controller
 {
-    
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|unique:instrument_types,name|max:255',
-        ]);
+    use ApiResponse;
 
-        $instrumentType = InstrumentType::create([
-            'name' => $request->name,
-        ]);
-
-        return response()->json([
-            'message' => 'Instrument type created successfully',
-            'data' => $instrumentType
-        ], 201);
-    }
-
-    
-    public function update(Request $request, $id)
-    {
-        $instrumentType = InstrumentType::findOrFail($id);
-
-        $request->validate([
-            'name' => 'required|unique:instrument_types,name,' . $id . '|max:255',
-        ]);
-
-        $instrumentType->update([
-            'name' => $request->name,
-        ]);
-
-        return response()->json([
-            'message' => 'Instrument type updated successfully',
-            'data' => $instrumentType
-        ]);
-    }
-
-    
-    public function destroy($id)
-    {
-        $instrumentType = InstrumentType::findOrFail($id);
-
-        if ($instrumentType->instruments()->count() > 0) {
-            return response()->json([
-                'message' => 'Cannot delete: instruments are linked to this type.'
-            ], 400);
-        }
-
-        $instrumentType->delete();
-
-        return response()->json([
-            'message' => 'Instrument type deleted successfully'
-        ]);
-    }
-
-    
-    public function softDelete($id)
-    {
-        $instrumentType = InstrumentType::findOrFail($id);
-        $instrumentType->delete(); 
-
-        return response()->json([
-            'message' => 'Instrument type soft-deleted successfully'
-        ]);
-    }
-
-    
-    public function restore($id)
-    {
-        $instrumentType = InstrumentType::withTrashed()->findOrFail($id);
-        $instrumentType->restore();
-
-        return response()->json([
-            'message' => 'Instrument type restored successfully',
-            'data' => $instrumentType
-        ]);
-    }
-
-    
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse
     {
         $query = InstrumentType::query();
 
-        
         if ($request->has('status')) {
             if ($request->status === 'deleted') {
                 $query = $query->onlyTrashed();
@@ -98,23 +24,66 @@ class InstrumentTypeController extends Controller
             }
         }
 
-        
         if ($request->has('search')) {
             $search = $request->search;
             $query = $query->where('name', 'LIKE', "%$search%");
         }
 
-    
         $perPage = $request->get('per_page', 10);
         $instrumentTypes = $query->paginate($perPage);
 
-        return response()->json($instrumentTypes);
+        return $this->success($instrumentTypes);
     }
 
-    public function show($id)
+    public function show($id): JsonResponse
     {
         $instrumentType = InstrumentType::with('instruments')->findOrFail($id);
 
-        return response()->json($instrumentType);
+        return $this->success($instrumentType);
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'name' => 'required|unique:instrument_types,name|max:255',
+        ]);
+
+        $instrumentType = InstrumentType::create($validated);
+
+        return $this->success($instrumentType, 'Instrument type created successfully', 201);
+    }
+
+    public function update(Request $request, $id): JsonResponse
+    {
+        $instrumentType = InstrumentType::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|unique:instrument_types,name,' . $id . '|max:255',
+        ]);
+
+        $instrumentType->update($validated);
+
+        return $this->success($instrumentType, 'Instrument type updated successfully');
+    }
+
+    public function destroy($id): JsonResponse
+    {
+        $instrumentType = InstrumentType::findOrFail($id);
+
+        if ($instrumentType->instruments()->count() > 0) {
+            return $this->error('Cannot delete: instruments are linked to this type.', 400);
+        }
+
+        $instrumentType->delete();
+
+        return $this->success(null, 'Instrument type deleted successfully', 204);
+    }
+
+    public function restore($id): JsonResponse
+    {
+        $instrumentType = InstrumentType::withTrashed()->findOrFail($id);
+        $instrumentType->restore();
+
+        return $this->success($instrumentType, 'Instrument type restored successfully');
     }
 }

@@ -3,32 +3,33 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    use ApiResponse;
+
     /**
      * Display a paginated list of users.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $users = User::with('role')
             ->orderBy('id', 'desc')
             ->paginate(15);
 
-        return response()->json([
-            'status' => true,
-            'data'   => $users,
-        ]);
+        return $this->success($users);
     }
 
     /**
      * Store a newly created user in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         // Validate incoming data
         $validated = $request->validate([
@@ -49,30 +50,25 @@ class UserController extends Controller
             'password'  => Hash::make($validated['password']),
         ]);
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'User created successfully.',
-            'data'    => $user->load('role'),
-        ], 201);
+        $user->load('role');
+
+        return $this->success($user, 'User created successfully', 201);
     }
 
     /**
      * Display the specified user.
      */
-    public function show(User $user)
+    public function show(User $user): JsonResponse
     {
         $user->load('role');
 
-        return response()->json([
-            'status' => true,
-            'data'   => $user,
-        ]);
+        return $this->success($user);
     }
 
     /**
      * Update the specified user in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user): JsonResponse
     {
         // Validate incoming data
         $validated = $request->validate([
@@ -95,24 +91,18 @@ class UserController extends Controller
         }
 
         $user->save();
+        $user->load('role');
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'User updated successfully.',
-            'data'    => $user->load('role'),
-        ]);
+        return $this->success($user, 'User updated successfully');
     }
 
     /**
      * Soft delete the specified user.
      */
-    public function destroy(User $user)
+    public function destroy(User $user): JsonResponse
     {
         $user->delete();
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'User deleted successfully.',
-        ]);
+        return $this->success(null, 'User deleted successfully', 204);
     }
 }

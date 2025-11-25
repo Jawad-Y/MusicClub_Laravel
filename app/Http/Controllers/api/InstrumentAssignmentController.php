@@ -1,16 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
 use App\Models\InstrumentAssignment;
 use App\Models\Instrument;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class InstrumentAssignmentController extends Controller
 {
-    public function index(Request $request)
+    use ApiResponse;
+
+    public function index(Request $request): JsonResponse
     {
         $query = InstrumentAssignment::with(['instrument', 'user']);
 
@@ -38,131 +43,133 @@ class InstrumentAssignmentController extends Controller
             });
         }
 
-        return $query->paginate($request->per_page ?? 10);
+        $assignments = $query->paginate($request->per_page ?? 10);
+
+        return $this->success($assignments);
     }
 
-    public function show($id)
+    public function show($id): JsonResponse
     {
-        return InstrumentAssignment::with(['instrument', 'user'])->findOrFail($id);
+        $assignment = InstrumentAssignment::with(['instrument', 'user'])->findOrFail($id);
+        
+        return $this->success($assignment);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $request->validate([
-            'instrument_id' => 'required|exists:instruments,instrument_id',
-            'user_id' => 'required|exists:users,user_id',
+        $validated = $request->validate([
+            'instrument_id' => 'required|exists:instruments,id',
+            'user_id' => 'required|exists:users,id',
             'assigned_at' => 'required|date',
         ]);
 
-        if (!$this->isAvailable($request->instrument_id)) {
-            return response()->json(['error' => 'Instrument not available'], 422);
+        if (!$this->isAvailable($validated['instrument_id'])) {
+            return $this->error('Instrument not available', 422);
         }
 
-        $assignment = InstrumentAssignment::create([
-            'instrument_id' => $request->instrument_id,
-            'user_id' => $request->user_id,
-            'assigned_at' => $request->assigned_at,
-        ]);
+        $assignment = InstrumentAssignment::create($validated);
 
-        Instrument::where('instrument_id', $request->instrument_id)
+        Instrument::where('id', $validated['instrument_id'])
             ->update(['condition' => 'assigned']);
 
-        return $assignment;
+        $assignment->load(['instrument', 'user']);
+
+        return $this->success($assignment, 'Assignment created successfully', 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         $assignment = InstrumentAssignment::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'assigned_at' => 'sometimes|date',
             'returned_at' => 'sometimes|date|nullable',
         ]);
 
-        $assignment->update($request->all());
+        $assignment->update($validated);
+        $assignment->load(['instrument', 'user']);
 
-        return $assignment;
+        return $this->success($assignment, 'Assignment updated successfully');
     }
 
-    public function destroy($id)
-    {
-        $assignment = InstrumentAssignment::findOrFail($id);
-        $assignment->forceDelete();
-
-        return ['message' => 'Assignment deleted'];
-    }
-
-    public function softDelete($id)
+    public function destroy($id): JsonResponse
     {
         $assignment = InstrumentAssignment::findOrFail($id);
         $assignment->delete();
 
-        return ['message' => 'Assignment soft-deleted'];
+        return $this->success(null, 'Assignment deleted successfully', 204);
     }
 
-    public function restore($id)
+    public function restore($id): JsonResponse
     {
         $assignment = InstrumentAssignment::withTrashed()->findOrFail($id);
         $assignment->restore();
+        $assignment->load(['instrument', 'user']);
 
-        return ['message' => 'Assignment restored'];
+        return $this->success($assignment, 'Assignment restored successfully');
     }
 
-    public function returnInstrument($id)
+    public function returnInstrument($id): JsonResponse
     {
         $assignment = InstrumentAssignment::findOrFail($id);
 
         if ($assignment->returned_at) {
-            return response()->json(['error' => 'Instrument already returned'], 422);
+            return $this->error('Instrument already returned', 422);
         }
 
         $assignment->update([
             'returned_at' => now(),
         ]);
 
-        Instrument::where('instrument_id', $assignment->instrument_id)
+        Instrument::where('id', $assignment->instrument_id)
             ->update(['condition' => 'available']);
 
-        return ['message' => 'Instrument returned'];
+        $assignment->load(['instrument', 'user']);
+
+        return $this->success($assignment, 'Instrument returned successfully');
     }
 
-    public function isAvailable($instrument_id)
+    private function isAvailable($instrument_id): bool
     {
         return !InstrumentAssignment::where('instrument_id', $instrument_id)
             ->whereNull('returned_at')
             ->exists();
     }
 
-    public function checkAvailability(Request $request)
+    public function checkAvailability(Request $request): JsonResponse
     {
-        $request->validate([
-            'instrument_id' => 'required|exists:instruments,instrument_id',
+        $validated = $request->validate([
+            'instrument_id' => 'required|exists:instruments,id',
         ]);
 
-        return [
-            'available' => $this->isAvailable($request->instrument_id),
-        ];
+        return $this->success([
+            'available' => $this->isAvailable($validated['instrument_id']),
+        ]);
     }
 
-    public function getByUser($user_id)
+    public function getByUser($user_id): JsonResponse
     {
-        return InstrumentAssignment::with(['instrument', 'user'])
+        $assignments = InstrumentAssignment::with(['instrument', 'user'])
             ->where('user_id', $user_id)
             ->get();
+
+        return $this->success($assignments);
     }
 
-    public function getByInstrument($instrument_id)
+    public function getByInstrument($instrument_id): JsonResponse
     {
-        return InstrumentAssignment::with(['instrument', 'user'])
+        $assignments = InstrumentAssignment::with(['instrument', 'user'])
             ->where('instrument_id', $instrument_id)
             ->get();
+
+        return $this->success($assignments);
     }
 
-    public function exportHistory()
+    public function exportHistory(): JsonResponse
     {
         $data = InstrumentAssignment::with(['instrument', 'user'])->get();
 
-        return response()->json($data);
+        return $this->success($data);
     }
 }
 

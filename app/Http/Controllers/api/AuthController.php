@@ -3,65 +3,56 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    use ApiResponse;
+
     /**
      * Handle user login and issue a Sanctum token.
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         try {
             // Validate incoming request data
-            $request->validate([
+            $validated = $request->validate([
                 'email'    => 'required|email',
                 'password' => 'required',
             ]);
 
             // Find user by email
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $validated['email'])->first();
 
             // Verify user and password
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                return response()->json([
-                    'status'  => false,
-                    'message' => 'Invalid credentials.',
-                ], 401);
+            if (!$user || !Hash::check($validated['password'], $user->password)) {
+                return $this->error('Invalid credentials.', 401);
             }
 
             // Create a new token for this user
             $token = $user->createToken('api_token')->plainTextToken;
 
-            return response()->json([
-                'status'  => true,
-                'message' => 'Login successful.',
-                'token'   => $token,
-                'user'    => $user,
-            ]);
+            return $this->success([
+                'token' => $token,
+                'user'  => $user,
+            ], 'Login successful');
         } catch (\Throwable $e) {
-            // TEMPORARY: return the error message to help debugging
-            return response()->json([
-                'status'  => false,
-                'message' => 'Server error in login.',
-                'error'   => $e->getMessage(),
-            ], 500);
+            return $this->error('Server error in login.', 500, $e->getMessage());
         }
     }
 
     /**
      * Revoke the current access token (logout).
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         // Delete the current access token
-        $request->user()->currentAccessToken()->delete();
+        $request->user()?->currentAccessToken()?->delete();
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'Logout successful.',
-        ]);
+        return $this->success(null, 'Logout successful');
     }
 }
