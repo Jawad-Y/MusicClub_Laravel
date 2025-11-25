@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\DepartmentController;
@@ -24,68 +25,78 @@ use App\Http\Controllers\Api\PerformanceReviewController;
 use App\Http\Controllers\Api\UserAssignmentController;
 use App\Http\Controllers\Api\ReportsLogController;
 
-// User routes
-Route::apiResource('users', UserController::class);
+// Public authentication route
+Route::post('login', [AuthController::class, 'login']);
 
-// Role routes
-Route::apiResource('roles', RoleController::class);
+// Protected API routes (require Sanctum token)
+Route::middleware('auth:sanctum')->group(function () {
+    // Logout route
+    Route::post('logout', [AuthController::class, 'logout']);
 
-// Department routes
-Route::apiResource('departments', DepartmentController::class);
+    // User routes
+    Route::apiResource('users', UserController::class)
+        ->middlewareFor(['store', 'update', 'destroy'], 'role:leader,individual affair');
 
-// Class routes
-Route::apiResource('classes', ClasController::class);
+    // Role routes
+    Route::apiResource('roles', RoleController::class);
 
-// Class Member routes
-Route::apiResource('class-members', ClassMemberController::class);
+    // Department routes
+    Route::apiResource('departments', DepartmentController::class);
 
-// Membership routes
-Route::apiResource('memberships', MembershipController::class);
+    // Class routes
+    Route::apiResource('classes', ClasController::class);
 
-// Instrument Type routes
-Route::apiResource('instrument-types', InstrumentTypeController::class);
+    // Class member routes
+    Route::apiResource('class-members', ClassMemberController::class);
 
-// Instrument routes
-Route::apiResource('instruments', InstrumentController::class);
+    // Membership routes
+    Route::apiResource('memberships', MembershipController::class);
 
-// Instrument Assignment routes
-Route::apiResource('instrument-assignments', InstrumentAssignmentController::class);
+    // Instrument type routes
+    Route::apiResource('instrument-types', InstrumentTypeController::class);
 
-// Instrument Maintenance routes
-Route::apiResource('instrument-maintenances', InstrumentMaintenanceController::class);
+    // Instrument routes
+    Route::apiResource('instruments', InstrumentController::class);
 
-// Clothing Item routes
-Route::apiResource('clothing-items', ClothingItemController::class);
+    // Instrument assignment routes
+    Route::apiResource('instrument-assignments', InstrumentAssignmentController::class);
 
-// Clothing Assignment routes
-Route::apiResource('clothing-assignments', ClothingAssignmentController::class);
+    // Instrument maintenance routes
+    Route::apiResource('instrument-maintenances', InstrumentMaintenanceController::class);
 
-// Library Material routes
-Route::apiResource('library-materials', LibraryMaterialController::class);
+    // Clothing item routes
+    Route::apiResource('clothing-items', ClothingItemController::class);
 
-// Training Session routes
-Route::apiResource('training-sessions', TrainingSessionController::class);
+    // Clothing assignment routes
+    Route::apiResource('clothing-assignments', ClothingAssignmentController::class);
 
-// Session Attendance routes
-Route::apiResource('session-attendances', SessionAttendanceController::class);
+    // Library material routes
+    Route::apiResource('library-materials', LibraryMaterialController::class);
 
-// Homework routes
-Route::apiResource('homeworks', HomeworkController::class);
+    // Training session routes
+    Route::apiResource('training-sessions', TrainingSessionController::class);
 
-// Homework Submission routes
-Route::apiResource('homework-submissions', HomeworkSubmissionController::class);
+    // Session attendance routes
+    Route::apiResource('session-attendances', SessionAttendanceController::class);
 
-// Event routes
-Route::apiResource('events', EventController::class);
+    // Homework routes
+    Route::apiResource('homeworks', HomeworkController::class);
 
-// Event Participant routes
-Route::apiResource('event-participants', EventParticipantController::class);
+    // Homework submission routes
+    Route::apiResource('homework-submissions', HomeworkSubmissionController::class);
 
-// Performance Review routes
-Route::apiResource('performance-reviews', PerformanceReviewController::class);
+    // Event routes
+    Route::apiResource('events', EventController::class);
 
-// User Assignment routes
-Route::apiResource('user-assignments', UserAssignmentController::class);
+    // Event participant routes
+    Route::apiResource('event-participants', EventParticipantController::class);
 
-// Reports Log routes
-Route::apiResource('reports-logs', ReportsLogController::class);
+    // Performance review routes
+    Route::apiResource('performance-reviews', PerformanceReviewController::class);
+
+    // User assignment routes
+    Route::apiResource('user-assignments', UserAssignmentController::class);
+
+    // Reports log routes
+    Route::apiResource('reports-logs', ReportsLogController::class);
+});

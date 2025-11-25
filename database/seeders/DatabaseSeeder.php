@@ -16,17 +16,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1) Create a default role (if not exists)
-        $role = Role::firstOrCreate(
-            ['role_name' => 'Member'], 
-            ['description' => 'Default member role']
-        );
-
-        // 2) Create one test user
-        User::factory()->create([
-            'full_name' => 'Test User',
-            'email' => 'test@example.com',
-            'role_id' => $role->id,
+        $this->call([
+            RolesTableSeeder::class,
+            AdminUserSeeder::class,
         ]);
     }
 }

@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Model
+class User extends Authenticatable
 {
-    use HasFactory, SoftDeletes;
+    use HasApiTokens, HasFactory, SoftDeletes, Notifiable;
 
     protected $table = 'users';
 
@@ -18,6 +20,18 @@ class User extends Model
         'phone',
         'role_id',
         'status',
+        'password',
+    ];
+
+    // Hide sensitive fields when serializing the model
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    // Casts for specific fields
+    protected $casts = [
+        'email_verified_at' => 'datetime',
     ];
 
     // Relationships
@@ -35,5 +49,20 @@ class User extends Model
     public function memberships()
     {
         return $this->hasMany(Membership::class);
+    }
+
+    // Helper method to check if user can create accounts
+    public function canCreateAccounts(): bool
+    {
+        if (!$this->role) {
+            return false;
+        }
+
+        $name = strtolower($this->role->role_name);
+
+        return in_array($name, [
+            'leader',
+            'individual affair',
+        ]);
     }
 }

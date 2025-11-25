@@ -24,6 +24,11 @@ return new class extends Migration
             $table->string('phone', 30)->nullable();
             $table->foreignId('role_id')->constrained('roles');
             $table->string('status', 20)->default('active')->index();
+
+            //Auth:
+            $table->string('password');
+            $table->rememberToken();
+            
             $table->timestamps();
             $table->softDeletes();
         });

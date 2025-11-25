@@ -3,48 +3,87 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
 use App\Models\InstrumentType;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class InstrumentTypeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use ApiResponse;
+
+    public function index(Request $request): JsonResponse
     {
-        //
+        $query = InstrumentType::query();
+
+        if ($request->has('status')) {
+            if ($request->status === 'deleted') {
+                $query = $query->onlyTrashed();
+            } elseif ($request->status === 'active') {
+                $query = $query->whereNull('deleted_at');
+            }
+        }
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query = $query->where('name', 'LIKE', "%$search%");
+        }
+
+        $perPage = $request->get('per_page', 10);
+        $instrumentTypes = $query->paginate($perPage);
+
+        return $this->success($instrumentTypes);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function show($id): JsonResponse
     {
-        //
+        $instrumentType = InstrumentType::with('instruments')->findOrFail($id);
+
+        return $this->success($instrumentType);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(InstrumentType $instrumentType)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|unique:instrument_types,name|max:255',
+        ]);
+
+        $instrumentType = InstrumentType::create($validated);
+
+        return $this->success($instrumentType, 'Instrument type created successfully', 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, InstrumentType $instrumentType)
+    public function update(Request $request, $id): JsonResponse
     {
-        //
+        $instrumentType = InstrumentType::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|unique:instrument_types,name,' . $id . '|max:255',
+        ]);
+
+        $instrumentType->update($validated);
+
+        return $this->success($instrumentType, 'Instrument type updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(InstrumentType $instrumentType)
+    public function destroy($id): JsonResponse
     {
-        //
+        $instrumentType = InstrumentType::findOrFail($id);
+
+        if ($instrumentType->instruments()->count() > 0) {
+            return $this->error('Cannot delete: instruments are linked to this type.', 400);
+        }
+
+        $instrumentType->delete();
+
+        return $this->success(null, 'Instrument type deleted successfully', 204);
+    }
+
+    public function restore($id): JsonResponse
+    {
+        $instrumentType = InstrumentType::withTrashed()->findOrFail($id);
+        $instrumentType->restore();
+
+        return $this->success($instrumentType, 'Instrument type restored successfully');
     }
 }
