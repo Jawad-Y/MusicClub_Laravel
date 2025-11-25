@@ -17,9 +17,7 @@ class EventController extends Controller
      */
     public function index(): JsonResponse
     {
-        $events = Event::all();
-        
-        return $this->success($events);
+        return response()->json(Event::all());
     }
 
     /**
@@ -37,7 +35,7 @@ class EventController extends Controller
 
         $event = Event::create($validated);
 
-        return $this->success($event, 'Event created successfully', 201);
+        return response()->json($event, 201);
     }
 
     /**
@@ -45,7 +43,7 @@ class EventController extends Controller
      */
     public function show(Event $event): JsonResponse
     {
-        return $this->success($event);
+        return response()->json($event);
     }
 
     /**
@@ -63,7 +61,7 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return $this->success($event, 'Event updated successfully');
+        return response()->json($event);
     }
 
     /**
@@ -73,6 +71,8 @@ class EventController extends Controller
     {
         $event->delete();
 
-        return $this->success(null, 'Event deleted successfully', 204);
+        return response()->json([
+            'message' => 'Event deleted successfully'
+        ], 200);
     }
 }

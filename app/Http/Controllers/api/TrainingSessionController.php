@@ -17,9 +17,13 @@ class TrainingSessionController extends Controller
      */
     public function index(): JsonResponse
     {
+<<<<<<< HEAD
         $sessions = TrainingSession::all();
         
         return $this->success($sessions);
+=======
+        return response()->json(TrainingSession::all());
+>>>>>>> ef5ff7784d81a77e414fc55e52c51d666bfb4f99
     }
 
     /**
@@ -40,7 +44,11 @@ class TrainingSessionController extends Controller
 
         $session = TrainingSession::create($validated);
 
+<<<<<<< HEAD
         return $this->success($session, 'Training session created successfully', 201);
+=======
+        return response()->json($session, 201);
+>>>>>>> ef5ff7784d81a77e414fc55e52c51d666bfb4f99
     }
 
     /**
@@ -48,7 +56,11 @@ class TrainingSessionController extends Controller
      */
     public function show(TrainingSession $trainingSession): JsonResponse
     {
+<<<<<<< HEAD
         return $this->success($trainingSession);
+=======
+        return response()->json($trainingSession);
+>>>>>>> ef5ff7784d81a77e414fc55e52c51d666bfb4f99
     }
 
     /**
@@ -69,7 +81,11 @@ class TrainingSessionController extends Controller
 
         $trainingSession->update($validated);
 
+<<<<<<< HEAD
         return $this->success($trainingSession, 'Training session updated successfully');
+=======
+        return response()->json($trainingSession);
+>>>>>>> ef5ff7784d81a77e414fc55e52c51d666bfb4f99
     }
 
     /**
@@ -79,6 +95,10 @@ class TrainingSessionController extends Controller
     {
         $trainingSession->delete();
 
+<<<<<<< HEAD
         return $this->success(null, 'Training session deleted successfully', 204);
+=======
+        return response()->json(['message' => 'Training Session deleted successfully'], 200);
+>>>>>>> ef5ff7784d81a77e414fc55e52c51d666bfb4f99
     }
 }

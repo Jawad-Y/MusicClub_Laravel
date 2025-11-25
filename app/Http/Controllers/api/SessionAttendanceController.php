@@ -17,9 +17,7 @@ class SessionAttendanceController extends Controller
      */
     public function index(): JsonResponse
     {
-        $attendances = SessionAttendance::all();
-        
-        return $this->success($attendances);
+        return response()->json(SessionAttendance::all());
     }
 
     /**
@@ -36,7 +34,7 @@ class SessionAttendanceController extends Controller
 
         $attendance = SessionAttendance::create($validated);
 
-        return $this->success($attendance, 'Session attendance created successfully', 201);
+        return response()->json($attendance, 201);
     }
 
     /**
@@ -44,7 +42,7 @@ class SessionAttendanceController extends Controller
      */
     public function show(SessionAttendance $sessionAttendance): JsonResponse
     {
-        return $this->success($sessionAttendance);
+        return response()->json($sessionAttendance);
     }
 
     /**
@@ -61,7 +59,7 @@ class SessionAttendanceController extends Controller
 
         $sessionAttendance->update($validated);
 
-        return $this->success($sessionAttendance, 'Session attendance updated successfully');
+        return response()->json($sessionAttendance);
     }
 
     /**
@@ -71,6 +69,6 @@ class SessionAttendanceController extends Controller
     {
         $sessionAttendance->delete();
 
-        return $this->success(null, 'Session attendance deleted successfully', 204);
+        return response()->json(['message' => 'Session Attendance deleted successfully'], 200);
     }
 }

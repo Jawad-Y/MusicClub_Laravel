@@ -17,9 +17,7 @@ class HomeworkSubmissionController extends Controller
      */
     public function index(): JsonResponse
     {
-        $submissions = HomeworkSubmission::all();
-        
-        return $this->success($submissions);
+        return response()->json(HomeworkSubmission::all());
     }
 
     /**
@@ -37,7 +35,7 @@ class HomeworkSubmissionController extends Controller
 
         $submission = HomeworkSubmission::create($validated);
 
-        return $this->success($submission, 'Submission created successfully', 201);
+        return response()->json($submission, 201);
     }
 
     /**
@@ -45,7 +43,7 @@ class HomeworkSubmissionController extends Controller
      */
     public function show(HomeworkSubmission $homeworkSubmission): JsonResponse
     {
-        return $this->success($homeworkSubmission);
+        return response()->json($homeworkSubmission);
     }
 
     /**
@@ -63,7 +61,7 @@ class HomeworkSubmissionController extends Controller
 
         $homeworkSubmission->update($validated);
 
-        return $this->success($homeworkSubmission, 'Submission updated successfully');
+        return response()->json($homeworkSubmission);
     }
 
     /**
@@ -73,6 +71,6 @@ class HomeworkSubmissionController extends Controller
     {
         $homeworkSubmission->delete();
 
-        return $this->success(null, 'Submission deleted successfully', 204);
+        return response()->json(['message' => 'Submission deleted successfully'], 200);
     }
 }
