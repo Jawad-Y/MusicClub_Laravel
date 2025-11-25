@@ -17,13 +17,7 @@ class HomeworkController extends Controller
      */
     public function index(): JsonResponse
     {
-<<<<<<< HEAD
-        $homework = Homework::all();
-        
-        return $this->success($homework);
-=======
         return response()->json(Homework::all());
->>>>>>> ef5ff7784d81a77e414fc55e52c51d666bfb4f99
     }
 
     /**
@@ -40,11 +34,7 @@ class HomeworkController extends Controller
 
         $homework = Homework::create($validated);
 
-<<<<<<< HEAD
-        return $this->success($homework, 'Homework created successfully', 201);
-=======
         return response()->json($homework, 201);
->>>>>>> ef5ff7784d81a77e414fc55e52c51d666bfb4f99
     }
 
     /**
@@ -52,11 +42,7 @@ class HomeworkController extends Controller
      */
     public function show(Homework $homework): JsonResponse
     {
-<<<<<<< HEAD
-        return $this->success($homework);
-=======
         return response()->json($homework);
->>>>>>> ef5ff7784d81a77e414fc55e52c51d666bfb4f99
     }
 
     /**
@@ -73,11 +59,7 @@ class HomeworkController extends Controller
 
         $homework->update($validated);
 
-<<<<<<< HEAD
-        return $this->success($homework, 'Homework updated successfully');
-=======
         return response()->json($homework);
->>>>>>> ef5ff7784d81a77e414fc55e52c51d666bfb4f99
     }
 
     /**
@@ -87,12 +69,8 @@ class HomeworkController extends Controller
     {
         $homework->delete();
 
-<<<<<<< HEAD
-        return $this->success(null, 'Homework deleted successfully', 204);
-=======
         return response()->json([
             'message' => 'Homework deleted successfully'
         ], 200);
->>>>>>> ef5ff7784d81a77e414fc55e52c51d666bfb4f99
     }
 }
