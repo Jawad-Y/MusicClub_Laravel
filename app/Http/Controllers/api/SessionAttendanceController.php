@@ -3,48 +3,74 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
 use App\Models\SessionAttendance;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SessionAttendanceController extends Controller
 {
+    use ApiResponse;
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
-        //
+        $attendances = SessionAttendance::all();
+        
+        return $this->success($attendances);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validated = $request->validate([
+            'session_id'    => 'required|exists:training_sessions,id',
+            'trainee_id'    => 'required|exists:users,id',
+            'status'        => 'required|string',
+            'confirmation'  => 'nullable|string',
+        ]);
+
+        $attendance = SessionAttendance::create($validated);
+
+        return $this->success($attendance, 'Session attendance created successfully', 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(SessionAttendance $sessionAttendance)
+    public function show(SessionAttendance $sessionAttendance): JsonResponse
     {
-        //
+        return $this->success($sessionAttendance);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SessionAttendance $sessionAttendance)
+    public function update(Request $request, SessionAttendance $sessionAttendance): JsonResponse
     {
-        //
+        $validated = $request->validate([
+            'session_id'    => 'sometimes|exists:training_sessions,id',
+            'trainee_id'    => 'sometimes|exists:users,id',
+            'status'        => 'sometimes|string',
+            'confirmation'  => 'sometimes|string',
+        ]);
+
+        $sessionAttendance->update($validated);
+
+        return $this->success($sessionAttendance, 'Session attendance updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SessionAttendance $sessionAttendance)
+    public function destroy(SessionAttendance $sessionAttendance): JsonResponse
     {
-        //
+        $sessionAttendance->delete();
+
+        return $this->success(null, 'Session attendance deleted successfully', 204);
     }
 }
