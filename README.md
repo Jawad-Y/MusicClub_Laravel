@@ -1,59 +1,197 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Music Club Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Laravel-based web application for managing music club operations, including instruments, classes, events, memberships, and more.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Instrument Management**: Track instruments, types, assignments, and maintenance
+- **Class Management**: Manage music classes, members, and attendance
+- **Event Management**: Organize events and track participant involvement
+- **Membership System**: Handle club memberships and user assignments
+- **Library Management**: Catalog music library materials
+- **Performance Reviews**: Track student progress and reviews
+- **Homework System**: Assign and track homework submissions
+- **Clothing Assignment**: Manage uniform and clothing inventory
+- **Export Functionality**: Export data to Excel and CSV formats
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **PHP**: >= 8.2
+- **Composer**: Latest version
+- **Node.js**: >= 18.x
+- **NPM**: >= 9.x
+- **Database**: MySQL 5.7+ / PostgreSQL 12+ / SQLite 3.8.8+
+- **Web Server**: Apache / Nginx
 
-## Learning Laravel
+## Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 1. Clone the Repository
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone https://github.com/Jawad-Y/MusicClub_Laravel.git
+cd MusicClub_Laravel
+```
 
-## Laravel Sponsors
+### 2. Install PHP Dependencies
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+composer install
+```
 
-### Premium Partners
+### 3. Install Node.js Dependencies
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+npm install
+```
+
+### 4. Environment Configuration
+
+Copy the example environment file and generate application key:
+
+```bash
+copy .env.example .env
+php artisan key:generate
+```
+
+### 5. Configure Database
+
+Edit the `.env` file and set your database credentials:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=music_club
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### 6. Run Database Migrations
+
+Create the database tables:
+
+```bash
+php artisan migrate
+```
+
+### 7. (Optional) Seed the Database
+
+If you want to populate the database with sample data:
+
+```bash
+php artisan db:seed
+```
+
+### 8. Build Frontend Assets
+
+For development:
+```bash
+npm run dev
+```
+
+For production:
+```bash
+npm run build
+```
+
+### 9. Start the Development Server
+
+```bash
+php artisan serve
+```
+
+The application will be available at `http://localhost:8000`
+
+## Running Both Servers Concurrently
+
+To run both the Laravel development server and Vite asset server simultaneously:
+
+```bash
+php artisan serve
+```
+
+In a separate terminal:
+```bash
+npm run dev
+```
+
+## API Endpoints
+
+The application provides RESTful API endpoints for all resources:
+
+- `/api/instruments` - Instrument management
+- `/api/instrument-types` - Instrument type management
+- `/api/classes` - Class management
+- `/api/events` - Event management
+- `/api/memberships` - Membership management
+- `/api/users` - User management
+- And more...
+
+
+## Project Structure
+
+```
+app/
+├── Http/Controllers/    # API Controllers
+├── Models/             # Eloquent Models
+├── Policies/           # Authorization Policies
+├── Exports/            # Excel Export Classes
+config/                 # Configuration files
+database/
+├── migrations/         # Database migrations
+├── seeders/           # Database seeders
+resources/
+├── js/                # JavaScript files
+├── css/               # CSS files
+└── views/             # Blade templates
+routes/
+├── api.php            # API routes
+└── web.php            # Web routes
+```
+
+## Technologies Used
+
+- **Framework**: Laravel 12
+- **Frontend**: Vite, Tailwind CSS 4.0
+- **Authentication**: Laravel Sanctum
+- **Export**: Maatwebsite Excel
+- **Database**: Eloquent ORM
+- **Testing**: PHPUnit
+
+## Quick Start Guide
+
+For a fresh installation on Windows:
+
+```powershell
+# Install dependencies
+composer install
+npm install
+
+# Setup environment
+copy .env.example .env
+php artisan key:generate
+
+# Configure database in .env, then migrate
+php artisan migrate
+
+# Build assets and start server
+npm run dev
+# In another terminal:
+php artisan serve
+```
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Support
+
+For issues and questions, please open an issue on the GitHub repository.
