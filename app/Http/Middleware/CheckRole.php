@@ -20,14 +20,14 @@ class CheckRole
     public function handle(Request $request, Closure $next, ...$roles)
     {
         // Ensure user is authenticated
-        if (!auth()->check()) {
+        if (!$request->user()) {
             return response()->json([
                 'status'  => false,
                 'message' => 'Authentication required.',
             ], 401);
         }
 
-        $user = auth()->user();
+        $user = $request->user();
 
         // Extract user role name
         $userRole = strtolower($user->role->role_name ?? '');
