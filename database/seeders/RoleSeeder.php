@@ -15,8 +15,28 @@ class RoleSeeder extends Seeder
         ]);
 
         Role::create([
-            'role_name' => 'Manager',
-            'description' => 'Manager with departmental access',
+            'role_name' => 'Leader',
+            'description' => 'Main system leader',
+        ]);
+
+        Role::create([
+            'role_name' => 'Department Leader',
+            'description' => 'Department manager',
+        ]);
+
+        Role::create([
+            'role_name' => 'Class Leader',
+            'description' => 'Responsible for classes',
+        ]);
+
+        Role::create([
+            'role_name' => 'Inventory Manager',
+            'description' => 'Responsible for inventory management',
+        ]);
+
+        Role::create([
+            'role_name' => 'Individual Affair',
+            'description' => 'HR / Affairs manager',
         ]);
 
         Role::create([
