@@ -41,6 +41,22 @@ class UserController extends Controller
             'password'  => ['required', 'string', 'min:6'],
         ]);
 
+        // Check if Individual Affair is trying to create Admin or Leader
+        $currentUser = $request->user();
+        $currentUserRole = strtolower($currentUser->role->role_name ?? '');
+        
+        if ($currentUserRole === 'individual affair') {
+            $targetRole = Role::find($validated['role_id']);
+            $targetRoleName = strtolower($targetRole->role_name ?? '');
+            
+            if (in_array($targetRoleName, ['admin', 'leader'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Individual Affair cannot create users with Admin or Leader roles.',
+                ], 403);
+            }
+        }
+
         $user = User::create([
             'full_name' => $validated['full_name'],
             'email'     => $validated['email'],
@@ -79,6 +95,31 @@ class UserController extends Controller
             'status'    => ['required', 'in:active,inactive'],
             'password'  => ['nullable', 'string', 'min:6'],
         ]);
+
+        // Check if Individual Affair is trying to update to Admin or Leader
+        $currentUser = $request->user();
+        $currentUserRole = strtolower($currentUser->role->role_name ?? '');
+        
+        if ($currentUserRole === 'individual affair') {
+            $targetRole = Role::find($validated['role_id']);
+            $targetRoleName = strtolower($targetRole->role_name ?? '');
+            
+            if (in_array($targetRoleName, ['admin', 'leader'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Individual Affair cannot assign Admin or Leader roles.',
+                ], 403);
+            }
+            
+            // Also prevent updating users who are already Admin or Leader
+            $existingUserRole = strtolower($user->role->role_name ?? '');
+            if (in_array($existingUserRole, ['admin', 'leader'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Individual Affair cannot update users with Admin or Leader roles.',
+                ], 403);
+            }
+        }
 
         $user->full_name = $validated['full_name'];
         $user->email     = $validated['email'];

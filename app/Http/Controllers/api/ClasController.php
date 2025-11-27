@@ -15,9 +15,23 @@ class ClasController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $myclasses = Clas::with(['department', 'classLeader'])->get();
+        $query = Clas::with(['department', 'classLeader']);
+        
+        // Apply filters based on user role from middleware
+        if ($request->has('_filter_department_ids')) {
+            // Department leaders: classes in their departments
+            $query->whereIn('department_id', $request->input('_filter_department_ids'));
+        } elseif ($request->has('_filter_class_leader_id')) {
+            // Class leaders: only their class
+            $query->where('class_leader_id', $request->input('_filter_class_leader_id'));
+        } elseif ($request->has('_filter_class_ids')) {
+            // Trainers and members: only their classes
+            $query->whereIn('id', $request->input('_filter_class_ids'));
+        }
+        
+        $myclasses = $query->get();
         
         return $this->success($myclasses);
     }

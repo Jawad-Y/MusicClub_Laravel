@@ -15,12 +15,17 @@ class DepartmentController extends Controller
     /**
      * Display a list of all departments.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         // Load departments with their leader relation (if defined in the model)
-        $departments = Department::with('leader')
-            ->orderBy('id', 'asc')
-            ->get();
+        $query = Department::with('leader');
+        
+        // If department leader, only show their own department
+        if ($request->has('_department_leader_id')) {
+            $query->where('leader_id', $request->input('_department_leader_id'));
+        }
+        
+        $departments = $query->orderBy('id', 'asc')->get();
 
         return $this->success($departments);
     }

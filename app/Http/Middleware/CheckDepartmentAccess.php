@@ -63,6 +63,19 @@ class CheckDepartmentAccess
                     'message' => 'You do not have permission to access department resources.',
                 ], 403);
             }
+                                                                                                                                                                                        } else {
+            // For index/list requests (no specific department ID)
+            // Department leaders should only see their own department
+            if ($userRole === 'department leader') {
+                // Store user ID in request for controller to filter
+                $request->merge(['_department_leader_id' => $user->id]);
+            } elseif (!in_array($userRole, ['admin', 'leader'])) {
+                // Regular users cannot list departments
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'You do not have permission to access department resources.',
+                ], 403);
+            }
         }
 
         return $next($request);

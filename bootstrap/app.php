@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'department.access' => \App\Http\Middleware\CheckDepartmentAccess::class,
             'class.access' => \App\Http\Middleware\CheckClassAccess::class,
             'resource.owner' => \App\Http\Middleware\CheckResourceOwnership::class,
+            'trainee.owner' => \App\Http\Middleware\IsTraineeOwner::class,
         ]);
 
         // Apply middleware to API routes

@@ -15,9 +15,14 @@ class SessionAttendanceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json(SessionAttendance::all());
+        $user = $request->user();
+        $attendances = SessionAttendance::accessibleBy($user)
+            ->with(['session.class', 'trainee'])
+            ->get();
+        
+        return response()->json($attendances);
     }
 
     /**
@@ -40,9 +45,14 @@ class SessionAttendanceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(SessionAttendance $sessionAttendance): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
-        return response()->json($sessionAttendance);
+        $user = $request->user();
+        $attendance = SessionAttendance::accessibleBy($user)
+            ->with(['session.class', 'trainee'])
+            ->findOrFail($id);
+        
+        return response()->json($attendance);
     }
 
     /**

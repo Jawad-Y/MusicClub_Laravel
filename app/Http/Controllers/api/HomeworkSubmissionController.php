@@ -15,9 +15,14 @@ class HomeworkSubmissionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json(HomeworkSubmission::all());
+        $user = $request->user();
+        $submissions = HomeworkSubmission::accessibleBy($user)
+            ->with(['homework.trainingSession.class', 'trainee'])
+            ->get();
+        
+        return response()->json($submissions);
     }
 
     /**
@@ -27,11 +32,15 @@ class HomeworkSubmissionController extends Controller
     {
         $validated = $request->validate([
             'homework_id'  => 'required|exists:homework,id',
-            'trainee_id'   => 'required|exists:users,id',
+            'trainee_id'   => 'required|exists:users,id', // Auto-set for trainees by middleware
             'file_url'     => 'nullable|string|max:255',
             'notes'        => 'nullable|string',
             'submitted_at' => 'nullable|date',
         ]);
+
+        // Ensure trainee can only submit for homework they have access to
+        $user = $request->user();
+        $homework = \App\Models\Homework::accessibleBy($user)->findOrFail($validated['homework_id']);
 
         $submission = HomeworkSubmission::create($validated);
 
@@ -41,9 +50,14 @@ class HomeworkSubmissionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(HomeworkSubmission $homeworkSubmission): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
-        return response()->json($homeworkSubmission);
+        $user = $request->user();
+        $submission = HomeworkSubmission::accessibleBy($user)
+            ->with(['homework.trainingSession.class', 'trainee'])
+            ->findOrFail($id);
+        
+        return response()->json($submission);
     }
 
     /**

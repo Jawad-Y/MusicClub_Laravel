@@ -15,9 +15,14 @@ class ClassMemberController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $classMembers = ClassMember::with(['class', 'user'])->get();
+        $user = $request->user();
+        $accessibleClassIds = $user->getAccessibleClassIds();
+        
+        $classMembers = ClassMember::whereIn('class_id', $accessibleClassIds)
+            ->with(['class', 'user'])
+            ->get();
         
         return $this->success($classMembers);
     }
@@ -42,9 +47,14 @@ class ClassMemberController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ClassMember $classMember): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
-        $classMember->load(['class', 'user']);
+        $user = $request->user();
+        $accessibleClassIds = $user->getAccessibleClassIds();
+        
+        $classMember = ClassMember::whereIn('class_id', $accessibleClassIds)
+            ->with(['class', 'user'])
+            ->findOrFail($id);
         
         return $this->success($classMember);
     }

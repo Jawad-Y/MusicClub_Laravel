@@ -85,10 +85,10 @@ class CheckClassAccess
                     ], 403);
                 }
             }
-            // Regular members can only access classes they're enrolled in
+            // Regular members/trainees can only access classes they're enrolled in
             else {
-                $isMember = $user->memberships()
-                    ->where('class_id', $classId)
+                $isMember = $user->classMembers()
+                    ->where('classes.id', $classId)
                     ->exists();
 
                 if (!$isMember) {
@@ -97,6 +97,28 @@ class CheckClassAccess
                         'message' => 'You are not enrolled in this class.',
                     ], 403);
                 }
+            }
+        } else {
+            // For index/list requests (no specific class ID)
+            // Store filter criteria based on user role
+            if ($userRole === 'department leader') {
+                // Get department IDs where user is leader
+                $departmentIds = $user->ledDepartments()->pluck('id')->toArray();
+                $request->merge(['_filter_department_ids' => $departmentIds]);
+            } elseif ($userRole === 'class leader') {
+                // Only show their own class
+                $request->merge(['_filter_class_leader_id' => $user->id]);
+            } elseif ($userRole === 'trainer') {
+                // Only show classes they teach
+                $classIds = TrainingSession::where('trainer_id', $user->id)
+                    ->distinct()
+                    ->pluck('class_id')
+                    ->toArray();
+                $request->merge(['_filter_class_ids' => $classIds]);
+            } else {
+                // Regular members/trainees can only see classes they're enrolled in
+                $classIds = $user->classMembers()->pluck('classes.id')->toArray();
+                $request->merge(['_filter_class_ids' => $classIds]);
             }
         }
 

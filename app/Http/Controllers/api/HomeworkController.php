@@ -15,9 +15,14 @@ class HomeworkController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json(Homework::all());
+        $user = $request->user();
+        $homework = Homework::accessibleBy($user)
+            ->with(['trainingSession.class', 'homeworkSubmissions'])
+            ->get();
+        
+        return response()->json($homework);
     }
 
     /**
@@ -40,8 +45,13 @@ class HomeworkController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Homework $homework): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
+        $user = $request->user();
+        $homework = Homework::accessibleBy($user)
+            ->with(['trainingSession.class', 'homeworkSubmissions.trainee'])
+            ->findOrFail($id);
+        
         return response()->json($homework);
     }
 

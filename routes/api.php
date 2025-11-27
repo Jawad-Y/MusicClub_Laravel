@@ -54,8 +54,12 @@ Route::middleware('auth:sanctum')->group(function () {
         ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader,class leader');
 
     // Class member routes
-    Route::apiResource('class-members', ClassMemberController::class)
-        ->middleware('class.access')
+    Route::apiResource('classmembers', ClassMemberController::class)
+        ->only(['index', 'show']) // Trainees can view
+        ->middleware('class.access');
+    
+    Route::apiResource('classmembers', ClassMemberController::class)
+        ->except(['index', 'show'])
         ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader,class leader');
 
     // Membership routes
@@ -64,52 +68,68 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Instrument type routes
     Route::apiResource('instrument-types', InstrumentTypeController::class)
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,inventory manager');
+        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
 
     // Instrument routes
     Route::apiResource('instruments', InstrumentController::class)
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,inventory manager');
+        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
 
     // Instrument assignment routes
     Route::apiResource('instrument-assignments', InstrumentAssignmentController::class)
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,inventory manager');
+        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
 
     // Instrument maintenance routes
     Route::apiResource('instrument-maintenances', InstrumentMaintenanceController::class)
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,inventory manager');
+        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
 
     // Clothing item routes
     Route::apiResource('clothing-items', ClothingItemController::class)
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,inventory manager');
+        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
 
     // Clothing assignment routes
     Route::apiResource('clothing-assignments', ClothingAssignmentController::class)
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,inventory manager');
+        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
 
     // Library material routes
     Route::apiResource('library-materials', LibraryMaterialController::class)
         ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,inventory manager')
         ->middlewareFor(['store', 'update'], 'role:trainer');
 
-    // Training session routes
+    // Training session routes - Trainees can view sessions for their classes
     Route::apiResource('training-sessions', TrainingSessionController::class)
+        ->only(['index', 'show']); // All authenticated users including trainees
+    
+    Route::apiResource('training-sessions', TrainingSessionController::class)
+        ->except(['index', 'show'])
         ->middleware('class.access')
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader,class leader ,trainer');
+        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader,class leader,trainer');
 
-    // Session attendance routes
+    // Session attendance routes - Trainees can view their own attendance
     Route::apiResource('session-attendances', SessionAttendanceController::class)
+        ->only(['index', 'show']); // All authenticated users including trainees
+    
+    Route::apiResource('session-attendances', SessionAttendanceController::class)
+        ->except(['index', 'show'])
         ->middleware('class.access')
         ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader,class leader,trainer');
 
-    // Homework routes
+    // Homework routes - Trainees can view homework for their classes
     Route::apiResource('homeworks', HomeworkController::class)
+        ->only(['index', 'show']); // All authenticated users including trainees
+    
+    Route::apiResource('homeworks', HomeworkController::class)
+        ->except(['index', 'show'])
         ->middleware('class.access')
         ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader,class leader,trainer');
 
-    // Homework submission routes
+    // Homework submission routes - Trainees can create/update/delete their own submissions
     Route::apiResource('homework-submissions', HomeworkSubmissionController::class)
-        ->middleware(['class.access', 'resource.owner'])
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader,class leader,trainer');
+        ->only(['index', 'show']); // All can view (filtered by scope)
+    
+    Route::apiResource('homework-submissions', HomeworkSubmissionController::class)
+        ->except(['index', 'show'])
+        ->middleware('trainee.owner') // Ensures trainees only modify their own
+        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader,class leader,trainer,trainee');
 
     // Event routes
     Route::apiResource('events', EventController::class)

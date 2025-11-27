@@ -15,9 +15,14 @@ class TrainingSessionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json(TrainingSession::all());
+        $user = $request->user();
+        $sessions = TrainingSession::accessibleBy($user)
+            ->with(['class', 'trainer'])
+            ->get();
+        
+        return response()->json($sessions);
     }
 
     /**
@@ -44,9 +49,14 @@ class TrainingSessionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TrainingSession $trainingSession): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
-        return response()->json($trainingSession);
+        $user = $request->user();
+        $session = TrainingSession::accessibleBy($user)
+            ->with(['class', 'trainer', 'attendances'])
+            ->findOrFail($id);
+        
+        return response()->json($session);
     }
 
     /**
