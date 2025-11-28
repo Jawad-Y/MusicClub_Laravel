@@ -13,6 +13,11 @@ class LibraryMaterialPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow department leaders and class leaders to view library materials
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,11 @@ class LibraryMaterialPolicy
      */
     public function view(User $user, LibraryMaterial $libraryMaterial): bool
     {
+        // Allow department leaders and class leaders to view library materials
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true;
+        }
+
         return false;
     }
 

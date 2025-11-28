@@ -22,9 +22,22 @@ class ClothingItemController extends Controller
         ]);
 
         $limit = $request->input('limit', 20);
+        $user = $request->user();
+        $query = ClothingItem::query()->with(['assignments:id,item_id,user_id,assigned_at']);
 
-        $items = ClothingItem::with(['assignments:id,item_id,user_id,assigned_at'])
-            ->orderBy('category')
+        // Filter for department leaders and class leaders - only show items assigned to their class members
+        // Inventory managers have full access
+        if (($user->isDepartmentLeader() || $user->isClassLeader()) && !$user->isInventoryManager()) {
+            $accessibleUserIds = $user->getAccessibleUserIds();
+            $itemIds = \App\Models\ClothingAssignment::whereIn('user_id', $accessibleUserIds)
+                ->whereNull('returned_at')
+                ->pluck('item_id')
+                ->unique();
+            
+            $query->whereIn('id', $itemIds);
+        }
+
+        $items = $query->orderBy('category')
             ->paginate($limit, ['id','category','size','quantity']);
 
         return $this->success($items);
@@ -33,10 +46,23 @@ class ClothingItemController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
-        $item = ClothingItem::with(['assignments:id,item_id,user_id,assigned_at'])
-            ->findOrFail($id);
+        $user = $request->user();
+        $query = ClothingItem::query()->with(['assignments:id,item_id,user_id,assigned_at']);
+
+        // Filter for department leaders and class leaders, but not for inventory managers
+        if (($user->isDepartmentLeader() || $user->isClassLeader()) && !$user->isInventoryManager()) {
+            $accessibleUserIds = $user->getAccessibleUserIds();
+            $itemIds = \App\Models\ClothingAssignment::whereIn('user_id', $accessibleUserIds)
+                ->whereNull('returned_at')
+                ->pluck('item_id')
+                ->unique();
+            
+            $query->whereIn('id', $itemIds);
+        }
+
+        $item = $query->findOrFail($id);
 
         return $this->success($item);
     }

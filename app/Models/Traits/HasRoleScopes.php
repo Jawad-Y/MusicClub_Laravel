@@ -47,6 +47,22 @@ trait HasRoleScopes
     }
 
     /**
+     * Check if the user is an Inventory Manager
+     */
+    public function isInventoryManager(): bool
+    {
+        return $this->role && strtolower($this->role->role_name) === 'inventory manager';
+    }
+
+    /**
+     * Check if the user is a Member
+     */
+    public function isMember(): bool
+    {
+        return $this->role && strtolower($this->role->role_name) === 'member';
+    }
+
+    /**
      * Get all department IDs this user can access
      */
     public function getAccessibleDepartmentIds(): array
@@ -90,8 +106,8 @@ trait HasRoleScopes
             return $this->ledClasses()->pluck('id')->toArray();
         }
 
-        if ($this->isTrainee() || $this->isTrainer()) {
-            // Trainees and trainers can access classes they are members of
+        if ($this->isTrainee() || $this->isTrainer() || $this->isInventoryManager() || $this->isMember()) {
+            // Trainees, trainers, inventory managers, and members can access classes they are members of
             return $this->classMembers()->pluck('classes.id')->toArray();
         }
 
@@ -129,8 +145,8 @@ trait HasRoleScopes
                 ->toArray();
         }
 
-        if ($this->isTrainee()) {
-            // Trainees can only access members in the same classes
+        if ($this->isTrainee() || $this->isMember()) {
+            // Trainees and members can only access members in the same classes
             $classIds = $this->classMembers()->pluck('classes.id')->toArray();
             
             return \App\Models\ClassMember::whereIn('class_id', $classIds)
@@ -172,7 +188,7 @@ trait HasRoleScopes
             });
         }
 
-        if ($user->isTrainee()) {
+        if ($user->isTrainee() || $user->isMember()) {
             $classIds = $user->classMembers()->pluck('classes.id')->toArray();
             
             return $query->whereHas('classMembers', function ($q) use ($classIds) {

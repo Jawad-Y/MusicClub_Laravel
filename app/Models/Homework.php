@@ -62,8 +62,8 @@ class Homework extends Model
             });
         }
 
-        if ($user->isTrainee()) {
-            // Trainees can see homework for their enrolled classes
+        if ($user->isTrainee() || $user->isMember()) {
+            // Trainees and members can see homework for their enrolled classes
             $classIds = $user->classMembers()->pluck('classes.id')->toArray();
             return $query->whereHas('trainingSession', function ($q) use ($classIds) {
                 $q->whereIn('class_id', $classIds);

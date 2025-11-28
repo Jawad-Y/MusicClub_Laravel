@@ -41,18 +41,34 @@ class UserController extends Controller
             'password'  => ['required', 'string', 'min:6'],
         ]);
 
-        // Check if Individual Affair is trying to create Admin or Leader
+        // Check role-based restrictions for user creation
         $currentUser = $request->user();
         $currentUserRole = strtolower($currentUser->role->role_name ?? '');
+        $targetRole = Role::find($validated['role_id']);
+        $targetRoleName = strtolower($targetRole->role_name ?? '');
         
+        // Only Leader can create users with Leader role
+        if ($targetRoleName === 'leader' && $currentUserRole !== 'leader') {
+            return response()->json([
+                'status' => false,
+                'message' => 'Only Leader can create users with Leader role.',
+            ], 403);
+        }
+        
+        // Only Leader and Individual Affair can create Department Leader
+        if ($targetRoleName === 'department leader' && !in_array($currentUserRole, ['leader', 'individual affair'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Only Leader and Individual Affair can create users with Department Leader role.',
+            ], 403);
+        }
+        
+        // Individual Affair cannot create Admin
         if ($currentUserRole === 'individual affair') {
-            $targetRole = Role::find($validated['role_id']);
-            $targetRoleName = strtolower($targetRole->role_name ?? '');
-            
-            if (in_array($targetRoleName, ['admin', 'leader'])) {
+            if ($targetRoleName === 'admin') {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Individual Affair cannot create users with Admin or Leader roles.',
+                    'message' => 'Individual Affair cannot create users with Admin role.',
                 ], 403);
             }
         }
@@ -96,23 +112,39 @@ class UserController extends Controller
             'password'  => ['nullable', 'string', 'min:6'],
         ]);
 
-        // Check if Individual Affair is trying to update to Admin or Leader
+        // Check role-based restrictions for user updates
         $currentUser = $request->user();
         $currentUserRole = strtolower($currentUser->role->role_name ?? '');
+        $targetRole = Role::find($validated['role_id']);
+        $targetRoleName = strtolower($targetRole->role_name ?? '');
+        $existingUserRole = strtolower($user->role->role_name ?? '');
         
+        // Only Leader can assign Leader role
+        if ($targetRoleName === 'leader' && $currentUserRole !== 'leader') {
+            return response()->json([
+                'status' => false,
+                'message' => 'Only Leader can assign Leader role.',
+            ], 403);
+        }
+        
+        // Only Leader and Individual Affair can assign Department Leader role
+        if ($targetRoleName === 'department leader' && !in_array($currentUserRole, ['leader', 'individual affair'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Only Leader and Individual Affair can assign Department Leader role.',
+            ], 403);
+        }
+        
+        // Individual Affair cannot assign Admin role
         if ($currentUserRole === 'individual affair') {
-            $targetRole = Role::find($validated['role_id']);
-            $targetRoleName = strtolower($targetRole->role_name ?? '');
-            
-            if (in_array($targetRoleName, ['admin', 'leader'])) {
+            if ($targetRoleName === 'admin') {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Individual Affair cannot assign Admin or Leader roles.',
+                    'message' => 'Individual Affair cannot assign Admin role.',
                 ], 403);
             }
             
             // Also prevent updating users who are already Admin or Leader
-            $existingUserRole = strtolower($user->role->role_name ?? '');
             if (in_array($existingUserRole, ['admin', 'leader'])) {
                 return response()->json([
                     'status' => false,

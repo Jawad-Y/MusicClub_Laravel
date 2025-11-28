@@ -13,6 +13,11 @@ class SessionAttendancePolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow department leaders and class leaders to view session attendance
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,11 @@ class SessionAttendancePolicy
      */
     public function view(User $user, SessionAttendance $sessionAttendance): bool
     {
+        // Department leaders and class leaders use accessibleBy scope in the model
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true; // Filtered by controller using accessibleBy scope
+        }
+
         return false;
     }
 

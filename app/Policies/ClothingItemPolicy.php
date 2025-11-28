@@ -13,6 +13,16 @@ class ClothingItemPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow inventory managers full access
+        if ($user->isInventoryManager()) {
+            return true;
+        }
+
+        // Allow department leaders and class leaders to view clothing items
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +31,24 @@ class ClothingItemPolicy
      */
     public function view(User $user, ClothingItem $clothingItem): bool
     {
+        // Allow inventory managers full access
+        if ($user->isInventoryManager()) {
+            return true;
+        }
+
+        // Department leaders and class leaders can only view items assigned to their class members
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            $accessibleUserIds = $user->getAccessibleUserIds();
+            
+            // Check if the clothing item is assigned to any user in their classes
+            $isAccessible = \App\Models\ClothingAssignment::where('item_id', $clothingItem->id)
+                ->whereIn('user_id', $accessibleUserIds)
+                ->whereNull('returned_at')
+                ->exists();
+            
+            return $isAccessible;
+        }
+
         return false;
     }
 

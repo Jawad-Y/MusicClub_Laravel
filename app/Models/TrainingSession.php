@@ -99,8 +99,8 @@ class TrainingSession extends Model
             });
         }
 
-        if ($user->isTrainee()) {
-            // Trainees can only see sessions for their enrolled classes
+        if ($user->isTrainee() || $user->isMember()) {
+            // Trainees and members can only see sessions for their enrolled classes
             $classIds = $user->classMembers()->pluck('classes.id')->toArray();
             return $query->whereIn('class_id', $classIds);
         }

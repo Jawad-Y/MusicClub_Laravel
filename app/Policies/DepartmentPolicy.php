@@ -13,6 +13,11 @@ class DepartmentPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow department leaders to view departments
+        if ($user->isDepartmentLeader()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,12 @@ class DepartmentPolicy
      */
     public function view(User $user, Department $department): bool
     {
+        // Department leaders can view their own departments
+        if ($user->isDepartmentLeader()) {
+            $departmentIds = $user->ledDepartments()->pluck('id')->toArray();
+            return in_array($department->id, $departmentIds);
+        }
+
         return false;
     }
 

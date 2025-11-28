@@ -13,6 +13,11 @@ class EventPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow members and trainees to view events
+        if ($user->isMember() || $user->isTrainee()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,11 @@ class EventPolicy
      */
     public function view(User $user, Event $event): bool
     {
+        // Allow members and trainees to view events
+        if ($user->isMember() || $user->isTrainee()) {
+            return true;
+        }
+
         return false;
     }
 

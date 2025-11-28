@@ -13,6 +13,11 @@ class InstrumentAssignmentPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow inventory managers and department leaders full access
+        if ($user->isInventoryManager() || $user->isDepartmentLeader()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,11 @@ class InstrumentAssignmentPolicy
      */
     public function view(User $user, InstrumentAssignment $instrumentAssignment): bool
     {
+        // Allow inventory managers and department leaders full access
+        if ($user->isInventoryManager() || $user->isDepartmentLeader()) {
+            return true;
+        }
+
         return false;
     }
 

@@ -59,8 +59,8 @@ class Clas extends Model
             return $query->whereIn('id', $classIds);
         }
 
-        if ($user->isTrainee() || $user->isTrainer()) {
-            // Trainees and trainers can access classes they are members of
+        if ($user->isTrainee() || $user->isTrainer() || $user->isMember()) {
+            // Trainees, trainers, and members can access classes they are members of
             $classIds = $user->classMembers()->pluck('classes.id')->toArray();
             return $query->whereIn('id', $classIds);
         }

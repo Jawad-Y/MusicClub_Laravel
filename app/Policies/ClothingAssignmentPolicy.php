@@ -13,6 +13,16 @@ class ClothingAssignmentPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow inventory managers full access
+        if ($user->isInventoryManager()) {
+            return true;
+        }
+
+        // Allow department leaders and class leaders to view clothing assignments
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +31,17 @@ class ClothingAssignmentPolicy
      */
     public function view(User $user, ClothingAssignment $clothingAssignment): bool
     {
+        // Allow inventory managers full access
+        if ($user->isInventoryManager()) {
+            return true;
+        }
+
+        // Department leaders and class leaders can only view assignments for users in their enrolled classes
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            $accessibleUserIds = $user->getAccessibleUserIds();
+            return in_array($clothingAssignment->user_id, $accessibleUserIds);
+        }
+
         return false;
     }
 

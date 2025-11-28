@@ -15,9 +15,19 @@ class ClothingAssignmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $assignments = ClothingAssignment::with(['item', 'user'])->get();
+        $user = $request->user();
+        $query = ClothingAssignment::query()->with(['item', 'user']);
+
+        // Filter for department leaders and class leaders - only show assignments for their class members
+        // Inventory managers have full access
+        if (($user->isDepartmentLeader() || $user->isClassLeader()) && !$user->isInventoryManager()) {
+            $accessibleUserIds = $user->getAccessibleUserIds();
+            $query->whereIn('user_id', $accessibleUserIds);
+        }
+
+        $assignments = $query->get();
         
         return $this->success($assignments);
     }
@@ -25,9 +35,18 @@ class ClothingAssignmentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
-        $assignment = ClothingAssignment::with(['item', 'user'])->findOrFail($id);
+        $user = $request->user();
+        $query = ClothingAssignment::query()->with(['item', 'user']);
+
+        // Filter for department leaders and class leaders, but not for inventory managers
+        if (($user->isDepartmentLeader() || $user->isClassLeader()) && !$user->isInventoryManager()) {
+            $accessibleUserIds = $user->getAccessibleUserIds();
+            $query->whereIn('user_id', $accessibleUserIds);
+        }
+
+        $assignment = $query->findOrFail($id);
         
         return $this->success($assignment);
     }

@@ -15,9 +15,14 @@ class MembershipController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $memberships = Membership::with(['user'])->get();
+        $user = $request->user();
+        $accessibleUserIds = $user->getAccessibleUserIds();
+        
+        $memberships = Membership::whereIn('user_id', $accessibleUserIds)
+            ->with(['user'])
+            ->get();
         
         return $this->success($memberships);
     }
@@ -43,9 +48,14 @@ class MembershipController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Membership $membership): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
-        $membership->load(['user']);
+        $user = $request->user();
+        $accessibleUserIds = $user->getAccessibleUserIds();
+        
+        $membership = Membership::whereIn('user_id', $accessibleUserIds)
+            ->with(['user'])
+            ->findOrFail($id);
         
         return $this->success($membership);
     }

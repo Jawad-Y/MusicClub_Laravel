@@ -2,19 +2,18 @@
 
 namespace App\Policies;
 
-use App\Models\ClassMember;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class ClassMemberPolicy
+class UserPolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        // Allow department leaders and class leaders to view class members from their enrolled classes
-        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+        // Allow class leaders to view users in their classes
+        if ($user->isClassLeader()) {
             return true;
         }
 
@@ -24,12 +23,11 @@ class ClassMemberPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, ClassMember $classMember): bool
+    public function view(User $user, User $model): bool
     {
-        // Department leaders and class leaders can only view members from their enrolled classes
-        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
-            $accessibleClassIds = $user->getAccessibleClassIds();
-            return in_array($classMember->class_id, $accessibleClassIds);
+        // Class leaders can view all users
+        if ($user->isClassLeader()) {
+            return true;
         }
 
         return false;
@@ -46,7 +44,7 @@ class ClassMemberPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, ClassMember $classMember): bool
+    public function update(User $user, User $model): bool
     {
         return false;
     }
@@ -54,7 +52,7 @@ class ClassMemberPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, ClassMember $classMember): bool
+    public function delete(User $user, User $model): bool
     {
         return false;
     }
@@ -62,7 +60,7 @@ class ClassMemberPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, ClassMember $classMember): bool
+    public function restore(User $user, User $model): bool
     {
         return false;
     }
@@ -70,7 +68,7 @@ class ClassMemberPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, ClassMember $classMember): bool
+    public function forceDelete(User $user, User $model): bool
     {
         return false;
     }

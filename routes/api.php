@@ -51,7 +51,8 @@ Route::middleware('auth:sanctum')->group(function () {
     'myclasses' => 'myclasses'
     ])
         ->middleware('class.access')
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader,class leader');
+        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader')
+        ->middlewareFor(['update'],'role:class leader');
 
     // Class member routes
     Route::apiResource('classmembers', ClassMemberController::class)
@@ -68,27 +69,27 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Instrument type routes
     Route::apiResource('instrument-types', InstrumentTypeController::class)
-        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
+        ->middleware('role:Admin,leader,inventory manager');
 
     // Instrument routes
     Route::apiResource('instruments', InstrumentController::class)
-        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
+        ->middleware('role:Admin,leader,inventory manager,department leader');
 
     // Instrument assignment routes
     Route::apiResource('instrument-assignments', InstrumentAssignmentController::class)
-        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
+        ->middleware('role:Admin,leader,inventory manager,department leader');
 
     // Instrument maintenance routes
     Route::apiResource('instrument-maintenances', InstrumentMaintenanceController::class)
-        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
+        ->middleware('role:Admin,leader,inventory manager,department leader,class leader');
 
     // Clothing item routes
     Route::apiResource('clothing-items', ClothingItemController::class)
-        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
+        ->middleware('role:Admin,leader,inventory manager,department leader,class leader');
 
     // Clothing assignment routes
     Route::apiResource('clothing-assignments', ClothingAssignmentController::class)
-        ->middleware('role:Admin,leader,inventory manager,department leader,class leader,trainer');
+        ->middleware('role:Admin,leader,inventory manager,department leader,class leader');
 
     // Library material routes
     Route::apiResource('library-materials', LibraryMaterialController::class)

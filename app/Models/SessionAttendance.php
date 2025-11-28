@@ -65,8 +65,8 @@ class SessionAttendance extends Model
             });
         }
 
-        if ($user->isTrainee()) {
-            // Trainees can only see attendance for sessions in their enrolled classes
+        if ($user->isTrainee() || $user->isMember()) {
+            // Trainees and members can only see attendance for sessions in their enrolled classes
             return $query->where('trainee_id', $user->id);
         }
 

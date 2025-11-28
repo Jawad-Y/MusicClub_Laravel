@@ -63,8 +63,8 @@ class HomeworkSubmission extends Model
             });
         }
 
-        if ($user->isTrainee()) {
-            // Trainees can only see their own submissions
+        if ($user->isTrainee() || $user->isMember()) {
+            // Trainees and members can only see their own submissions
             return $query->where('trainee_id', $user->id);
         }
 

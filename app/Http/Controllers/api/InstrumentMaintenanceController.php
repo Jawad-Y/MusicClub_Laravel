@@ -16,7 +16,20 @@ class InstrumentMaintenanceController extends Controller
 
     public function index(Request $request): JsonResponse
     {
+        $user = $request->user();
         $query = InstrumentMaintenance::query()->with('instrument');
+
+        // Filter for department leaders and class leaders - only show maintenances for instruments assigned to their class members
+        // Inventory managers have full access
+        if (($user->isDepartmentLeader() || $user->isClassLeader()) && !$user->isInventoryManager()) {
+            $accessibleUserIds = $user->getAccessibleUserIds();
+            $instrumentIds = \App\Models\InstrumentAssignment::whereIn('user_id', $accessibleUserIds)
+                ->whereNull('returned_at')
+                ->pluck('instrument_id')
+                ->unique();
+            
+            $query->whereIn('instrument_id', $instrumentIds);
+        }
 
         if ($request->has('instrument_id')) {
             $query->where('instrument_id', $request->instrument_id);
@@ -45,9 +58,23 @@ class InstrumentMaintenanceController extends Controller
         return $this->success($maintenances);
     }
 
-    public function show($id): JsonResponse
+    public function show(Request $request, $id): JsonResponse
     {
-        $maintenance = InstrumentMaintenance::with('instrument')->findOrFail($id);
+        $user = $request->user();
+        $query = InstrumentMaintenance::query()->with('instrument');
+
+        // Filter for department leaders and class leaders, but not for inventory managers
+        if (($user->isDepartmentLeader() || $user->isClassLeader()) && !$user->isInventoryManager()) {
+            $accessibleUserIds = $user->getAccessibleUserIds();
+            $instrumentIds = \App\Models\InstrumentAssignment::whereIn('user_id', $accessibleUserIds)
+                ->whereNull('returned_at')
+                ->pluck('instrument_id')
+                ->unique();
+            
+            $query->whereIn('instrument_id', $instrumentIds);
+        }
+
+        $maintenance = $query->findOrFail($id);
         
         return $this->success($maintenance);
     }
