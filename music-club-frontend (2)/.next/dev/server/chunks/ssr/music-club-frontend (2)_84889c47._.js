@@ -391,67 +391,132 @@ const navigationItems = [
     {
         name: "Dashboard",
         href: "/dashboard",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$layout$2d$dashboard$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__LayoutDashboard$3e$__["LayoutDashboard"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$layout$2d$dashboard$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__LayoutDashboard$3e$__["LayoutDashboard"],
+        roles: [
+            "leader",
+            "department leader",
+            "class leader",
+            "trainer",
+            "trainee",
+            "inventory manager"
+        ]
     },
     {
         name: "Users & Roles",
         href: "/dashboard/users",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__["Users"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$users$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Users$3e$__["Users"],
+        roles: [
+            "leader"
+        ]
     },
     {
         name: "Departments",
         href: "/dashboard/departments",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$building$2d$2$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Building2$3e$__["Building2"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$building$2d$2$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Building2$3e$__["Building2"],
+        roles: [
+            "leader",
+            "department leader"
+        ]
     },
     {
         name: "Classes",
         href: "/dashboard/classes",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$graduation$2d$cap$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__GraduationCap$3e$__["GraduationCap"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$graduation$2d$cap$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__GraduationCap$3e$__["GraduationCap"],
+        roles: [
+            "leader",
+            "department leader",
+            "class leader",
+            "trainer"
+        ]
     },
     {
         name: "Instruments",
         href: "/dashboard/instruments",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$guitar$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Guitar$3e$__["Guitar"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$guitar$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Guitar$3e$__["Guitar"],
+        roles: [
+            "leader",
+            "inventory manager"
+        ]
     },
     {
         name: "Clothing",
         href: "/dashboard/clothing",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shirt$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Shirt$3e$__["Shirt"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shirt$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Shirt$3e$__["Shirt"],
+        roles: [
+            "leader",
+            "inventory manager"
+        ]
     },
     {
         name: "Training Sessions",
         href: "/dashboard/training",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__["BookOpen"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__["BookOpen"],
+        roles: [
+            "leader",
+            "department leader",
+            "class leader",
+            "trainer"
+        ]
     },
     {
         name: "Homework",
         href: "/dashboard/homework",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clipboard$2d$list$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ClipboardList$3e$__["ClipboardList"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clipboard$2d$list$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ClipboardList$3e$__["ClipboardList"],
+        roles: [
+            "leader",
+            "department leader",
+            "class leader",
+            "trainer"
+        ]
     },
     {
         name: "Events",
         href: "/dashboard/events",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Calendar$3e$__["Calendar"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Calendar$3e$__["Calendar"],
+        roles: [
+            "leader",
+            "class leader"
+        ]
     },
     {
         name: "Library",
         href: "/dashboard/library",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$text$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__FileText$3e$__["FileText"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$text$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__FileText$3e$__["FileText"],
+        roles: [
+            "leader",
+            "trainer"
+        ]
     },
     {
         name: "Performance",
         href: "/dashboard/performance",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__["TrendingUp"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$trending$2d$up$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__TrendingUp$3e$__["TrendingUp"],
+        roles: [
+            "leader",
+            "trainer"
+        ]
     },
     {
         name: "Reports",
         href: "/dashboard/reports",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chart$2d$column$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BarChart3$3e$__["BarChart3"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chart$2d$column$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__BarChart3$3e$__["BarChart3"],
+        roles: [
+            "leader",
+            "department leader"
+        ]
     },
     {
         name: "Profile",
         href: "/dashboard/profile",
-        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$user$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__UserCircle$3e$__["UserCircle"]
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$user$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__UserCircle$3e$__["UserCircle"],
+        roles: [
+            "leader",
+            "department leader",
+            "class leader",
+            "trainer",
+            "trainee",
+            "inventory manager"
+        ]
     }
 ];
 function DashboardLayout({ children }) {
@@ -459,6 +524,14 @@ function DashboardLayout({ children }) {
     const { user, logout } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$lib$2f$auth$2d$context$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRouter"])();
     const pathname = (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["usePathname"])();
+    // Filter navigation items based on user role
+    const visibleNavItems = (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMemo"])(()=>{
+        if (!user?.role?.role_name) return [];
+        const userRole = user.role.role_name.toLowerCase();
+        return navigationItems.filter((item)=>item.roles.includes(userRole));
+    }, [
+        user
+    ]);
     const handleLogout = async ()=>{
         await logout();
         router.push("/login");
@@ -482,12 +555,12 @@ function DashboardLayout({ children }) {
                                             className: "h-5 w-5 text-primary"
                                         }, void 0, false, {
                                             fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                            lineNumber: 73,
+                                            lineNumber: 80,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                        lineNumber: 72,
+                                        lineNumber: 79,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -495,23 +568,23 @@ function DashboardLayout({ children }) {
                                         children: "Music Club"
                                     }, void 0, false, {
                                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                        lineNumber: 75,
+                                        lineNumber: 82,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                lineNumber: 71,
+                                lineNumber: 78,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                            lineNumber: 70,
+                            lineNumber: 77,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
                             className: "flex-1 px-3 py-4 space-y-1 overflow-y-auto",
-                            children: navigationItems.map((item)=>{
+                            children: visibleNavItems.map((item)=>{
                                 const Icon = item.icon;
                                 const isActive = pathname === item.href;
                                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -523,31 +596,31 @@ function DashboardLayout({ children }) {
                                             className: "h-5 w-5"
                                         }, void 0, false, {
                                             fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                            lineNumber: 93,
+                                            lineNumber: 100,
                                             columnNumber: 19
                                         }, this),
                                         item.name
                                     ]
                                 }, item.name, true, {
                                     fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                    lineNumber: 83,
+                                    lineNumber: 90,
                                     columnNumber: 17
                                 }, this);
                             })
                         }, void 0, false, {
                             fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                            lineNumber: 78,
+                            lineNumber: 85,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                    lineNumber: 69,
+                    lineNumber: 76,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                lineNumber: 68,
+                lineNumber: 75,
                 columnNumber: 7
             }, this),
             sidebarOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -558,7 +631,7 @@ function DashboardLayout({ children }) {
                         onClick: ()=>setSidebarOpen(false)
                     }, void 0, false, {
                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                        lineNumber: 105,
+                        lineNumber: 112,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("aside", {
@@ -578,12 +651,12 @@ function DashboardLayout({ children }) {
                                                         className: "h-5 w-5 text-primary"
                                                     }, void 0, false, {
                                                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                        lineNumber: 111,
+                                                        lineNumber: 118,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                    lineNumber: 110,
+                                                    lineNumber: 117,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -591,13 +664,13 @@ function DashboardLayout({ children }) {
                                                     children: "Music Club"
                                                 }, void 0, false, {
                                                     fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                    lineNumber: 113,
+                                                    lineNumber: 120,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                            lineNumber: 109,
+                                            lineNumber: 116,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -608,23 +681,23 @@ function DashboardLayout({ children }) {
                                                 className: "h-5 w-5"
                                             }, void 0, false, {
                                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                lineNumber: 116,
+                                                lineNumber: 123,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                            lineNumber: 115,
+                                            lineNumber: 122,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                    lineNumber: 108,
+                                    lineNumber: 115,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
                                     className: "flex-1 px-3 py-4 space-y-1 overflow-y-auto",
-                                    children: navigationItems.map((item)=>{
+                                    children: visibleNavItems.map((item)=>{
                                         const Icon = item.icon;
                                         const isActive = pathname === item.href;
                                         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -639,37 +712,37 @@ function DashboardLayout({ children }) {
                                                     className: "h-5 w-5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                    lineNumber: 137,
+                                                    lineNumber: 144,
                                                     columnNumber: 23
                                                 }, this),
                                                 item.name
                                             ]
                                         }, item.name, true, {
                                             fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                            lineNumber: 124,
+                                            lineNumber: 131,
                                             columnNumber: 21
                                         }, this);
                                     })
                                 }, void 0, false, {
                                     fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                    lineNumber: 119,
+                                    lineNumber: 126,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                            lineNumber: 107,
+                            lineNumber: 114,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                        lineNumber: 106,
+                        lineNumber: 113,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                lineNumber: 104,
+                lineNumber: 111,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -687,19 +760,19 @@ function DashboardLayout({ children }) {
                                     className: "h-5 w-5"
                                 }, void 0, false, {
                                     fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                    lineNumber: 153,
+                                    lineNumber: 160,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                lineNumber: 152,
+                                lineNumber: 159,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex-1"
                             }, void 0, false, {
                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                lineNumber: 156,
+                                lineNumber: 163,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenu"], {
@@ -720,7 +793,7 @@ function DashboardLayout({ children }) {
                                                                 children: user?.full_name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                                lineNumber: 163,
+                                                                lineNumber: 170,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -728,13 +801,13 @@ function DashboardLayout({ children }) {
                                                                 children: user?.role?.role_name || "User"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                                lineNumber: 164,
+                                                                lineNumber: 171,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                        lineNumber: 162,
+                                                        lineNumber: 169,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -744,35 +817,35 @@ function DashboardLayout({ children }) {
                                                             children: user?.full_name?.charAt(0).toUpperCase()
                                                         }, void 0, false, {
                                                             fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                            lineNumber: 167,
+                                                            lineNumber: 174,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                        lineNumber: 166,
+                                                        lineNumber: 173,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__["ChevronDown"], {
                                                         className: "h-4 w-4 text-muted-foreground"
                                                     }, void 0, false, {
                                                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                        lineNumber: 169,
+                                                        lineNumber: 176,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                lineNumber: 161,
+                                                lineNumber: 168,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                            lineNumber: 160,
+                                            lineNumber: 167,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                        lineNumber: 159,
+                                        lineNumber: 166,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -783,12 +856,12 @@ function DashboardLayout({ children }) {
                                                 children: "My Account"
                                             }, void 0, false, {
                                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                lineNumber: 174,
+                                                lineNumber: 181,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuSeparator"], {}, void 0, false, {
                                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                lineNumber: 175,
+                                                lineNumber: 182,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DropdownMenuItem"], {
@@ -798,38 +871,38 @@ function DashboardLayout({ children }) {
                                                         className: "mr-2 h-4 w-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                        lineNumber: 177,
+                                                        lineNumber: 184,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: "Log out"
                                                     }, void 0, false, {
                                                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                        lineNumber: 178,
+                                                        lineNumber: 185,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                                lineNumber: 176,
+                                                lineNumber: 183,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                        lineNumber: 173,
+                                        lineNumber: 180,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                                lineNumber: 158,
+                                lineNumber: 165,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                        lineNumber: 151,
+                        lineNumber: 158,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -837,19 +910,19 @@ function DashboardLayout({ children }) {
                         children: children
                     }, void 0, false, {
                         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                        lineNumber: 185,
+                        lineNumber: 192,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-                lineNumber: 149,
+                lineNumber: 156,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/music-club-frontend (2)/components/dashboard-layout.tsx",
-        lineNumber: 66,
+        lineNumber: 73,
         columnNumber: 5
     }, this);
 }
@@ -1742,7 +1815,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$
 var __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/music-club-frontend (2)/lib/api-client.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$lib$2f$api$2d$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/music-club-frontend (2)/lib/api-utils.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/music-club-frontend (2)/hooks/use-toast.ts [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$lib$2f$auth$2d$context$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/music-club-frontend (2)/lib/auth-context.tsx [app-ssr] (ecmascript)");
 "use client";
+;
 ;
 ;
 ;
@@ -1778,6 +1853,7 @@ function EventsPage() {
         role: "attendee"
     });
     const { toast } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$hooks$2f$use$2d$toast$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useToast"])();
+    const { isLeader, isClassLeader } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$lib$2f$auth$2d$context$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         fetchData();
     }, []);
@@ -1910,7 +1986,7 @@ function EventsPage() {
                                     children: "Events"
                                 }, void 0, false, {
                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                    lineNumber: 180,
+                                    lineNumber: 182,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1918,533 +1994,535 @@ function EventsPage() {
                                     children: "Manage music club events and performances"
                                 }, void 0, false, {
                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                    lineNumber: 181,
+                                    lineNumber: 183,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                            lineNumber: 179,
+                            lineNumber: 181,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex gap-2",
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Dialog"], {
-                                    open: isParticipantDialogOpen,
-                                    onOpenChange: setIsParticipantDialogOpen,
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogTrigger"], {
-                                            asChild: true,
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                                                variant: "outline",
-                                                className: "gap-2 bg-transparent",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__UserPlus$3e$__["UserPlus"], {
-                                                        className: "h-4 w-4"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 187,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    "Add Participant"
-                                                ]
-                                            }, void 0, true, {
+                            children: (isLeader() || isClassLeader()) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Dialog"], {
+                                        open: isParticipantDialogOpen,
+                                        onOpenChange: setIsParticipantDialogOpen,
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogTrigger"], {
+                                                asChild: true,
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                                    variant: "outline",
+                                                    className: "gap-2 bg-transparent",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__UserPlus$3e$__["UserPlus"], {
+                                                            className: "h-4 w-4"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                            lineNumber: 191,
+                                                            columnNumber: 23
+                                                        }, this),
+                                                        "Add Participant"
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                    lineNumber: 190,
+                                                    columnNumber: 21
+                                                }, this)
+                                            }, void 0, false, {
                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                lineNumber: 186,
-                                                columnNumber: 17
-                                            }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                            lineNumber: 185,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogContent"], {
-                                            className: "sm:max-w-[425px]",
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
-                                                onSubmit: handleParticipantSubmit,
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogHeader"], {
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogTitle"], {
-                                                                children: "Add Event Participant"
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 194,
-                                                                columnNumber: 21
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogDescription"], {
-                                                                children: "Assign a participant to an event"
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 195,
-                                                                columnNumber: 21
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 193,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "grid gap-4 py-4",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "grid gap-2",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                                        htmlFor: "participant_event",
-                                                                        children: "Event"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 199,
-                                                                        columnNumber: 23
-                                                                    }, this),
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
-                                                                        value: participantFormData.event_id,
-                                                                        onValueChange: (value)=>setParticipantFormData({
-                                                                                ...participantFormData,
-                                                                                event_id: value
-                                                                            }),
-                                                                        required: true,
-                                                                        children: [
-                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectTrigger"], {
-                                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectValue"], {
-                                                                                    placeholder: "Select an event"
-                                                                                }, void 0, false, {
-                                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                    lineNumber: 206,
-                                                                                    columnNumber: 27
-                                                                                }, this)
-                                                                            }, void 0, false, {
-                                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                lineNumber: 205,
-                                                                                columnNumber: 25
-                                                                            }, this),
-                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
-                                                                                children: events.map((event)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
-                                                                                        value: event.id.toString(),
-                                                                                        children: event.title
-                                                                                    }, event.id, false, {
+                                                lineNumber: 189,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogContent"], {
+                                                className: "sm:max-w-[425px]",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                                                    onSubmit: handleParticipantSubmit,
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogHeader"], {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogTitle"], {
+                                                                    children: "Add Event Participant"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 198,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogDescription"], {
+                                                                    children: "Assign a participant to an event"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 199,
+                                                                    columnNumber: 21
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                            lineNumber: 197,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "grid gap-4 py-4",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "grid gap-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                                            htmlFor: "participant_event",
+                                                                            children: "Event"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 203,
+                                                                            columnNumber: 23
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
+                                                                            value: participantFormData.event_id,
+                                                                            onValueChange: (value)=>setParticipantFormData({
+                                                                                    ...participantFormData,
+                                                                                    event_id: value
+                                                                                }),
+                                                                            required: true,
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectTrigger"], {
+                                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectValue"], {
+                                                                                        placeholder: "Select an event"
+                                                                                    }, void 0, false, {
                                                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
                                                                                         lineNumber: 210,
-                                                                                        columnNumber: 29
-                                                                                    }, this))
-                                                                            }, void 0, false, {
-                                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                lineNumber: 208,
-                                                                                columnNumber: 25
-                                                                            }, this)
-                                                                        ]
-                                                                    }, void 0, true, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 200,
-                                                                        columnNumber: 23
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 198,
-                                                                columnNumber: 21
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "grid gap-2",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                                        htmlFor: "participant_user",
-                                                                        children: "User"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 218,
-                                                                        columnNumber: 23
-                                                                    }, this),
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
-                                                                        value: participantFormData.user_id,
-                                                                        onValueChange: (value)=>setParticipantFormData({
-                                                                                ...participantFormData,
-                                                                                user_id: value
-                                                                            }),
-                                                                        required: true,
-                                                                        children: [
-                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectTrigger"], {
-                                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectValue"], {
-                                                                                    placeholder: "Select a user"
+                                                                                        columnNumber: 27
+                                                                                    }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                    lineNumber: 225,
-                                                                                    columnNumber: 27
+                                                                                    lineNumber: 209,
+                                                                                    columnNumber: 25
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
+                                                                                    children: events.map((event)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                                                                            value: event.id.toString(),
+                                                                                            children: event.title
+                                                                                        }, event.id, false, {
+                                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                                            lineNumber: 214,
+                                                                                            columnNumber: 29
+                                                                                        }, this))
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                                    lineNumber: 212,
+                                                                                    columnNumber: 25
                                                                                 }, this)
-                                                                            }, void 0, false, {
-                                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                lineNumber: 224,
-                                                                                columnNumber: 25
-                                                                            }, this),
-                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
-                                                                                children: users.map((user)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
-                                                                                        value: user.id.toString(),
-                                                                                        children: user.full_name
-                                                                                    }, user.id, false, {
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 204,
+                                                                            columnNumber: 23
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 202,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "grid gap-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                                            htmlFor: "participant_user",
+                                                                            children: "User"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 222,
+                                                                            columnNumber: 23
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
+                                                                            value: participantFormData.user_id,
+                                                                            onValueChange: (value)=>setParticipantFormData({
+                                                                                    ...participantFormData,
+                                                                                    user_id: value
+                                                                                }),
+                                                                            required: true,
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectTrigger"], {
+                                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectValue"], {
+                                                                                        placeholder: "Select a user"
+                                                                                    }, void 0, false, {
                                                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
                                                                                         lineNumber: 229,
-                                                                                        columnNumber: 29
-                                                                                    }, this))
-                                                                            }, void 0, false, {
-                                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                lineNumber: 227,
-                                                                                columnNumber: 25
-                                                                            }, this)
-                                                                        ]
-                                                                    }, void 0, true, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 219,
-                                                                        columnNumber: 23
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 217,
-                                                                columnNumber: 21
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "grid gap-2",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                                        htmlFor: "participant_role",
-                                                                        children: "Role"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 237,
-                                                                        columnNumber: 23
-                                                                    }, this),
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
-                                                                        value: participantFormData.role,
-                                                                        onValueChange: (value)=>setParticipantFormData({
-                                                                                ...participantFormData,
-                                                                                role: value
-                                                                            }),
-                                                                        children: [
-                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectTrigger"], {
-                                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
-                                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                    lineNumber: 243,
-                                                                                    columnNumber: 27
-                                                                                }, this)
-                                                                            }, void 0, false, {
-                                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                lineNumber: 242,
-                                                                                columnNumber: 25
-                                                                            }, this),
-                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
-                                                                                children: [
-                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
-                                                                                        value: "performer",
-                                                                                        children: "Performer"
-                                                                                    }, void 0, false, {
-                                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                        lineNumber: 246,
                                                                                         columnNumber: 27
-                                                                                    }, this),
-                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
-                                                                                        value: "attendee",
-                                                                                        children: "Attendee"
-                                                                                    }, void 0, false, {
+                                                                                    }, this)
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                                    lineNumber: 228,
+                                                                                    columnNumber: 25
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
+                                                                                    children: users.map((user)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                                                                            value: user.id.toString(),
+                                                                                            children: user.full_name
+                                                                                        }, user.id, false, {
+                                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                                            lineNumber: 233,
+                                                                                            columnNumber: 29
+                                                                                        }, this))
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                                    lineNumber: 231,
+                                                                                    columnNumber: 25
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 223,
+                                                                            columnNumber: 23
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 221,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "grid gap-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                                            htmlFor: "participant_role",
+                                                                            children: "Role"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 241,
+                                                                            columnNumber: 23
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
+                                                                            value: participantFormData.role,
+                                                                            onValueChange: (value)=>setParticipantFormData({
+                                                                                    ...participantFormData,
+                                                                                    role: value
+                                                                                }),
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectTrigger"], {
+                                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectValue"], {}, void 0, false, {
                                                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
                                                                                         lineNumber: 247,
                                                                                         columnNumber: 27
-                                                                                    }, this),
-                                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
-                                                                                        value: "volunteer",
-                                                                                        children: "Volunteer"
-                                                                                    }, void 0, false, {
-                                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                        lineNumber: 248,
-                                                                                        columnNumber: 27
                                                                                     }, this)
-                                                                                ]
-                                                                            }, void 0, true, {
-                                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                lineNumber: 245,
-                                                                                columnNumber: 25
-                                                                            }, this)
-                                                                        ]
-                                                                    }, void 0, true, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 238,
-                                                                        columnNumber: 23
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 236,
-                                                                columnNumber: 21
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 197,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogFooter"], {
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                                                            type: "submit",
-                                                            children: "Add Participant"
-                                                        }, void 0, false, {
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                                    lineNumber: 246,
+                                                                                    columnNumber: 25
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
+                                                                                    children: [
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                                                                            value: "performer",
+                                                                                            children: "Performer"
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                                            lineNumber: 250,
+                                                                                            columnNumber: 27
+                                                                                        }, this),
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                                                                            value: "attendee",
+                                                                                            children: "Attendee"
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                                            lineNumber: 251,
+                                                                                            columnNumber: 27
+                                                                                        }, this),
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                                                                            value: "volunteer",
+                                                                                            children: "Volunteer"
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                                            lineNumber: 252,
+                                                                                            columnNumber: 27
+                                                                                        }, this)
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                                    lineNumber: 249,
+                                                                                    columnNumber: 25
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 242,
+                                                                            columnNumber: 23
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 240,
+                                                                    columnNumber: 21
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
                                                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                            lineNumber: 254,
-                                                            columnNumber: 21
-                                                        }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 253,
-                                                        columnNumber: 19
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                lineNumber: 192,
-                                                columnNumber: 17
-                                            }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                            lineNumber: 191,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                    lineNumber: 184,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Dialog"], {
-                                    open: isDialogOpen,
-                                    onOpenChange: (open)=>{
-                                        setIsDialogOpen(open);
-                                        if (!open) resetForm();
-                                    },
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogTrigger"], {
-                                            asChild: true,
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                                                className: "gap-2",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
-                                                        className: "h-4 w-4"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 269,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    "Create Event"
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                lineNumber: 268,
-                                                columnNumber: 17
-                                            }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                            lineNumber: 267,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogContent"], {
-                                            className: "sm:max-w-[500px]",
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
-                                                onSubmit: handleSubmit,
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogHeader"], {
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogTitle"], {
-                                                                children: editingEvent ? "Edit Event" : "Create New Event"
+                                                            lineNumber: 201,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogFooter"], {
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                                                type: "submit",
+                                                                children: "Add Participant"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 276,
-                                                                columnNumber: 21
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogDescription"], {
-                                                                children: editingEvent ? "Update event information" : "Create a new music club event"
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 277,
+                                                                lineNumber: 258,
                                                                 columnNumber: 21
                                                             }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 275,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "grid gap-4 py-4",
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "grid gap-2",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                                        htmlFor: "title",
-                                                                        children: "Event Title"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 283,
-                                                                        columnNumber: 23
-                                                                    }, this),
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                                                                        id: "title",
-                                                                        value: formData.title,
-                                                                        onChange: (e)=>setFormData({
-                                                                                ...formData,
-                                                                                title: e.target.value
-                                                                            }),
-                                                                        required: true,
-                                                                        placeholder: "e.g., Spring Concert 2025"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 284,
-                                                                        columnNumber: 23
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 282,
-                                                                columnNumber: 21
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "grid gap-2",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                                        htmlFor: "description",
-                                                                        children: "Description"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 293,
-                                                                        columnNumber: 23
-                                                                    }, this),
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Textarea"], {
-                                                                        id: "description",
-                                                                        value: formData.description,
-                                                                        onChange: (e)=>setFormData({
-                                                                                ...formData,
-                                                                                description: e.target.value
-                                                                            }),
-                                                                        placeholder: "Describe the event...",
-                                                                        rows: 3
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 294,
-                                                                        columnNumber: 23
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 292,
-                                                                columnNumber: 21
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "grid gap-2",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                                        htmlFor: "date",
-                                                                        children: "Date"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 303,
-                                                                        columnNumber: 23
-                                                                    }, this),
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                                                                        id: "date",
-                                                                        type: "date",
-                                                                        value: formData.date,
-                                                                        onChange: (e)=>setFormData({
-                                                                                ...formData,
-                                                                                date: e.target.value
-                                                                            })
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 304,
-                                                                        columnNumber: 23
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 302,
-                                                                columnNumber: 21
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                className: "grid gap-2",
-                                                                children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                                        htmlFor: "location",
-                                                                        children: "Location"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 312,
-                                                                        columnNumber: 23
-                                                                    }, this),
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                                                                        id: "location",
-                                                                        value: formData.location,
-                                                                        onChange: (e)=>setFormData({
-                                                                                ...formData,
-                                                                                location: e.target.value
-                                                                            }),
-                                                                        placeholder: "e.g., Main Auditorium"
-                                                                    }, void 0, false, {
-                                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 313,
-                                                                        columnNumber: 23
-                                                                    }, this)
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 311,
-                                                                columnNumber: 21
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 281,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogFooter"], {
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                                                            type: "submit",
-                                                            children: editingEvent ? "Update Event" : "Create Event"
                                                         }, void 0, false, {
                                                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                            lineNumber: 322,
-                                                            columnNumber: 21
+                                                            lineNumber: 257,
+                                                            columnNumber: 19
                                                         }, this)
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 321,
-                                                        columnNumber: 19
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                    lineNumber: 196,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                lineNumber: 274,
-                                                columnNumber: 17
+                                                lineNumber: 195,
+                                                columnNumber: 15
                                             }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                            lineNumber: 273,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                    lineNumber: 260,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                        lineNumber: 188,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Dialog"], {
+                                        open: isDialogOpen,
+                                        onOpenChange: (open)=>{
+                                            setIsDialogOpen(open);
+                                            if (!open) resetForm();
+                                        },
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogTrigger"], {
+                                                asChild: true,
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                                    className: "gap-2",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
+                                                            className: "h-4 w-4"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                            lineNumber: 273,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        "Create Event"
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                    lineNumber: 272,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                lineNumber: 271,
+                                                columnNumber: 15
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogContent"], {
+                                                className: "sm:max-w-[500px]",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                                                    onSubmit: handleSubmit,
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogHeader"], {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogTitle"], {
+                                                                    children: editingEvent ? "Edit Event" : "Create New Event"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 280,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogDescription"], {
+                                                                    children: editingEvent ? "Update event information" : "Create a new music club event"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 281,
+                                                                    columnNumber: 21
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                            lineNumber: 279,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "grid gap-4 py-4",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "grid gap-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                                            htmlFor: "title",
+                                                                            children: "Event Title"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 287,
+                                                                            columnNumber: 23
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
+                                                                            id: "title",
+                                                                            value: formData.title,
+                                                                            onChange: (e)=>setFormData({
+                                                                                    ...formData,
+                                                                                    title: e.target.value
+                                                                                }),
+                                                                            required: true,
+                                                                            placeholder: "e.g., Spring Concert 2025"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 288,
+                                                                            columnNumber: 23
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 286,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "grid gap-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                                            htmlFor: "description",
+                                                                            children: "Description"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 297,
+                                                                            columnNumber: 23
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Textarea"], {
+                                                                            id: "description",
+                                                                            value: formData.description,
+                                                                            onChange: (e)=>setFormData({
+                                                                                    ...formData,
+                                                                                    description: e.target.value
+                                                                                }),
+                                                                            placeholder: "Describe the event...",
+                                                                            rows: 3
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 298,
+                                                                            columnNumber: 23
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 296,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "grid gap-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                                            htmlFor: "date",
+                                                                            children: "Date"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 307,
+                                                                            columnNumber: 23
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
+                                                                            id: "date",
+                                                                            type: "date",
+                                                                            value: formData.date,
+                                                                            onChange: (e)=>setFormData({
+                                                                                    ...formData,
+                                                                                    date: e.target.value
+                                                                                })
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 308,
+                                                                            columnNumber: 23
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 306,
+                                                                    columnNumber: 21
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "grid gap-2",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                                            htmlFor: "location",
+                                                                            children: "Location"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 316,
+                                                                            columnNumber: 23
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
+                                                                            id: "location",
+                                                                            value: formData.location,
+                                                                            onChange: (e)=>setFormData({
+                                                                                    ...formData,
+                                                                                    location: e.target.value
+                                                                                }),
+                                                                            placeholder: "e.g., Main Auditorium"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                            lineNumber: 317,
+                                                                            columnNumber: 23
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                    lineNumber: 315,
+                                                                    columnNumber: 21
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                            lineNumber: 285,
+                                                            columnNumber: 19
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$dialog$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["DialogFooter"], {
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                                                type: "submit",
+                                                                children: editingEvent ? "Update Event" : "Create Event"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                                lineNumber: 326,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                            lineNumber: 325,
+                                                            columnNumber: 19
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                    lineNumber: 278,
+                                                    columnNumber: 17
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                                lineNumber: 277,
+                                                columnNumber: 15
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
+                                        lineNumber: 264,
+                                        columnNumber: 13
+                                    }, this)
+                                ]
+                            }, void 0, true)
+                        }, void 0, false, {
                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                            lineNumber: 183,
+                            lineNumber: 185,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                    lineNumber: 178,
+                    lineNumber: 180,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Tabs"], {
@@ -2458,7 +2536,7 @@ function EventsPage() {
                                     children: "Upcoming Events"
                                 }, void 0, false, {
                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                    lineNumber: 332,
+                                    lineNumber: 338,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -2466,7 +2544,7 @@ function EventsPage() {
                                     children: "All Events"
                                 }, void 0, false, {
                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                    lineNumber: 333,
+                                    lineNumber: 339,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsTrigger"], {
@@ -2474,13 +2552,13 @@ function EventsPage() {
                                     children: "Participants"
                                 }, void 0, false, {
                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                    lineNumber: 334,
+                                    lineNumber: 340,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                            lineNumber: 331,
+                            lineNumber: 337,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -2491,7 +2569,7 @@ function EventsPage() {
                                 children: "Loading..."
                             }, void 0, false, {
                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                lineNumber: 339,
+                                lineNumber: 345,
                                 columnNumber: 15
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "grid grid-cols-1 lg:grid-cols-2 gap-6",
@@ -2517,7 +2595,7 @@ function EventsPage() {
                                                                         children: event.title
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 356,
+                                                                        lineNumber: 362,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
@@ -2529,7 +2607,7 @@ function EventsPage() {
                                                                                         className: "h-3 w-3"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                        lineNumber: 360,
+                                                                                        lineNumber: 366,
                                                                                         columnNumber: 37
                                                                                     }, this),
                                                                                     new Date(event.date).toLocaleDateString("en-US", {
@@ -2541,7 +2619,7 @@ function EventsPage() {
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                lineNumber: 359,
+                                                                                lineNumber: 365,
                                                                                 columnNumber: 35
                                                                             }, this),
                                                                             event.location && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2551,26 +2629,26 @@ function EventsPage() {
                                                                                         className: "h-3 w-3"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                        lineNumber: 371,
+                                                                                        lineNumber: 377,
                                                                                         columnNumber: 37
                                                                                     }, this),
                                                                                     event.location
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                lineNumber: 370,
+                                                                                lineNumber: 376,
                                                                                 columnNumber: 35
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 357,
+                                                                        lineNumber: 363,
                                                                         columnNumber: 31
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 355,
+                                                                lineNumber: 361,
                                                                 columnNumber: 29
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2579,23 +2657,23 @@ function EventsPage() {
                                                                     className: "h-4 w-4 text-pink-500"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                    lineNumber: 378,
+                                                                    lineNumber: 384,
                                                                     columnNumber: 31
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 377,
+                                                                lineNumber: 383,
                                                                 columnNumber: 29
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 354,
+                                                        lineNumber: 360,
                                                         columnNumber: 27
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                    lineNumber: 353,
+                                                    lineNumber: 359,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2607,7 +2685,7 @@ function EventsPage() {
                                                                 children: event.description
                                                             }, void 0, false, {
                                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 384,
+                                                                lineNumber: 390,
                                                                 columnNumber: 51
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2617,7 +2695,7 @@ function EventsPage() {
                                                                         className: "h-4 w-4"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 386,
+                                                                        lineNumber: 392,
                                                                         columnNumber: 31
                                                                     }, this),
                                                                     eventParticipants.length,
@@ -2626,10 +2704,10 @@ function EventsPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 385,
+                                                                lineNumber: 391,
                                                                 columnNumber: 29
                                                             }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            (isLeader() || isClassLeader()) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "flex gap-2 pt-2",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -2642,15 +2720,15 @@ function EventsPage() {
                                                                                 className: "h-3 w-3 mr-1"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                                lineNumber: 396,
-                                                                                columnNumber: 33
+                                                                                lineNumber: 403,
+                                                                                columnNumber: 35
                                                                             }, this),
                                                                             "Edit"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 390,
-                                                                        columnNumber: 31
+                                                                        lineNumber: 397,
+                                                                        columnNumber: 33
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                                                         variant: "outline",
@@ -2661,35 +2739,35 @@ function EventsPage() {
                                                                             className: "h-3 w-3"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                            lineNumber: 405,
-                                                                            columnNumber: 33
+                                                                            lineNumber: 412,
+                                                                            columnNumber: 35
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                        lineNumber: 399,
-                                                                        columnNumber: 31
+                                                                        lineNumber: 406,
+                                                                        columnNumber: 33
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                lineNumber: 389,
-                                                                columnNumber: 29
+                                                                lineNumber: 396,
+                                                                columnNumber: 31
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 383,
+                                                        lineNumber: 389,
                                                         columnNumber: 27
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                    lineNumber: 382,
+                                                    lineNumber: 388,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, event.id, true, {
                                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                            lineNumber: 352,
+                                            lineNumber: 358,
                                             columnNumber: 23
                                         }, this);
                                     }),
@@ -2702,7 +2780,7 @@ function EventsPage() {
                                                     className: "h-12 w-12 text-muted-foreground mb-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                    lineNumber: 416,
+                                                    lineNumber: 424,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2710,29 +2788,29 @@ function EventsPage() {
                                                     children: "No upcoming events"
                                                 }, void 0, false, {
                                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                    lineNumber: 417,
+                                                    lineNumber: 425,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                            lineNumber: 415,
+                                            lineNumber: 423,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                        lineNumber: 414,
+                                        lineNumber: 422,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                lineNumber: 341,
+                                lineNumber: 347,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                            lineNumber: 337,
+                            lineNumber: 343,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -2749,20 +2827,20 @@ function EventsPage() {
                                                         children: event.title
                                                     }, void 0, false, {
                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 430,
+                                                        lineNumber: 438,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
                                                         children: event.date ? new Date(event.date).toLocaleDateString() : "Date TBD"
                                                     }, void 0, false, {
                                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                        lineNumber: 431,
+                                                        lineNumber: 439,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                lineNumber: 429,
+                                                lineNumber: 437,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2771,28 +2849,28 @@ function EventsPage() {
                                                     children: event.location
                                                 }, void 0, false, {
                                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                    lineNumber: 436,
+                                                    lineNumber: 444,
                                                     columnNumber: 40
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                lineNumber: 435,
+                                                lineNumber: 443,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, event.id, true, {
                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                        lineNumber: 428,
+                                        lineNumber: 436,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                lineNumber: 426,
+                                lineNumber: 434,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                            lineNumber: 425,
+                            lineNumber: 433,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$tabs$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["TabsContent"], {
@@ -2806,20 +2884,20 @@ function EventsPage() {
                                                 children: "Event Participants"
                                             }, void 0, false, {
                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                lineNumber: 446,
+                                                lineNumber: 454,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardDescription"], {
                                                 children: "All registered event participants"
                                             }, void 0, false, {
                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                lineNumber: 447,
+                                                lineNumber: 455,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                        lineNumber: 445,
+                                        lineNumber: 453,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -2830,7 +2908,7 @@ function EventsPage() {
                                                 children: "No participants registered"
                                             }, void 0, false, {
                                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                lineNumber: 452,
+                                                lineNumber: 460,
                                                 columnNumber: 21
                                             }, this) : participants.map((participant)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "flex items-center justify-between p-3 border rounded-lg",
@@ -2843,7 +2921,7 @@ function EventsPage() {
                                                                     children: participant.user?.full_name
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                    lineNumber: 457,
+                                                                    lineNumber: 465,
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2854,13 +2932,13 @@ function EventsPage() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                                    lineNumber: 458,
+                                                                    lineNumber: 466,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                            lineNumber: 456,
+                                                            lineNumber: 464,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2868,51 +2946,51 @@ function EventsPage() {
                                                             children: participant.role || "attendee"
                                                         }, void 0, false, {
                                                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                            lineNumber: 460,
+                                                            lineNumber: 468,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, participant.id, true, {
                                                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                                    lineNumber: 455,
+                                                    lineNumber: 463,
                                                     columnNumber: 23
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                            lineNumber: 450,
+                                            lineNumber: 458,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                        lineNumber: 449,
+                                        lineNumber: 457,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                                lineNumber: 444,
+                                lineNumber: 452,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                            lineNumber: 443,
+                            lineNumber: 451,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-                    lineNumber: 330,
+                    lineNumber: 336,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-            lineNumber: 177,
+            lineNumber: 179,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/music-club-frontend (2)/app/dashboard/events/page.tsx",
-        lineNumber: 176,
+        lineNumber: 178,
         columnNumber: 5
     }, this);
 }

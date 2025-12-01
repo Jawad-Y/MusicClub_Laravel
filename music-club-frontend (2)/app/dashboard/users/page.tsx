@@ -19,7 +19,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Pencil, Trash2, Search, UserPlus } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Pencil, Trash2, Search, UserPlus, Eye, ArrowUpDown, Filter } from "lucide-react"
 import apiClient from "@/lib/api-client"
 import { useToast } from "@/hooks/use-toast"
 import { extractArrayFromResponse } from "@/lib/api-utils"
@@ -43,13 +44,28 @@ interface Role {
   description?: string
 }
 
+interface UserProfile {
+  instrumentAssignments: any[]
+  clothingAssignments: any[]
+  attendance: any[]
+  events: any[]
+}
+
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([])
   const [roles, setRoles] = useState<Role[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
+  const [roleFilter, setRoleFilter] = useState<string>("all")
+  const [statusFilter, setStatusFilter] = useState<string>("all")
+  const [sortBy, setSortBy] = useState<"name" | "email" | "role">("name")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
+  const [groupBy, setGroupBy] = useState<"none" | "role" | "status">("none")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [viewingUser, setViewingUser] = useState<User | null>(null)
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
@@ -175,11 +191,78 @@ export default function UsersPage() {
     })
   }
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  const handleViewProfile = async (user: User) => {
+    setViewingUser(user)
+    setIsProfileDialogOpen(true)
+    setUserProfile(null)
+    
+    try {
+      const [instrumentsRes, clothingRes, attendanceRes, eventsRes] = await Promise.all([
+        apiClient.get(`/instrument-assignments?user_id=${user.id}`).catch(() => ({ data: { data: [] } })),
+        apiClient.get(`/clothing-assignments?user_id=${user.id}`).catch(() => ({ data: { data: [] } })),
+        apiClient.get(`/session-attendances?trainee_id=${user.id}`).catch(() => ({ data: { data: [] } })),
+        apiClient.get(`/event-participants?user_id=${user.id}`).catch(() => ({ data: { data: [] } })),
+      ])
+
+      setUserProfile({
+        instrumentAssignments: extractArrayFromResponse(instrumentsRes),
+        clothingAssignments: extractArrayFromResponse(clothingRes),
+        attendance: extractArrayFromResponse(attendanceRes),
+        events: extractArrayFromResponse(eventsRes),
+      })
+    } catch (error) {
+      console.error("Error fetching user profile:", error)
+      toast({
+        title: "Warning",
+        description: "Some profile data could not be loaded",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const filteredUsers = users
+    .filter((user) => {
+      const matchesSearch =
+        user.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesRole = roleFilter === "all" || user.role_id.toString() === roleFilter
+      const matchesStatus = statusFilter === "all" || user.status === statusFilter
+      return matchesSearch && matchesRole && matchesStatus
+    })
+    .sort((a, b) => {
+      let comparison = 0
+      if (sortBy === "name") {
+        comparison = a.full_name.localeCompare(b.full_name)
+      } else if (sortBy === "email") {
+        comparison = a.email.localeCompare(b.email)
+      } else if (sortBy === "role") {
+        comparison = (a.role?.role_name || "").localeCompare(b.role?.role_name || "")
+      }
+      return sortOrder === "asc" ? comparison : -comparison
+    })
+
+  const groupedUsers = () => {
+    if (groupBy === "none") {
+      return { "All Users": filteredUsers }
+    } else if (groupBy === "role") {
+      return filteredUsers.reduce((acc, user) => {
+        const key = user.role?.role_name || "No Role"
+        if (!acc[key]) acc[key] = []
+        acc[key].push(user)
+        return acc
+      }, {} as Record<string, User[]>)
+    } else if (groupBy === "status") {
+      return filteredUsers.reduce((acc, user) => {
+        const key = user.status || "Unknown"
+        if (!acc[key]) acc[key] = []
+        acc[key].push(user)
+        return acc
+      }, {} as Record<string, User[]>)
+    }
+    return { "All Users": filteredUsers }
+  }
+
+  const userGroups = groupedUsers()
 
   return (
     <DashboardLayout>
@@ -297,7 +380,7 @@ export default function UsersPage() {
             <CardDescription>A list of all users registered in the system</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="mb-4">
+            <div className="mb-4 space-y-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
@@ -307,71 +390,235 @@ export default function UsersPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Select value={roleFilter} onValueChange={setRoleFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Filter by Role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Roles</SelectItem>
+                    {roles.map((role) => (
+                      <SelectItem key={role.id} value={role.id.toString()}>
+                        {role.role_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Filter by Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sort By" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="name">Name</SelectItem>
+                    <SelectItem value="email">Email</SelectItem>
+                    <SelectItem value="role">Role</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select value={groupBy} onValueChange={(v) => setGroupBy(v as any)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Group By" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No Grouping</SelectItem>
+                    <SelectItem value="role">Group by Role</SelectItem>
+                    <SelectItem value="status">Group by Status</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+                >
+                  <ArrowUpDown className="h-4 w-4 mr-2" />
+                  {sortOrder === "asc" ? "Ascending" : "Descending"}
+                </Button>
+              </div>
             </div>
 
             {isLoading ? (
               <div className="text-center py-8 text-muted-foreground">Loading...</div>
             ) : (
-              <div className="rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredUsers.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={6} className="text-center text-muted-foreground">
-                          No users found
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      filteredUsers.map((user) => (
-                        <TableRow key={user.id}>
-                          <TableCell className="font-medium">{user.full_name}</TableCell>
-                          <TableCell>{user.email}</TableCell>
-                          <TableCell>{user.phone || "-"}</TableCell>
-                          <TableCell>
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
-                              {user.role?.role_name || "N/A"}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <span
-                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                user.status === "active"
-                                  ? "bg-green-500/10 text-green-500 border border-green-500/20"
-                                  : "bg-gray-500/10 text-gray-500 border border-gray-500/20"
-                              }`}
-                            >
-                              {user.status}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-2">
-                              <Button variant="ghost" size="icon" onClick={() => handleEdit(user)}>
-                                <Pencil className="h-4 w-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" onClick={() => handleDelete(user.id)}>
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))
+              <div className="space-y-6">
+                {Object.entries(userGroups).map(([groupName, groupUsers]) => (
+                  <div key={groupName}>
+                    {groupBy !== "none" && (
+                      <h3 className="text-lg font-semibold mb-3 text-foreground">{groupName}</h3>
                     )}
-                  </TableBody>
-                </Table>
+                    <div className="rounded-md border">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Email</TableHead>
+                            <TableHead>Phone</TableHead>
+                            <TableHead>Role</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {groupUsers.length === 0 ? (
+                            <TableRow>
+                              <TableCell colSpan={6} className="text-center text-muted-foreground">
+                                No users found
+                              </TableCell>
+                            </TableRow>
+                          ) : (
+                            groupUsers.map((user) => (
+                              <TableRow key={user.id}>
+                                <TableCell className="font-medium">{user.full_name}</TableCell>
+                                <TableCell>{user.email}</TableCell>
+                                <TableCell>{user.phone || "-"}</TableCell>
+                                <TableCell>
+                                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
+                                    {user.role?.role_name || "N/A"}
+                                  </span>
+                                </TableCell>
+                                <TableCell>
+                                  <span
+                                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                      user.status === "active"
+                                        ? "bg-green-500/10 text-green-500 border border-green-500/20"
+                                        : "bg-gray-500/10 text-gray-500 border border-gray-500/20"
+                                    }`}
+                                  >
+                                    {user.status}
+                                  </span>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  <div className="flex justify-end gap-2">
+                                    <Button variant="ghost" size="icon" onClick={() => handleViewProfile(user)} title="View Profile">
+                                      <Eye className="h-4 w-4" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" onClick={() => handleEdit(user)}>
+                                      <Pencil className="h-4 w-4" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" onClick={() => handleDelete(user.id)}>
+                                      <Trash2 className="h-4 w-4 text-destructive" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </CardContent>
         </Card>
+
+        {/* User Profile Dialog */}
+        <Dialog open={isProfileDialogOpen} onOpenChange={setIsProfileDialogOpen}>
+          <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>User Profile: {viewingUser?.full_name}</DialogTitle>
+              <DialogDescription>{viewingUser?.email}</DialogDescription>
+            </DialogHeader>
+            {userProfile ? (
+              <Tabs defaultValue="instruments" className="w-full">
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="instruments">Instruments</TabsTrigger>
+                  <TabsTrigger value="clothing">Clothing</TabsTrigger>
+                  <TabsTrigger value="attendance">Attendance</TabsTrigger>
+                  <TabsTrigger value="events">Events</TabsTrigger>
+                </TabsList>
+                <TabsContent value="instruments" className="space-y-4">
+                  <h4 className="font-medium">Instrument Assignments</h4>
+                  {userProfile.instrumentAssignments.length > 0 ? (
+                    <div className="space-y-2">
+                      {userProfile.instrumentAssignments.map((assignment: any) => (
+                        <div key={assignment.id} className="p-3 border rounded-lg">
+                          <p className="font-medium">{assignment.instrument?.name || "Unknown Instrument"}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Assigned: {new Date(assignment.assigned_at).toLocaleDateString()}
+                            {assignment.returned_at && ` • Returned: ${new Date(assignment.returned_at).toLocaleDateString()}`}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No instrument assignments</p>
+                  )}
+                </TabsContent>
+                <TabsContent value="clothing" className="space-y-4">
+                  <h4 className="font-medium">Clothing Assignments</h4>
+                  {userProfile.clothingAssignments.length > 0 ? (
+                    <div className="space-y-2">
+                      {userProfile.clothingAssignments.map((assignment: any) => (
+                        <div key={assignment.id} className="p-3 border rounded-lg">
+                          <p className="font-medium">{assignment.item?.name || "Unknown Item"}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Assigned: {new Date(assignment.assigned_at).toLocaleDateString()}
+                            {assignment.returned_at && ` • Returned: ${new Date(assignment.returned_at).toLocaleDateString()}`}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No clothing assignments</p>
+                  )}
+                </TabsContent>
+                <TabsContent value="attendance" className="space-y-4">
+                  <h4 className="font-medium">Attendance Records</h4>
+                  {userProfile.attendance.length > 0 ? (
+                    <div className="space-y-2">
+                      {userProfile.attendance.map((record: any) => (
+                        <div key={record.id} className="p-3 border rounded-lg">
+                          <p className="font-medium">{record.session?.title || "Session"}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Status: {record.status} • {record.confirmation || "No confirmation"}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No attendance records</p>
+                  )}
+                </TabsContent>
+                <TabsContent value="events" className="space-y-4">
+                  <h4 className="font-medium">Event Participation</h4>
+                  {userProfile.events.length > 0 ? (
+                    <div className="space-y-2">
+                      {userProfile.events.map((participation: any) => (
+                        <div key={participation.id} className="p-3 border rounded-lg">
+                          <p className="font-medium">{participation.event?.title || "Event"}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Role: {participation.role || "Participant"}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">No event participation</p>
+                  )}
+                </TabsContent>
+              </Tabs>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">Loading profile...</div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   )

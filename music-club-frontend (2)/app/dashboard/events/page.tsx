@@ -24,6 +24,7 @@ import { Calendar, Plus, Pencil, Trash2, MapPin, Users, UserPlus } from "lucide-
 import apiClient from "@/lib/api-client"
 import { extractArrayFromResponse } from "@/lib/api-utils"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/lib/auth-context"
 
 interface Event {
   id: number
@@ -71,6 +72,7 @@ export default function EventsPage() {
     role: "attendee",
   })
   const { toast } = useToast()
+  const { isLeader, isClassLeader } = useAuth()
 
   useEffect(() => {
     fetchData()
@@ -181,13 +183,15 @@ export default function EventsPage() {
             <p className="text-muted-foreground mt-1">Manage music club events and performances</p>
           </div>
           <div className="flex gap-2">
-            <Dialog open={isParticipantDialogOpen} onOpenChange={setIsParticipantDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="gap-2 bg-transparent">
-                  <UserPlus className="h-4 w-4" />
-                  Add Participant
-                </Button>
-              </DialogTrigger>
+            {(isLeader() || isClassLeader()) && (
+              <>
+                <Dialog open={isParticipantDialogOpen} onOpenChange={setIsParticipantDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="gap-2 bg-transparent">
+                      <UserPlus className="h-4 w-4" />
+                      Add Participant
+                    </Button>
+                  </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <form onSubmit={handleParticipantSubmit}>
                   <DialogHeader>
@@ -324,6 +328,8 @@ export default function EventsPage() {
                 </form>
               </DialogContent>
             </Dialog>
+              </>
+            )}
           </div>
         </div>
 
@@ -386,25 +392,27 @@ export default function EventsPage() {
                               <Users className="h-4 w-4" />
                               {eventParticipants.length} participant{eventParticipants.length !== 1 ? "s" : ""}
                             </div>
-                            <div className="flex gap-2 pt-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1 bg-transparent"
-                                onClick={() => handleEdit(event)}
-                              >
-                                <Pencil className="h-3 w-3 mr-1" />
-                                Edit
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="text-destructive hover:bg-destructive/10 bg-transparent"
-                                onClick={() => handleDelete(event.id)}
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </div>
+                            {(isLeader() || isClassLeader()) && (
+                              <div className="flex gap-2 pt-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="flex-1 bg-transparent"
+                                  onClick={() => handleEdit(event)}
+                                >
+                                  <Pencil className="h-3 w-3 mr-1" />
+                                  Edit
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="text-destructive hover:bg-destructive/10 bg-transparent"
+                                  onClick={() => handleDelete(event.id)}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         </CardContent>
                       </Card>

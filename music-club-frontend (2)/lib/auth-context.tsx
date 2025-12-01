@@ -29,6 +29,12 @@ interface AuthContextType {
   setUser: (user: User | null) => void
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  isLeader: () => boolean
+  isDepartmentLeader: () => boolean
+  isClassLeader: () => boolean
+  isTrainer: () => boolean
+  isTrainee: () => boolean
+  hasRole: (roleName: string) => boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -112,6 +118,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const isLeader = () => user?.role?.role_name?.toLowerCase() === "leader"
+  const isDepartmentLeader = () => user?.role?.role_name?.toLowerCase() === "department leader"
+  const isClassLeader = () => user?.role?.role_name?.toLowerCase() === "class leader"
+  const isTrainer = () => user?.role?.role_name?.toLowerCase() === "trainer"
+  const isTrainee = () => user?.role?.role_name?.toLowerCase() === "trainee"
+  const hasRole = (roleName: string) => user?.role?.role_name?.toLowerCase() === roleName.toLowerCase()
+
   return (
     <AuthContext.Provider
       value={{
@@ -121,6 +134,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser: handleSetUser,
         login,
         logout,
+        isLeader,
+        isDepartmentLeader,
+        isClassLeader,
+        isTrainer,
+        isTrainee,
+        hasRole,
       }}
     >
       {children}

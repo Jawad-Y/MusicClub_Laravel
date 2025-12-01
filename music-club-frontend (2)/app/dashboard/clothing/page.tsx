@@ -23,6 +23,7 @@ import { Shirt, Plus, Pencil, Trash2, UserIcon } from "lucide-react"
 import apiClient from "@/lib/api-client"
 import { extractArrayFromResponse } from "@/lib/api-utils"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/lib/auth-context"
 
 interface ClothingItem {
   id: number
@@ -66,7 +67,14 @@ export default function ClothingPage() {
     item_id: "",
     user_id: "",
   })
+  const [searchQuery, setSearchQuery] = useState("")
+  const [sortBy, setSortBy] = useState<"user" | "item" | "date">("date")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
+  const [groupBy, setGroupBy] = useState<"none" | "user" | "item">("none")
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "returned">("active")
   const { toast } = useToast()
+  const { isLeader, user } = useAuth()
+  const canManageInventory = isLeader() || user?.role?.role_name?.toLowerCase() === "inventory manager"
 
   useEffect(() => {
     fetchData()
@@ -116,10 +124,12 @@ export default function ClothingPage() {
   const handleAssignSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
+      const formatForSql = (d: Date) => d.toISOString().split('.')[0].replace('T', ' ')
+
       const data = {
         item_id: Number.parseInt(assignFormData.item_id),
         user_id: Number.parseInt(assignFormData.user_id),
-        assigned_at: new Date().toISOString(),
+        assigned_at: formatForSql(new Date()),
       }
 
       await apiClient.createClothingAssignment(data)
@@ -155,8 +165,9 @@ export default function ClothingPage() {
 
   const handleReturnItem = async (assignmentId: number) => {
     try {
+      const formatForSql = (d: Date) => d.toISOString().split('.')[0].replace('T', ' ')
       await apiClient.updateClothingAssignment(assignmentId, {
-        returned_at: new Date().toISOString(),
+        returned_at: formatForSql(new Date()),
       })
       toast({ title: "Success", description: "Item returned successfully" })
       fetchData()
@@ -174,6 +185,50 @@ export default function ClothingPage() {
     })
   }
 
+  const filteredAndSortedAssignments = assignments
+    .filter((assignment) => {
+      const matchesSearch =
+        assignment.user?.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        assignment.item?.category.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesStatus =
+        statusFilter === "all" ||
+        (statusFilter === "active" && !assignment.returned_at) ||
+        (statusFilter === "returned" && assignment.returned_at)
+      return matchesSearch && matchesStatus
+    })
+    .sort((a, b) => {
+      let comparison = 0
+      if (sortBy === "user") {
+        comparison = (a.user?.full_name || "").localeCompare(b.user?.full_name || "")
+      } else if (sortBy === "item") {
+        comparison = (a.item?.category || "").localeCompare(b.item?.category || "")
+      } else if (sortBy === "date") {
+        comparison = new Date(a.assigned_at).getTime() - new Date(b.assigned_at).getTime()
+      }
+      return sortOrder === "asc" ? comparison : -comparison
+    })
+
+  const groupedAssignments = () => {
+    if (groupBy === "none") {
+      return { "All Assignments": filteredAndSortedAssignments }
+    } else if (groupBy === "user") {
+      return filteredAndSortedAssignments.reduce((acc, assignment) => {
+        const key = assignment.user?.full_name || "Unknown User"
+        if (!acc[key]) acc[key] = []
+        acc[key].push(assignment)
+        return acc
+      }, {} as Record<string, ClothingAssignment[]>)
+    } else if (groupBy === "item") {
+      return filteredAndSortedAssignments.reduce((acc, assignment) => {
+        const key = assignment.item?.category || "Unknown Item"
+        if (!acc[key]) acc[key] = []
+        acc[key].push(assignment)
+        return acc
+      }, {} as Record<string, ClothingAssignment[]>)
+    }
+    return { "All Assignments": filteredAndSortedAssignments }
+  }
+
   const activeAssignments = assignments.filter((a) => !a.returned_at)
 
   return (
@@ -184,14 +239,15 @@ export default function ClothingPage() {
             <h1 className="text-3xl font-bold text-foreground">Clothing Inventory</h1>
             <p className="text-muted-foreground mt-1">Manage uniforms and clothing items</p>
           </div>
-          <div className="flex gap-2">
-            <Dialog open={isAssignDialogOpen} onOpenChange={setIsAssignDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="gap-2 bg-transparent">
-                  <UserIcon className="h-4 w-4" />
-                  Assign
-                </Button>
-              </DialogTrigger>
+          {canManageInventory && (
+            <div className="flex gap-2">
+              <Dialog open={isAssignDialogOpen} onOpenChange={setIsAssignDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="gap-2 bg-transparent">
+                    <UserIcon className="h-4 w-4" />
+                    Assign
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <form onSubmit={handleAssignSubmit}>
                   <DialogHeader>
@@ -315,7 +371,8 @@ export default function ClothingPage() {
                 </form>
               </DialogContent>
             </Dialog>
-          </div>
+            </div>
+          )}
         </div>
 
         <Tabs defaultValue="inventory" className="space-y-4">
@@ -352,25 +409,27 @@ export default function ClothingPage() {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <div className="flex gap-2 mt-3">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="flex-1 bg-transparent"
-                            onClick={() => handleEdit(item)}
-                          >
-                            <Pencil className="h-3 w-3 mr-1" />
-                            Edit
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-destructive hover:bg-destructive/10 bg-transparent"
-                            onClick={() => handleDelete(item.id)}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
+                        {canManageInventory && (
+                          <div className="flex gap-2 mt-3">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="flex-1 bg-transparent"
+                              onClick={() => handleEdit(item)}
+                            >
+                              <Pencil className="h-3 w-3 mr-1" />
+                              Edit
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-destructive hover:bg-destructive/10 bg-transparent"
+                              onClick={() => handleDelete(item.id)}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   ))
@@ -382,31 +441,94 @@ export default function ClothingPage() {
           <TabsContent value="assignments" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Active Assignments</CardTitle>
-                <CardDescription>Clothing items currently assigned to users</CardDescription>
+                <CardTitle>Clothing Assignments</CardTitle>
+                <CardDescription>Manage clothing items assigned to users</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {activeAssignments.length === 0 ? (
-                    <p className="text-center py-8 text-muted-foreground">No active assignments</p>
-                  ) : (
-                    activeAssignments.map((assignment) => (
-                      <div key={assignment.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex-1">
-                          <p className="font-medium">
-                            {assignment.item?.category} {assignment.item?.size ? `(${assignment.item.size})` : ""}
-                          </p>
-                          <p className="text-sm text-muted-foreground">Assigned to: {assignment.user?.full_name}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Since: {new Date(assignment.assigned_at).toLocaleDateString()}
-                          </p>
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <Input
+                      placeholder="Search assignments..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+
+                    <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Filter by Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="returned">Returned</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sort By" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="item">Item</SelectItem>
+                        <SelectItem value="date">Date</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Select value={groupBy} onValueChange={(v) => setGroupBy(v as any)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Group By" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">No Grouping</SelectItem>
+                        <SelectItem value="user">Group by User</SelectItem>
+                        <SelectItem value="item">Group by Item</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+                    >
+                      {sortOrder === "asc" ? "↑ Asc" : "↓ Desc"}
+                    </Button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {Object.entries(groupedAssignments()).map(([groupName, groupAssignments]) => (
+                      <div key={groupName}>
+                        {groupBy !== "none" && (
+                          <h3 className="text-lg font-semibold mb-3 text-foreground">{groupName}</h3>
+                        )}
+                        <div className="space-y-3">
+                          {groupAssignments.length === 0 ? (
+                            <p className="text-center py-8 text-muted-foreground">No assignments found</p>
+                          ) : (
+                            groupAssignments.map((assignment) => (
+                              <div key={assignment.id} className="flex items-center justify-between p-3 border rounded-lg">
+                                <div className="flex-1">
+                                  <p className="font-medium">
+                                    {assignment.item?.category} {assignment.item?.size ? `(${assignment.item.size})` : ""}
+                                  </p>
+                                  <p className="text-sm text-muted-foreground">Assigned to: {assignment.user?.full_name}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    Assigned: {new Date(assignment.assigned_at).toLocaleDateString()}
+                                    {assignment.returned_at && ` • Returned: ${new Date(assignment.returned_at).toLocaleDateString()}`}
+                                  </p>
+                                </div>
+                                {!assignment.returned_at && (
+                                  <Button variant="outline" size="sm" onClick={() => handleReturnItem(assignment.id)}>
+                                    Mark Returned
+                                  </Button>
+                                )}
+                              </div>
+                            ))
+                          )}
                         </div>
-                        <Button variant="outline" size="sm" onClick={() => handleReturnItem(assignment.id)}>
-                          Mark Returned
-                        </Button>
                       </div>
-                    ))
-                  )}
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>

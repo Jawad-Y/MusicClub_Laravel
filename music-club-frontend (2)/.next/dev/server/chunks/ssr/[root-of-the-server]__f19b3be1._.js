@@ -494,6 +494,12 @@ function AuthProvider({ children }) {
         if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
         ;
     };
+    const isLeader = ()=>user?.role?.role_name?.toLowerCase() === "leader";
+    const isDepartmentLeader = ()=>user?.role?.role_name?.toLowerCase() === "department leader";
+    const isClassLeader = ()=>user?.role?.role_name?.toLowerCase() === "class leader";
+    const isTrainer = ()=>user?.role?.role_name?.toLowerCase() === "trainer";
+    const isTrainee = ()=>user?.role?.role_name?.toLowerCase() === "trainee";
+    const hasRole = (roleName)=>user?.role?.role_name?.toLowerCase() === roleName.toLowerCase();
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(AuthContext.Provider, {
         value: {
             user,
@@ -501,12 +507,18 @@ function AuthProvider({ children }) {
             isLoading,
             setUser: handleSetUser,
             login,
-            logout
+            logout,
+            isLeader,
+            isDepartmentLeader,
+            isClassLeader,
+            isTrainer,
+            isTrainee,
+            hasRole
         },
         children: children
     }, void 0, false, {
         fileName: "[project]/music-club-frontend (2)/lib/auth-context.tsx",
-        lineNumber: 116,
+        lineNumber: 129,
         columnNumber: 5
     }, this);
 }

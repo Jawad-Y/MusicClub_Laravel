@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Users, GraduationCap, Guitar, Calendar, TrendingUp, BookOpen } from "lucide-react"
 import apiClient from "@/lib/api-client"
 import { extractCountFromResponse, extractArrayFromResponse } from "@/lib/api-utils"
+import { useToast } from "@/hooks/use-toast"
 
 interface TrainingSession {
   id: number
@@ -27,17 +28,24 @@ export default function DashboardPage() {
   })
   const [upcomingSessions, setUpcomingSessions] = useState<TrainingSession[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const { toast } = useToast()
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [usersRes, classesRes, instrumentsRes, sessionsRes, eventsRes] = await Promise.all([
+        // Fetch all stats but handle individual failures gracefully
+        const results = await Promise.allSettled([
           apiClient.getUsers(),
           apiClient.getClasses(),
           apiClient.getInstruments(),
           apiClient.getTrainingSessions(),
           apiClient.getEvents(),
         ])
+
+        // Extract successful results, default to 0 for failed ones
+        const [usersRes, classesRes, instrumentsRes, sessionsRes, eventsRes] = results.map(
+          (result) => result.status === 'fulfilled' ? result.value : { success: false, data: [] }
+        )
 
         setStats({
           users: extractCountFromResponse(usersRes),
@@ -47,22 +55,32 @@ export default function DashboardPage() {
           events: extractCountFromResponse(eventsRes),
         })
 
-        // Get upcoming sessions
-        const sessions = extractArrayFromResponse(sessionsRes)
-        const today = new Date()
-        const upcoming = sessions
-          .filter((s: TrainingSession) => s.date && new Date(s.date) >= today)
-          .sort((a: TrainingSession, b: TrainingSession) => 
-            new Date(a.date).getTime() - new Date(b.date).getTime()
-          )
-          .slice(0, 5)
-        setUpcomingSessions(upcoming)
-      } catch (error: any) {
-        if (error && (error.status || error.body)) {
-          console.error("[v0] Error fetching dashboard stats - status:", error.status, "statusText:", error.statusText, "body:", error.body)
-        } else {
-          console.error("[v0] Error fetching dashboard stats:", error)
+        // Get upcoming sessions if available
+        if (sessionsRes.success) {
+          const sessions = extractArrayFromResponse(sessionsRes)
+          const today = new Date()
+          const upcoming = sessions
+            .filter((s: TrainingSession) => s.date && new Date(s.date) >= today)
+            .sort((a: TrainingSession, b: TrainingSession) => 
+              new Date(a.date).getTime() - new Date(b.date).getTime()
+            )
+            .slice(0, 5)
+          setUpcomingSessions(upcoming)
         }
+
+        // Log any failures for debugging
+        results.forEach((result, index) => {
+          if (result.status === 'rejected') {
+            const error = result.reason
+            console.error(`[v0] Error fetching stat ${index}:`, {
+              status: error?.status,
+              statusText: error?.statusText,
+              body: error?.body
+            })
+          }
+        })
+      } catch (error: any) {
+        console.error("[v0] Unexpected error in fetchStats:", error)
       } finally {
         setIsLoading(false)
       }

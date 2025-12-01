@@ -321,10 +321,10 @@ export default function UserProfilePage() {
                             <Calendar className="h-4 w-4 text-primary" />
                           </div>
                           <div>
-                            <p className="font-medium">{record.training_session?.session_name || "Session"}</p>
+                            <p className="font-medium">{record.training_session?.subject || "Session"}</p>
                             <p className="text-sm text-muted-foreground">
-                              {record.training_session?.session_date
-                                ? new Date(record.training_session.session_date).toLocaleDateString()
+                              {record.training_session?.date
+                                ? new Date(record.training_session.date).toLocaleDateString()
                                 : "N/A"}
                             </p>
                           </div>

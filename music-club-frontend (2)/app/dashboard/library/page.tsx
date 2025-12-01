@@ -50,9 +50,13 @@ export default function LibraryPage() {
     title: "",
     description: "",
     file_url: "",
-    instrument_type_id: "0", // Updated default value to '0'
+    instrument_type_id: "0",
   })
   const [searchQuery, setSearchQuery] = useState("")
+  const [sortBy, setSortBy] = useState<"title" | "date" | "type">("title")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
+  const [groupBy, setGroupBy] = useState<"none" | "type">("none")
+  const [typeFilter, setTypeFilter] = useState<string>("all")
   const { toast } = useToast()
 
   useEffect(() => {
@@ -68,13 +72,21 @@ export default function LibraryPage() {
 
       setMaterials(extractArrayFromResponse(materialsRes))
       setInstrumentTypes(extractArrayFromResponse(typesRes))
-    } catch (error) {
-      console.error("[v0] Error fetching data:", error?.status, error?.statusText, error?.body || error)
-      toast({
-        title: "Error",
-        description: "Failed to load library materials",
-        variant: "destructive",
+    } catch (error: any) {
+      console.error("[v0] Error fetching data:", {
+        status: error?.status,
+        statusText: error?.statusText,
+        body: error?.body,
+        message: error?.body?.message
       })
+      // Don't show toast for 403 - navigation should prevent access
+      if (error?.status !== 403) {
+        toast({
+          title: "Error",
+          description: error?.body?.message || "Failed to load library materials",
+          variant: "destructive",
+        })
+      }
     } finally {
       setIsLoading(false)
     }
@@ -138,11 +150,42 @@ export default function LibraryPage() {
     })
   }
 
-  const filteredMaterials = materials.filter(
-    (material) =>
-      material.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      material.description?.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  const filteredMaterials = materials
+    .filter((material) => {
+      const matchesSearch =
+        material.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        material.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesType =
+        typeFilter === "all" || material.instrument_type_id?.toString() === typeFilter
+      return matchesSearch && matchesType
+    })
+    .sort((a, b) => {
+      let comparison = 0
+      if (sortBy === "title") {
+        comparison = a.title.localeCompare(b.title)
+      } else if (sortBy === "date") {
+        comparison = new Date(a.uploaded_at || 0).getTime() - new Date(b.uploaded_at || 0).getTime()
+      } else if (sortBy === "type") {
+        comparison = (a.instrument_type?.name || "").localeCompare(b.instrument_type?.name || "")
+      }
+      return sortOrder === "asc" ? comparison : -comparison
+    })
+
+  const groupedMaterials = () => {
+    if (groupBy === "none") {
+      return { "All Materials": filteredMaterials }
+    } else if (groupBy === "type") {
+      return filteredMaterials.reduce((acc, material) => {
+        const key = material.instrument_type?.name || "No Type"
+        if (!acc[key]) acc[key] = []
+        acc[key].push(material)
+        return acc
+      }, {} as Record<string, LibraryMaterial[]>)
+    }
+    return { "All Materials": filteredMaterials }
+  }
+
+  const materialGroups = groupedMaterials()
 
   return (
     <DashboardLayout>
@@ -235,80 +278,135 @@ export default function LibraryPage() {
         </div>
 
         <div className="space-y-4">
-          <Input
-            placeholder="Search materials..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="max-w-md"
-          />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <Input
+              placeholder="Search materials..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Filter by Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                {instrumentTypes.map((type) => (
+                  <SelectItem key={type.id} value={type.id.toString()}>
+                    {type.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={sortBy} onValueChange={(v) => setSortBy(v as any)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Sort By" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="title">Title</SelectItem>
+                <SelectItem value="date">Upload Date</SelectItem>
+                <SelectItem value="type">Instrument Type</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={groupBy} onValueChange={(v) => setGroupBy(v as any)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Group By" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No Grouping</SelectItem>
+                <SelectItem value="type">Group by Type</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+            >
+              {sortOrder === "asc" ? "↑ Ascending" : "↓ Descending"}
+            </Button>
+          </div>
 
           {isLoading ? (
             <div className="text-center py-8 text-muted-foreground">Loading...</div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredMaterials.length === 0 ? (
-                <Card className="col-span-full">
-                  <CardContent className="flex flex-col items-center justify-center py-12">
-                    <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                    <p className="text-muted-foreground">No library materials found</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                filteredMaterials.map((material) => (
-                  <Card key={material.id} className="hover:border-primary/30 transition-colors">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-1 flex-1">
-                          <CardTitle className="text-lg">{material.title}</CardTitle>
-                          <CardDescription>
-                            {material.instrument_type?.name && (
-                              <span className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">
-                                {material.instrument_type.name}
-                              </span>
-                            )}
-                          </CardDescription>
-                        </div>
-                        <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
-                          <FileText className="h-4 w-4 text-blue-500" />
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        {material.description && (
-                          <p className="text-sm text-muted-foreground line-clamp-2">{material.description}</p>
-                        )}
-                        {material.uploaded_at && (
-                          <p className="text-xs text-muted-foreground">
-                            Uploaded: {new Date(material.uploaded_at).toLocaleDateString()}
-                          </p>
-                        )}
-                        <div className="flex gap-2 pt-2">
-                          {material.file_url && (
-                            <Button variant="outline" size="sm" className="flex-1 bg-transparent" asChild>
-                              <a href={material.file_url} target="_blank" rel="noopener noreferrer">
-                                <Download className="h-3 w-3 mr-1" />
-                                View
-                              </a>
-                            </Button>
-                          )}
-                          <Button variant="outline" size="sm" onClick={() => handleEdit(material)}>
-                            <Pencil className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-destructive hover:bg-destructive/10 bg-transparent"
-                            onClick={() => handleDelete(material.id)}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
+            <div className="space-y-6">
+              {Object.entries(materialGroups).map(([groupName, groupMaterials]) => (
+                <div key={groupName}>
+                  {groupBy !== "none" && (
+                    <h3 className="text-lg font-semibold mb-3 text-foreground">{groupName}</h3>
+                  )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {groupMaterials.length === 0 ? (
+                      <Card className="col-span-full">
+                        <CardContent className="flex flex-col items-center justify-center py-12">
+                          <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+                          <p className="text-muted-foreground">No library materials found</p>
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      groupMaterials.map((material) => (
+                        <Card key={material.id} className="hover:border-primary/30 transition-colors">
+                          <CardHeader>
+                            <div className="flex items-start justify-between">
+                              <div className="space-y-1 flex-1">
+                                <CardTitle className="text-lg">{material.title}</CardTitle>
+                                <CardDescription>
+                                  {material.instrument_type?.name && (
+                                    <span className="text-xs px-2 py-1 rounded bg-primary/10 text-primary">
+                                      {material.instrument_type.name}
+                                    </span>
+                                  )}
+                                </CardDescription>
+                              </div>
+                              <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                                <FileText className="h-4 w-4 text-blue-500" />
+                              </div>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-3">
+                              {material.description && (
+                                <p className="text-sm text-muted-foreground line-clamp-2">{material.description}</p>
+                              )}
+                              {material.uploaded_at && (
+                                <p className="text-xs text-muted-foreground">
+                                  Uploaded: {new Date(material.uploaded_at).toLocaleDateString()}
+                                </p>
+                              )}
+                              <div className="flex gap-2 pt-2">
+                                {material.file_url && (
+                                  <Button variant="outline" size="sm" className="flex-1 bg-transparent" asChild>
+                                    <a href={material.file_url} target="_blank" rel="noopener noreferrer">
+                                      <Download className="h-3 w-3 mr-1" />
+                                      View
+                                    </a>
+                                  </Button>
+                                )}
+                                <Button variant="outline" size="sm" onClick={() => handleEdit(material)}>
+                                  <Pencil className="h-3 w-3" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="text-destructive hover:bg-destructive/10 bg-transparent"
+                                  onClick={() => handleDelete(material.id)}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

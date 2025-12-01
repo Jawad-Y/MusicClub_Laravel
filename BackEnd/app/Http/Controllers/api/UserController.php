@@ -17,11 +17,13 @@ class UserController extends Controller
     /**
      * Display a paginated list of users.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $perPage = $request->get('per_page', 15);
+        
         $users = User::with('role')
             ->orderBy('id', 'desc')
-            ->paginate(15);
+            ->paginate($perPage);
 
         return $this->success($users);
     }

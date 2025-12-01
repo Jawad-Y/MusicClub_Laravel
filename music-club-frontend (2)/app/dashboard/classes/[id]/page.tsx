@@ -22,10 +22,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Calendar, User, Clock, MapPin, Upload, FileText, Trash2 } from "lucide-react"
+import { ArrowLeft, Calendar, User, Clock, MapPin, Upload, FileText, Trash2, Plus, UserPlus, CheckCircle2, XCircle } from "lucide-react"
 import apiClient from "@/lib/api-client"
+import { extractArrayFromResponse } from "@/lib/api-utils"
 import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/lib/auth-context"
+import { Checkbox } from "@/components/ui/checkbox"
 
 export default function ClassDetailsPage() {
   const params = useParams()
@@ -36,8 +38,16 @@ export default function ClassDetailsPage() {
   const [members, setMembers] = useState<any[]>([])
   const [trainingSessions, setTrainingSessions] = useState<any[]>([])
   const [libraryMaterials, setLibraryMaterials] = useState<any[]>([])
+  const [homework, setHomework] = useState<any[]>([])
+  const [users, setUsers] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isLibraryDialogOpen, setIsLibraryDialogOpen] = useState(false)
+  const [isSessionDialogOpen, setIsSessionDialogOpen] = useState(false)
+  const [isHomeworkDialogOpen, setIsHomeworkDialogOpen] = useState(false)
+  const [isAddUserDialogOpen, setIsAddUserDialogOpen] = useState(false)
+  const [isAttendanceDialogOpen, setIsAttendanceDialogOpen] = useState(false)
+  const [selectedSession, setSelectedSession] = useState<any>(null)
+  const [attendance, setAttendance] = useState<{[key: number]: boolean}>({})
   const [libraryFormData, setLibraryFormData] = useState({
     title: "",
     description: "",
@@ -45,19 +55,42 @@ export default function ClassDetailsPage() {
     material_type: "pdf",
     instrument_type_id: "",
   })
+  const [sessionFormData, setSessionFormData] = useState({
+    session_name: "",
+    description: "",
+    session_date: "",
+    start_time: "",
+    end_time: "",
+    location: "",
+    trainer_id: user?.id ? user.id.toString() : "",
+  })
+  const [homeworkFormData, setHomeworkFormData] = useState({
+    title: "",
+    description: "",
+    due_date: "",
+  })
+  const [addUserFormData, setAddUserFormData] = useState({
+    user_id: "",
+    role: "trainee",
+  })
   const { toast } = useToast()
 
   // Check if current user is enrolled in this class
   const isEnrolled = members.some((m) => m.user_id === user?.id)
   const isTrainer = members.some((m) => m.user_id === user?.id && m.role === "trainer")
-  const isAdmin = user?.role?.role_name === "admin"
-  const canAccess = isAdmin || isEnrolled
+  const isLeader = user?.role?.role_name?.toLowerCase() === "leader"
+  const isDeptLeader = user?.role?.role_name?.toLowerCase() === "department leader"
+  const isClassLeader = user?.role?.role_name?.toLowerCase() === "class leader"
+  const canManage = isLeader || isDeptLeader || isClassLeader || isTrainer
+  const canAccess = canManage || isEnrolled
 
   useEffect(() => {
     fetchClassData()
     fetchMembers()
     fetchTrainingSessions()
     fetchLibraryMaterials()
+    fetchHomework()
+    fetchUsers()
   }, [classId])
 
   const fetchClassData = async () => {
@@ -66,8 +99,18 @@ export default function ClassDetailsPage() {
       if (response.success && response.data) {
         setClassData(response.data)
       }
-    } catch (error) {
-      console.error("[v0] Error fetching class:", error)
+    } catch (error: any) {
+      console.error("[v0] Error fetching class:", {
+        status: error?.status,
+        statusText: error?.statusText,
+        body: error?.body,
+        error
+      })
+      toast({
+        title: "Error",
+        description: `Failed to load class: ${error?.status || 'Unknown error'}`,
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -76,20 +119,26 @@ export default function ClassDetailsPage() {
   const fetchMembers = async () => {
     try {
       const response = await apiClient.getClassMembers()
-      if (response.success && response.data) {
-        const classMembers = response.data.filter((m: any) => m.class_id === classId)
+      if (response.success) {
+        const allMembers = extractArrayFromResponse(response)
+        const classMembers = allMembers.filter((m: any) => m.class_id === classId)
         setMembers(classMembers)
       }
-    } catch (error) {
-      console.error("[v0] Error fetching members:", error)
+    } catch (error: any) {
+      console.error("[v0] Error fetching members:", {
+        status: error?.status,
+        statusText: error?.statusText,
+        body: error?.body
+      })
     }
   }
 
   const fetchTrainingSessions = async () => {
     try {
       const response = await apiClient.getTrainingSessions()
-      if (response.success && response.data) {
-        const classSessions = response.data.filter((s: any) => s.class_id === classId)
+      if (response.success) {
+        const allSessions = extractArrayFromResponse(response)
+        const classSessions = allSessions.filter((s: any) => s.class_id === classId)
         setTrainingSessions(classSessions)
       }
     } catch (error) {
@@ -100,12 +149,40 @@ export default function ClassDetailsPage() {
   const fetchLibraryMaterials = async () => {
     try {
       const response = await apiClient.getLibraryMaterials()
-      if (response.success && response.data) {
-        // Filter by class instrument type if available
-        setLibraryMaterials(response.data)
+      if (response.success) {
+        setLibraryMaterials(extractArrayFromResponse(response))
       }
     } catch (error) {
       console.error("[v0] Error fetching library materials:", error)
+    }
+  }
+
+  const fetchHomework = async () => {
+    try {
+      // use the collection endpoint and filter by class_id
+      const response = await apiClient.getHomeworks()
+      if (response.success) {
+        const allHomework = extractArrayFromResponse(response)
+        const classHomework = allHomework.filter((h: any) => h.class_id === classId)
+        setHomework(classHomework)
+      }
+    } catch (error: any) {
+      console.error("[v0] Error fetching homework:", {
+        status: error?.status,
+        statusText: error?.statusText,
+        body: error?.body
+      })
+    }
+  }
+
+  const fetchUsers = async () => {
+    try {
+      const response = await apiClient.getUsers()
+      if (response.success) {
+        setUsers(extractArrayFromResponse(response))
+      }
+    } catch (error) {
+      console.error("[v0] Error fetching users:", error)
     }
   }
 
@@ -135,6 +212,154 @@ export default function ClassDetailsPage() {
         description: error.message || "Failed to add library material",
         variant: "destructive",
       })
+    }
+  }
+
+  const handleSessionSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      // Map frontend names to backend expected fields
+      await apiClient.createTrainingSession({
+        subject: sessionFormData.session_name,
+        description: sessionFormData.description,
+        date: sessionFormData.session_date,
+        start_time: sessionFormData.start_time,
+        end_time: sessionFormData.end_time,
+        location: sessionFormData.location,
+        class_id: classId,
+        trainer_id: Number(sessionFormData.trainer_id),
+      })
+      toast({
+        title: "Success",
+        description: "Training session created successfully",
+      })
+      setIsSessionDialogOpen(false)
+      setSessionFormData({
+        session_name: "",
+        description: "",
+        session_date: "",
+        start_time: "",
+        end_time: "",
+        location: "",
+        trainer_id: "",
+      })
+      fetchTrainingSessions()
+    } catch (error: any) {
+      console.error("Session creation error:", error)
+      toast({
+        title: "Error",
+        description: error?.body?.message || error.message || "Failed to create session",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleHomeworkSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      await apiClient.createHomework({
+        ...homeworkFormData,
+        class_id: classId,
+      })
+      toast({
+        title: "Success",
+        description: "Homework created successfully",
+      })
+      setIsHomeworkDialogOpen(false)
+      setHomeworkFormData({
+        title: "",
+        description: "",
+        due_date: "",
+      })
+      fetchHomework()
+    } catch (error: any) {
+      console.error("Homework creation error:", error)
+      toast({
+        title: "Error",
+        description: error?.body?.message || error.message || "Failed to create homework",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleAddUser = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      await apiClient.createClassMember({
+        class_id: classId,
+        user_id: Number(addUserFormData.user_id),
+        role: addUserFormData.role,
+      })
+      toast({
+        title: "Success",
+        description: "User added to class successfully",
+      })
+      setIsAddUserDialogOpen(false)
+      setAddUserFormData({
+        user_id: "",
+        role: "trainee",
+      })
+      fetchMembers()
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to add user",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleOpenAttendance = (session: any) => {
+    setSelectedSession(session)
+    // Initialize attendance state
+    const initialAttendance: {[key: number]: boolean} = {}
+    members.forEach(member => {
+      initialAttendance[member.user_id] = false
+    })
+    setAttendance(initialAttendance)
+    setIsAttendanceDialogOpen(true)
+  }
+
+  const handleSubmitAttendance = async () => {
+    if (!selectedSession) return
+    
+    try {
+      // Submit attendance for each member
+      const attendancePromises = Object.entries(attendance).map(([userId, present]) => 
+        // backend expects `session_id` and `trainee_id`
+        apiClient.createSessionAttendance({
+          session_id: selectedSession.id,
+          trainee_id: Number(userId),
+          status: present ? "present" : "absent",
+        })
+      )
+      await Promise.all(attendancePromises)
+      toast({
+        title: "Success",
+        description: "Attendance recorded successfully",
+      })
+      setIsAttendanceDialogOpen(false)
+      setSelectedSession(null)
+      setAttendance({})
+    } catch (error: any) {
+      console.error("Attendance error:", error)
+      toast({
+        title: "Error",
+        description: error?.body?.message || error.message || "Failed to record attendance",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleRemoveMember = async (id: number) => {
+    if (!confirm("Are you sure you want to remove this member from the class?")) return
+    try {
+      await apiClient.deleteClassMember(id)
+      toast({ title: "Success", description: "Member removed successfully" })
+      fetchMembers()
+    } catch (error: any) {
+      console.error("Remove member error:", error)
+      toast({ title: "Error", description: error?.body?.message || error.message || "Failed to remove member", variant: "destructive" })
     }
   }
 
@@ -201,6 +426,7 @@ export default function ClassDetailsPage() {
             <TabsTrigger value="info">Class Info</TabsTrigger>
             <TabsTrigger value="members">Members</TabsTrigger>
             <TabsTrigger value="sessions">Training Sessions</TabsTrigger>
+            <TabsTrigger value="homework">Homework</TabsTrigger>
             <TabsTrigger value="library">Class Library</TabsTrigger>
           </TabsList>
 
@@ -234,9 +460,68 @@ export default function ClassDetailsPage() {
 
           <TabsContent value="members" className="space-y-4">
             <Card>
-              <CardHeader>
-                <CardTitle>Class Members</CardTitle>
-                <CardDescription>Students and trainers in this class</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                <div>
+                  <CardTitle>Class Members</CardTitle>
+                  <CardDescription>Students and trainers in this class</CardDescription>
+                </div>
+                {canManage && (
+                  <Dialog open={isAddUserDialogOpen} onOpenChange={setIsAddUserDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="gap-2">
+                        <UserPlus className="h-4 w-4" />
+                        Add User
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <form onSubmit={handleAddUser}>
+                        <DialogHeader>
+                          <DialogTitle>Add User to Class</DialogTitle>
+                          <DialogDescription>Assign a user as trainer or trainee</DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="user_id">User</Label>
+                            <Select
+                              value={addUserFormData.user_id}
+                              onValueChange={(value) => setAddUserFormData({ ...addUserFormData, user_id: value })}
+                              required
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a user" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {users.filter(u => !members.some(m => m.user_id === u.id)).map((user) => (
+                                  <SelectItem key={user.id} value={user.id.toString()}>
+                                    {user.full_name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="role">Role</Label>
+                            <Select
+                              value={addUserFormData.role}
+                              onValueChange={(value) => setAddUserFormData({ ...addUserFormData, role: value })}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="trainer">Trainer</SelectItem>
+                                <SelectItem value="trainee">Trainee</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button type="submit">Add User</Button>
+                        </DialogFooter>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -258,16 +543,31 @@ export default function ClassDetailsPage() {
                             <p className="text-sm text-muted-foreground">{member.user?.email}</p>
                           </div>
                         </div>
-                        <Badge
-                          variant={member.role === "trainer" ? "default" : "secondary"}
-                          className={
-                            member.role === "trainer"
-                              ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
-                              : "bg-purple-500/10 text-purple-500 border-purple-500/20"
-                          }
-                        >
-                          {member.role}
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge
+                            variant={member.role === "trainer" ? "default" : "secondary"}
+                            className={
+                              member.role === "trainer"
+                                ? "bg-blue-500/10 text-blue-500 border-blue-500/20"
+                                : "bg-purple-500/10 text-purple-500 border-purple-500/20"
+                            }
+                          >
+                            {member.role}
+                          </Badge>
+                          {canManage && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleRemoveMember(member.id)
+                              }}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     ))
                   )}
@@ -278,9 +578,121 @@ export default function ClassDetailsPage() {
 
           <TabsContent value="sessions" className="space-y-4">
             <Card>
-              <CardHeader>
-                <CardTitle>Training Sessions</CardTitle>
-                <CardDescription>Upcoming and past training sessions</CardDescription>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                <div>
+                  <CardTitle>Training Sessions</CardTitle>
+                  <CardDescription>Upcoming and past training sessions</CardDescription>
+                </div>
+                {canManage && (
+                  <Dialog open={isSessionDialogOpen} onOpenChange={setIsSessionDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="gap-2">
+                        <Plus className="h-4 w-4" />
+                        Create Session
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <form onSubmit={handleSessionSubmit}>
+                        <DialogHeader>
+                          <DialogTitle>Create Training Session</DialogTitle>
+                          <DialogDescription>Schedule a new training session for this class</DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="session_name">Session Name</Label>
+                            <Input
+                              id="session_name"
+                              value={sessionFormData.session_name}
+                              onChange={(e) => setSessionFormData({ ...sessionFormData, session_name: e.target.value })}
+                              required
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="trainer_id">Trainer</Label>
+                            <Select
+                              value={sessionFormData.trainer_id}
+                              onValueChange={(value) => setSessionFormData({ ...sessionFormData, trainer_id: value })}
+                              required
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a trainer" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {members
+                                  .filter((m) => m.role === "trainer")
+                                  .map((m) => (
+                                    <SelectItem key={m.user_id} value={m.user_id.toString()}>
+                                      {m.user?.full_name}
+                                    </SelectItem>
+                                  ))}
+                                {members
+                                  .filter((m) => m.role !== "trainer")
+                                  .map((m) => (
+                                    <SelectItem key={`alt-${m.user_id}`} value={m.user_id.toString()}>
+                                      {m.user?.full_name}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="session_description">Description</Label>
+                            <Textarea
+                              id="session_description"
+                              value={sessionFormData.description}
+                              onChange={(e) => setSessionFormData({ ...sessionFormData, description: e.target.value })}
+                            />
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                              <Label htmlFor="session_date">Date</Label>
+                              <Input
+                                id="session_date"
+                                type="date"
+                                value={sessionFormData.session_date}
+                                onChange={(e) => setSessionFormData({ ...sessionFormData, session_date: e.target.value })}
+                                required
+                              />
+                            </div>
+                            <div className="grid gap-2">
+                              <Label htmlFor="location">Location</Label>
+                              <Input
+                                id="location"
+                                value={sessionFormData.location}
+                                onChange={(e) => setSessionFormData({ ...sessionFormData, location: e.target.value })}
+                              />
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                              <Label htmlFor="start_time">Start Time</Label>
+                              <Input
+                                id="start_time"
+                                type="time"
+                                value={sessionFormData.start_time}
+                                onChange={(e) => setSessionFormData({ ...sessionFormData, start_time: e.target.value })}
+                                required
+                              />
+                            </div>
+                            <div className="grid gap-2">
+                              <Label htmlFor="end_time">End Time</Label>
+                              <Input
+                                id="end_time"
+                                type="time"
+                                value={sessionFormData.end_time}
+                                onChange={(e) => setSessionFormData({ ...sessionFormData, end_time: e.target.value })}
+                                required
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button type="submit">Create Session</Button>
+                        </DialogFooter>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -290,16 +702,29 @@ export default function ClassDetailsPage() {
                     trainingSessions.map((session) => (
                       <div key={session.id} className="p-4 border rounded-lg space-y-2">
                         <div className="flex items-start justify-between">
-                          <div>
-                            <h4 className="font-semibold">{session.session_name}</h4>
+                          <div className="flex-1">
+                            <h4 className="font-semibold">{session.subject}</h4>
                             <p className="text-sm text-muted-foreground mt-1">{session.description}</p>
                           </div>
-                          <Badge>{new Date(session.session_date) > new Date() ? "Upcoming" : "Past"}</Badge>
+                          <div className="flex items-center gap-2">
+                            <Badge>{new Date(session.date) > new Date() ? "Upcoming" : "Past"}</Badge>
+                            {canManage && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleOpenAttendance(session)}
+                                className="gap-1"
+                              >
+                                <CheckCircle2 className="h-3 w-3" />
+                                Attendance
+                              </Button>
+                            )}
+                          </div>
                         </div>
                         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <Calendar className="h-3 w-3" />
-                            {new Date(session.session_date).toLocaleDateString()}
+                            {session.date ? new Date(session.date).toLocaleDateString() : "N/A"}
                           </div>
                           <div className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
@@ -318,6 +743,93 @@ export default function ClassDetailsPage() {
             </Card>
           </TabsContent>
 
+          <TabsContent value="homework" className="space-y-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                <div>
+                  <CardTitle>Homework Assignments</CardTitle>
+                  <CardDescription>Assignments for this class</CardDescription>
+                </div>
+                {canManage && (
+                  <Dialog open={isHomeworkDialogOpen} onOpenChange={setIsHomeworkDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="gap-2">
+                        <Plus className="h-4 w-4" />
+                        Create Homework
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <form onSubmit={handleHomeworkSubmit}>
+                        <DialogHeader>
+                          <DialogTitle>Create Homework</DialogTitle>
+                          <DialogDescription>Assign homework to this class</DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="homework_title">Title</Label>
+                            <Input
+                              id="homework_title"
+                              value={homeworkFormData.title}
+                              onChange={(e) => setHomeworkFormData({ ...homeworkFormData, title: e.target.value })}
+                              required
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="homework_description">Description</Label>
+                            <Textarea
+                              id="homework_description"
+                              value={homeworkFormData.description}
+                              onChange={(e) => setHomeworkFormData({ ...homeworkFormData, description: e.target.value })}
+                              required
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="due_date">Due Date</Label>
+                            <Input
+                              id="due_date"
+                              type="date"
+                              value={homeworkFormData.due_date}
+                              onChange={(e) => setHomeworkFormData({ ...homeworkFormData, due_date: e.target.value })}
+                              required
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button type="submit">Create Homework</Button>
+                        </DialogFooter>
+                      </form>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {homework.length === 0 ? (
+                    <p className="text-center py-8 text-muted-foreground">No homework assigned</p>
+                  ) : (
+                    homework.map((hw) => (
+                      <div key={hw.id} className="p-4 border rounded-lg space-y-2">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-semibold">{hw.title}</h4>
+                            <p className="text-sm text-muted-foreground mt-1">{hw.description}</p>
+                          </div>
+                          <Badge variant={new Date(hw.due_date) > new Date() ? "default" : "destructive"}>
+                            {new Date(hw.due_date) > new Date() ? "Pending" : "Overdue"}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Calendar className="h-3 w-3" />
+                          Due: {new Date(hw.due_date).toLocaleDateString()}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="library" className="space-y-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -325,7 +837,7 @@ export default function ClassDetailsPage() {
                   <CardTitle>Class Library</CardTitle>
                   <CardDescription>Educational materials and resources</CardDescription>
                 </div>
-                {(isAdmin || isTrainer) && (
+                {canManage && (
                   <Dialog open={isLibraryDialogOpen} onOpenChange={setIsLibraryDialogOpen}>
                     <DialogTrigger asChild>
                       <Button size="sm" className="gap-2">
@@ -422,7 +934,7 @@ export default function ClassDetailsPage() {
                               View
                             </a>
                           </Button>
-                          {(isAdmin || isTrainer) && (
+                          {canManage && (
                             <Button
                               variant="ghost"
                               size="icon"
@@ -441,6 +953,52 @@ export default function ClassDetailsPage() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Attendance Dialog */}
+        <Dialog open={isAttendanceDialogOpen} onOpenChange={setIsAttendanceDialogOpen}>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Take Attendance</DialogTitle>
+              <DialogDescription>
+                {selectedSession?.subject} - {selectedSession?.date && new Date(selectedSession.date).toLocaleDateString()}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="max-h-[400px] overflow-y-auto py-4">
+              <div className="space-y-3">
+                {members.map((member) => (
+                  <div key={member.user_id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-full bg-primary/10">
+                        <User className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-medium">{member.user?.full_name}</p>
+                        <p className="text-sm text-muted-foreground">{member.role}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        checked={attendance[member.user_id] || false}
+                        onCheckedChange={(checked) => 
+                          setAttendance({...attendance, [member.user_id]: checked === true})
+                        }
+                      />
+                      {attendance[member.user_id] ? (
+                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                      ) : (
+                        <XCircle className="h-5 w-5 text-red-500" />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsAttendanceDialogOpen(false)}>Cancel</Button>
+              <Button onClick={handleSubmitAttendance}>Submit Attendance</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   )

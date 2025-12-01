@@ -1,0 +1,13 @@
+__turbopack_load_page_chunks__("/_app", [
+  "static/chunks/d6ae9_next_dist_compiled_7feeda3d._.js",
+  "static/chunks/d6ae9_next_dist_shared_lib_e3717b9e._.js",
+  "static/chunks/d6ae9_next_dist_client_edf4ba28._.js",
+  "static/chunks/d6ae9_next_dist_da652442._.js",
+  "static/chunks/d6ae9_next_app_0b156ce7.js",
+  "static/chunks/[next]_entry_page-loader_ts_bf469fef._.js",
+  "static/chunks/d6ae9_react-dom_34463895._.js",
+  "static/chunks/d6ae9_a1483319._.js",
+  "static/chunks/[root-of-the-server]__b16d2c84._.js",
+  "static/chunks/music-club-frontend (2)_pages__app_2da965e7._.js",
+  "static/chunks/turbopack-music-club-frontend (2)_pages__app_a03dc1b3._.js"
+])

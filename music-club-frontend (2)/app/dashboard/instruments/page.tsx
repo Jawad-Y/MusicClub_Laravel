@@ -23,6 +23,7 @@ import { Guitar, Plus, Pencil, Trash2, Package, UserIcon } from "lucide-react"
 import apiClient from "@/lib/api-client"
 import { extractArrayFromResponse } from "@/lib/api-utils"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/lib/auth-context"
 
 interface InstrumentType {
   id: number
@@ -80,6 +81,8 @@ export default function InstrumentsPage() {
     name: "",
   })
   const { toast } = useToast()
+  const { isLeader, user } = useAuth()
+  const canManageInventory = isLeader() || user?.role?.role_name?.toLowerCase() === "inventory manager"
 
   useEffect(() => {
     fetchData()
@@ -219,12 +222,13 @@ export default function InstrumentsPage() {
             <h1 className="text-3xl font-bold text-foreground">Instruments</h1>
             <p className="text-muted-foreground mt-1">Manage instrument inventory and assignments</p>
           </div>
-          <div className="flex gap-2">
-            <Dialog open={isTypeDialogOpen} onOpenChange={setIsTypeDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="gap-2 bg-transparent">
-                  <Package className="h-4 w-4" />
-                  Add Type
+          {canManageInventory && (
+            <div className="flex gap-2">
+              <Dialog open={isTypeDialogOpen} onOpenChange={setIsTypeDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="gap-2 bg-transparent">
+                    <Package className="h-4 w-4" />
+                    Add Type
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
@@ -397,7 +401,8 @@ export default function InstrumentsPage() {
                 </form>
               </DialogContent>
             </Dialog>
-          </div>
+            </div>
+          )}
         </div>
 
         <Tabs defaultValue="inventory" className="space-y-4">
@@ -449,25 +454,27 @@ export default function InstrumentsPage() {
                           >
                             {instrument.condition}
                           </span>
-                          <div className="flex gap-2 mt-3">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="flex-1 bg-transparent"
-                              onClick={() => handleEdit(instrument)}
-                            >
-                              <Pencil className="h-3 w-3 mr-1" />
-                              Edit
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="text-destructive hover:bg-destructive/10 bg-transparent"
+                          {canManageInventory && (
+                            <div className="flex gap-2 mt-3">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1 bg-transparent"
+                                onClick={() => handleEdit(instrument)}
+                              >
+                                <Pencil className="h-3 w-3 mr-1" />
+                                Edit
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-destructive hover:bg-destructive/10 bg-transparent"
                               onClick={() => handleDelete(instrument.id)}
                             >
                               <Trash2 className="h-3 w-3" />
                             </Button>
-                          </div>
+                            </div>
+                          )}
                         </div>
                       </CardContent>
                     </Card>

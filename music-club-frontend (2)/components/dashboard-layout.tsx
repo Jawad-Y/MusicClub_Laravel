@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
 import { Button } from "@/components/ui/button"
@@ -36,19 +36,19 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 const navigationItems = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Users & Roles", href: "/dashboard/users", icon: Users },
-  { name: "Departments", href: "/dashboard/departments", icon: Building2 },
-  { name: "Classes", href: "/dashboard/classes", icon: GraduationCap },
-  { name: "Instruments", href: "/dashboard/instruments", icon: Guitar },
-  { name: "Clothing", href: "/dashboard/clothing", icon: Shirt },
-  { name: "Training Sessions", href: "/dashboard/training", icon: BookOpen },
-  { name: "Homework", href: "/dashboard/homework", icon: ClipboardList },
-  { name: "Events", href: "/dashboard/events", icon: Calendar },
-  { name: "Library", href: "/dashboard/library", icon: FileText },
-  { name: "Performance", href: "/dashboard/performance", icon: TrendingUp },
-  { name: "Reports", href: "/dashboard/reports", icon: BarChart3 },
-  { name: "Profile", href: "/dashboard/profile", icon: UserCircle },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["leader", "department leader", "class leader", "trainer", "trainee", "inventory manager"] },
+  { name: "Users & Roles", href: "/dashboard/users", icon: Users, roles: ["leader"] },
+  { name: "Departments", href: "/dashboard/departments", icon: Building2, roles: ["leader", "department leader"] },
+  { name: "Classes", href: "/dashboard/classes", icon: GraduationCap, roles: ["leader", "department leader", "class leader", "trainer"] },
+  { name: "Instruments", href: "/dashboard/instruments", icon: Guitar, roles: ["leader", "inventory manager"] },
+  { name: "Clothing", href: "/dashboard/clothing", icon: Shirt, roles: ["leader", "inventory manager"] },
+  { name: "Training Sessions", href: "/dashboard/training", icon: BookOpen, roles: ["leader", "department leader", "class leader", "trainer"] },
+  { name: "Homework", href: "/dashboard/homework", icon: ClipboardList, roles: ["leader", "department leader", "class leader", "trainer"] },
+  { name: "Events", href: "/dashboard/events", icon: Calendar, roles: ["leader", "class leader"] },
+  { name: "Library", href: "/dashboard/library", icon: FileText, roles: ["leader", "trainer"] },
+  { name: "Performance", href: "/dashboard/performance", icon: TrendingUp, roles: ["leader", "trainer"] },
+  { name: "Reports", href: "/dashboard/reports", icon: BarChart3, roles: ["leader", "department leader"] },
+  { name: "Profile", href: "/dashboard/profile", icon: UserCircle, roles: ["leader", "department leader", "class leader", "trainer", "trainee", "inventory manager"] },
 ]
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -56,6 +56,13 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
+
+  // Filter navigation items based on user role
+  const visibleNavItems = useMemo(() => {
+    if (!user?.role?.role_name) return []
+    const userRole = user.role.role_name.toLowerCase()
+    return navigationItems.filter(item => item.roles.includes(userRole))
+  }, [user])
 
   const handleLogout = async () => {
     await logout()
@@ -76,7 +83,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-            {navigationItems.map((item) => {
+            {visibleNavItems.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.href
               return (
@@ -117,7 +124,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 </Button>
               </div>
               <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-                {navigationItems.map((item) => {
+                {visibleNavItems.map((item) => {
                   const Icon = item.icon
                   const isActive = pathname === item.href
                   return (
