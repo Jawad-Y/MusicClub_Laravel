@@ -1,0 +1,18 @@
+{
+  "/dashboard/classes/[id]/page": "app/dashboard/classes/[id]/page.js",
+  "/dashboard/classes/page": "app/dashboard/classes/page.js",
+  "/dashboard/clothing/page": "app/dashboard/clothing/page.js",
+  "/dashboard/departments/[id]/classes/page": "app/dashboard/departments/[id]/classes/page.js",
+  "/dashboard/departments/page": "app/dashboard/departments/page.js",
+  "/dashboard/events/page": "app/dashboard/events/page.js",
+  "/dashboard/homework/page": "app/dashboard/homework/page.js",
+  "/dashboard/instruments/page": "app/dashboard/instruments/page.js",
+  "/dashboard/library/page": "app/dashboard/library/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/dashboard/performance/page": "app/dashboard/performance/page.js",
+  "/dashboard/profile/page": "app/dashboard/profile/page.js",
+  "/dashboard/reports/page": "app/dashboard/reports/page.js",
+  "/dashboard/training/page": "app/dashboard/training/page.js",
+  "/dashboard/users/page": "app/dashboard/users/page.js",
+  "/login/page": "app/login/page.js"
+}

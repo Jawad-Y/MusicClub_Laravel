@@ -1,0 +1,33 @@
+{
+  "version": 3,
+  "middleware": {
+    "/": {
+      "files": [
+        "server/edge/chunks/music-club-frontend (2)_8033b155._.js",
+        "server/edge/chunks/[root-of-the-server]__2f9c48d4._.js",
+        "server/edge/chunks/turbopack-music-club-frontend (2)_edge-wrapper_ee7b1b57.js"
+      ],
+      "name": "middleware",
+      "page": "/",
+      "matchers": [
+        {
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?(?:\\/((?!api|_next\\/static|_next\\/image|favicon.ico).*))(\\\\.json)?[\\/#\\?]?$",
+          "originalSource": "/((?!api|_next/static|_next/image|favicon.ico).*)"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "development",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "xBVzpBux/UsO9ylP35rU4nGQo74ky/g5fWnN0MRYJZ0=",
+        "__NEXT_PREVIEW_MODE_ID": "6bb43e230682a5777019163e27df9f68",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "9678c341d380fcc059f3f48fc522b2abb73f21a4a994ae8c2e189c9a30825cbb",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "3ee4c3e62a2146f2f08eb9c3671233875582e32596ddb3e54397c0f52a5e23d0"
+      }
+    }
+  },
+  "sortedMiddleware": [
+    "/"
+  ],
+  "functions": {}
+}
