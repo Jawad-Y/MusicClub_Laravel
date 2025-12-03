@@ -13,6 +13,11 @@ class HomeworkPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow department leaders, class leaders and trainers to view homework
+        if ($user->isDepartmentLeader() || $user->isClassLeader() || $user->isTrainer()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,11 @@ class HomeworkPolicy
      */
     public function view(User $user, Homework $homework): bool
     {
+        // Department leaders, class leaders and trainers use accessibleBy scope in the model
+        if ($user->isDepartmentLeader() || $user->isClassLeader() || $user->isTrainer()) {
+            return true; // Filtered by controller using accessibleBy scope
+        }
+
         return false;
     }
 
@@ -29,6 +39,11 @@ class HomeworkPolicy
      */
     public function create(User $user): bool
     {
+        // Allow trainers to create homework
+        if ($user->isTrainer()) {
+            return true;
+        }
+
         return false;
     }
 

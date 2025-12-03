@@ -13,6 +13,11 @@ class TrainingSessionPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow department leaders, class leaders and trainers to view training sessions for their classes
+        if ($user->isDepartmentLeader() || $user->isClassLeader() || $user->isTrainer()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,24 @@ class TrainingSessionPolicy
      */
     public function view(User $user, TrainingSession $trainingSession): bool
     {
+        // Department leaders can view sessions for their department's classes
+        if ($user->isDepartmentLeader()) {
+            $classIds = $user->getAccessibleClassIds();
+            return in_array($trainingSession->class_id, $classIds);
+        }
+
+        // Class leaders can view sessions for their classes
+        if ($user->isClassLeader()) {
+            $classIds = $user->ledClasses()->pluck('id')->toArray();
+            return in_array($trainingSession->class_id, $classIds);
+        }
+
+        // Trainers can view sessions for classes they are members of
+        if ($user->isTrainer()) {
+            $classIds = $user->classMembers()->pluck('classes.id')->toArray();
+            return in_array($trainingSession->class_id, $classIds);
+        }
+
         return false;
     }
 
@@ -29,6 +52,11 @@ class TrainingSessionPolicy
      */
     public function create(User $user): bool
     {
+        // Allow trainers to create training sessions
+        if ($user->isTrainer()) {
+            return true;
+        }
+
         return false;
     }
 

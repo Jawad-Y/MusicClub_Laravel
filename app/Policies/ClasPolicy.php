@@ -13,7 +13,7 @@ class ClasPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class ClasPolicy
      */
     public function view(User $user, Clas $clas): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class ClasPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -37,7 +37,7 @@ class ClasPolicy
      */
     public function update(User $user, Clas $clas): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -45,7 +45,7 @@ class ClasPolicy
      */
     public function delete(User $user, Clas $clas): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -53,7 +53,7 @@ class ClasPolicy
      */
     public function restore(User $user, Clas $clas): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -61,6 +61,6 @@ class ClasPolicy
      */
     public function forceDelete(User $user, Clas $clas): bool
     {
-        return false;
+        return true;
     }
 }

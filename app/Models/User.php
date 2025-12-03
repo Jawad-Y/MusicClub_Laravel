@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasRoleScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, SoftDeletes, Notifiable;
+    use HasApiTokens, HasFactory, SoftDeletes, Notifiable, HasRoleScopes;
 
     protected $table = 'users';
 
@@ -44,6 +45,18 @@ class User extends Authenticatable
     public function ledDepartments()
     {
         return $this->hasMany(Department::class, 'leader_id');
+    }
+
+    public function ledClasses()
+    {
+        return $this->hasMany(Clas::class, 'class_leader_id');
+    }
+
+    public function classMembers()
+    {
+        return $this->belongsToMany(Clas::class, 'class_members', 'user_id', 'class_id')
+            ->withPivot('role')
+            ->withTimestamps();
     }
 
     public function memberships()

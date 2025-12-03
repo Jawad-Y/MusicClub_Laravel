@@ -12,6 +12,7 @@ use App\Models\SessionAttendance as ModelsSessionAttendance;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 
 
@@ -59,8 +60,51 @@ class TrainingSession extends Model
     }
 
     
-    public function homework(): HasMany
+    public function homeworks(): HasMany
     {
-        return $this->hasMany(Homework::class, 'session_id');
+        return $this->hasMany(Homework::class, 'training_sessions_id');
+    }
+
+    /**
+     * Scope training sessions accessible by the given user based on their role
+     */
+    public function scopeAccessibleBy(Builder $query, $user): Builder
+    {
+        if (!$user) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        if ($user->isLeader()) {
+            return $query; // Full access
+        }
+
+        if ($user->isDepartmentLeader()) {
+            $departmentIds = $user->ledDepartments()->pluck('id')->toArray();
+            return $query->whereHas('class', function ($q) use ($departmentIds) {
+                $q->whereIn('department_id', $departmentIds);
+            });
+        }
+
+        if ($user->isClassLeader()) {
+            $classIds = $user->ledClasses()->pluck('id')->toArray();
+            return $query->whereIn('class_id', $classIds);
+        }
+
+        if ($user->isTrainer()) {
+            // Trainers can see sessions they teach or classes they're in
+            $classIds = $user->classMembers()->pluck('classes.id')->toArray();
+            return $query->where(function ($q) use ($user, $classIds) {
+                $q->where('trainer_id', $user->id)
+                  ->orWhereIn('class_id', $classIds);
+            });
+        }
+
+        if ($user->isTrainee() || $user->isMember()) {
+            // Trainees and members can only see sessions for their enrolled classes
+            $classIds = $user->classMembers()->pluck('classes.id')->toArray();
+            return $query->whereIn('class_id', $classIds);
+        }
+
+        return $query->whereRaw('1 = 0');
     }
 }

@@ -13,6 +13,11 @@ class HomeworkSubmissionPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow department leaders and class leaders to view homework submissions
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,11 @@ class HomeworkSubmissionPolicy
      */
     public function view(User $user, HomeworkSubmission $homeworkSubmission): bool
     {
+        // Department leaders and class leaders use accessibleBy scope in the model
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true; // Filtered by controller using accessibleBy scope
+        }
+
         return false;
     }
 

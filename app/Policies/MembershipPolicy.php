@@ -13,6 +13,11 @@ class MembershipPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow department leaders and class leaders to view memberships
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,12 @@ class MembershipPolicy
      */
     public function view(User $user, Membership $membership): bool
     {
+        // Department leaders and class leaders can only view memberships for users in their enrolled classes
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            $accessibleUserIds = $user->getAccessibleUserIds();
+            return in_array($membership->user_id, $accessibleUserIds);
+        }
+
         return false;
     }
 

@@ -3,32 +3,33 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    use ApiResponse;
+
     /**
      * Display a paginated list of users.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $users = User::with('role')
             ->orderBy('id', 'desc')
             ->paginate(15);
 
-        return response()->json([
-            'status' => true,
-            'data'   => $users,
-        ]);
+        return $this->success($users);
     }
 
     /**
      * Store a newly created user in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         // Validate incoming data
         $validated = $request->validate([
@@ -40,6 +41,38 @@ class UserController extends Controller
             'password'  => ['required', 'string', 'min:6'],
         ]);
 
+        // Check role-based restrictions for user creation
+        $currentUser = $request->user();
+        $currentUserRole = strtolower($currentUser->role->role_name ?? '');
+        $targetRole = Role::find($validated['role_id']);
+        $targetRoleName = strtolower($targetRole->role_name ?? '');
+        
+        // Only Leader can create users with Leader role
+        if ($targetRoleName === 'leader' && $currentUserRole !== 'leader') {
+            return response()->json([
+                'status' => false,
+                'message' => 'Only Leader can create users with Leader role.',
+            ], 403);
+        }
+        
+        // Only Leader and Individual Affair can create Department Leader
+        if ($targetRoleName === 'department leader' && !in_array($currentUserRole, ['leader', 'individual affair'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Only Leader and Individual Affair can create users with Department Leader role.',
+            ], 403);
+        }
+        
+        // Individual Affair cannot create Admin
+        if ($currentUserRole === 'individual affair') {
+            if ($targetRoleName === 'admin') {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Individual Affair cannot create users with Admin role.',
+                ], 403);
+            }
+        }
+
         $user = User::create([
             'full_name' => $validated['full_name'],
             'email'     => $validated['email'],
@@ -49,30 +82,25 @@ class UserController extends Controller
             'password'  => Hash::make($validated['password']),
         ]);
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'User created successfully.',
-            'data'    => $user->load('role'),
-        ], 201);
+        $user->load('role');
+
+        return $this->success($user, 'User created successfully', 201);
     }
 
     /**
      * Display the specified user.
      */
-    public function show(User $user)
+    public function show(User $user): JsonResponse
     {
         $user->load('role');
 
-        return response()->json([
-            'status' => true,
-            'data'   => $user,
-        ]);
+        return $this->success($user);
     }
 
     /**
      * Update the specified user in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $user): JsonResponse
     {
         // Validate incoming data
         $validated = $request->validate([
@@ -83,6 +111,47 @@ class UserController extends Controller
             'status'    => ['required', 'in:active,inactive'],
             'password'  => ['nullable', 'string', 'min:6'],
         ]);
+
+        // Check role-based restrictions for user updates
+        $currentUser = $request->user();
+        $currentUserRole = strtolower($currentUser->role->role_name ?? '');
+        $targetRole = Role::find($validated['role_id']);
+        $targetRoleName = strtolower($targetRole->role_name ?? '');
+        $existingUserRole = strtolower($user->role->role_name ?? '');
+        
+        // Only Leader can assign Leader role
+        if ($targetRoleName === 'leader' && $currentUserRole !== 'leader') {
+            return response()->json([
+                'status' => false,
+                'message' => 'Only Leader can assign Leader role.',
+            ], 403);
+        }
+        
+        // Only Leader and Individual Affair can assign Department Leader role
+        if ($targetRoleName === 'department leader' && !in_array($currentUserRole, ['leader', 'individual affair'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Only Leader and Individual Affair can assign Department Leader role.',
+            ], 403);
+        }
+        
+        // Individual Affair cannot assign Admin role
+        if ($currentUserRole === 'individual affair') {
+            if ($targetRoleName === 'admin') {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Individual Affair cannot assign Admin role.',
+                ], 403);
+            }
+            
+            // Also prevent updating users who are already Admin or Leader
+            if (in_array($existingUserRole, ['admin', 'leader'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Individual Affair cannot update users with Admin or Leader roles.',
+                ], 403);
+            }
+        }
 
         $user->full_name = $validated['full_name'];
         $user->email     = $validated['email'];
@@ -95,24 +164,18 @@ class UserController extends Controller
         }
 
         $user->save();
+        $user->load('role');
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'User updated successfully.',
-            'data'    => $user->load('role'),
-        ]);
+        return $this->success($user, 'User updated successfully');
     }
 
     /**
      * Soft delete the specified user.
      */
-    public function destroy(User $user)
+    public function destroy(User $user): JsonResponse
     {
         $user->delete();
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'User deleted successfully.',
-        ]);
+        return $this->success(null, 'User deleted successfully', 204);
     }
 }

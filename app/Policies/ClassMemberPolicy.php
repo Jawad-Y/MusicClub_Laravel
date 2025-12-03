@@ -13,6 +13,11 @@ class ClassMemberPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow department leaders and class leaders to view class members from their enrolled classes
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,12 @@ class ClassMemberPolicy
      */
     public function view(User $user, ClassMember $classMember): bool
     {
+        // Department leaders and class leaders can only view members from their enrolled classes
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            $accessibleClassIds = $user->getAccessibleClassIds();
+            return in_array($classMember->class_id, $accessibleClassIds);
+        }
+
         return false;
     }
 

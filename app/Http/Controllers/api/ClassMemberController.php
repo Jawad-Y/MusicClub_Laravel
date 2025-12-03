@@ -3,24 +3,34 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
 use App\Models\ClassMember;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ClassMemberController extends Controller
 {
+    use ApiResponse;
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        $classMembers = ClassMember::with(['class', 'user'])->get();
-        return response()->json($classMembers);
+        $user = $request->user();
+        $accessibleClassIds = $user->getAccessibleClassIds();
+        
+        $classMembers = ClassMember::whereIn('class_id', $accessibleClassIds)
+            ->with(['class', 'user'])
+            ->get();
+        
+        return $this->success($classMembers);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -31,22 +41,28 @@ class ClassMemberController extends Controller
         $classMember = ClassMember::create($validated);
         $classMember->load(['class', 'user']);
 
-        return response()->json($classMember, 201);
+        return $this->success($classMember, 'Class member created successfully', 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(ClassMember $classMember)
+    public function show(Request $request, $id): JsonResponse
     {
-        $classMember->load(['class', 'user']);
-        return response()->json($classMember);
+        $user = $request->user();
+        $accessibleClassIds = $user->getAccessibleClassIds();
+        
+        $classMember = ClassMember::whereIn('class_id', $accessibleClassIds)
+            ->with(['class', 'user'])
+            ->findOrFail($id);
+        
+        return $this->success($classMember);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ClassMember $classMember)
+    public function update(Request $request, ClassMember $classMember): JsonResponse
     {
         $validated = $request->validate([
             'user_id' => 'sometimes|required|exists:users,id',
@@ -57,15 +73,16 @@ class ClassMemberController extends Controller
         $classMember->update($validated);
         $classMember->load(['class', 'user']);
 
-        return response()->json($classMember);
+        return $this->success($classMember, 'Class member updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ClassMember $classMember)
+    public function destroy(ClassMember $classMember): JsonResponse
     {
         $classMember->delete();
-        return response()->json(null, 204);
+        
+        return $this->success(null, 'Class member deleted successfully', 204);
     }
 }

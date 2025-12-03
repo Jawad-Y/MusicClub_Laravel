@@ -13,6 +13,11 @@ class PerformanceReviewPolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow department leaders and trainers to view performance reviews
+        if ($user->isDepartmentLeader() || $user->isTrainer()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +26,11 @@ class PerformanceReviewPolicy
      */
     public function view(User $user, PerformanceReview $performanceReview): bool
     {
+        // Allow department leaders and trainers to view performance reviews
+        if ($user->isDepartmentLeader() || $user->isTrainer()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -29,6 +39,11 @@ class PerformanceReviewPolicy
      */
     public function create(User $user): bool
     {
+        // Allow department leaders and trainers to create performance reviews
+        if ($user->isDepartmentLeader() || $user->isTrainer()) {
+            return true;
+        }
+
         return false;
     }
 

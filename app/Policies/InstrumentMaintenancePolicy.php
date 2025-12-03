@@ -13,6 +13,16 @@ class InstrumentMaintenancePolicy
      */
     public function viewAny(User $user): bool
     {
+        // Allow inventory managers full access
+        if ($user->isInventoryManager()) {
+            return true;
+        }
+
+        // Allow department leaders and class leaders to view instrument maintenances
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            return true;
+        }
+
         return false;
     }
 
@@ -21,6 +31,24 @@ class InstrumentMaintenancePolicy
      */
     public function view(User $user, InstrumentMaintenance $instrumentMaintenance): bool
     {
+        // Allow inventory managers full access
+        if ($user->isInventoryManager()) {
+            return true;
+        }
+
+        // Department leaders and class leaders can only view maintenances for instruments assigned to their class members
+        if ($user->isDepartmentLeader() || $user->isClassLeader()) {
+            $accessibleUserIds = $user->getAccessibleUserIds();
+            
+            // Check if the instrument is assigned to any user in their classes
+            $isAccessible = \App\Models\InstrumentAssignment::where('instrument_id', $instrumentMaintenance->instrument_id)
+                ->whereIn('user_id', $accessibleUserIds)
+                ->whereNull('returned_at')
+                ->exists();
+            
+            return $isAccessible;
+        }
+
         return false;
     }
 

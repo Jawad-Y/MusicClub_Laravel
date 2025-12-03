@@ -3,31 +3,32 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ApiResponse;
 use App\Models\UserAssignment;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserAssignmentController extends Controller
 {
+    use ApiResponse;
+
     /**
      * Display a list of all user assignments.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         // Eager-load relationships if they are defined in the model
         $assignments = UserAssignment::with(['user', 'class', 'department', 'instrument'])
             ->orderBy('id', 'desc')
             ->get();
 
-        return response()->json([
-            'status' => true,
-            'data'   => $assignments,
-        ]);
+        return $this->success($assignments);
     }
 
     /**
      * Store a newly created user assignment in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         // Validate input data
         $validated = $request->validate([
@@ -50,30 +51,23 @@ class UserAssignmentController extends Controller
 
         $assignment->load(['user', 'class', 'department', 'instrument']);
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'User assignment created successfully.',
-            'data'    => $assignment,
-        ], 201);
+        return $this->success($assignment, 'User assignment created successfully', 201);
     }
 
     /**
      * Display the specified user assignment.
      */
-    public function show(UserAssignment $userAssignment)
+    public function show(UserAssignment $userAssignment): JsonResponse
     {
         $userAssignment->load(['user', 'class', 'department', 'instrument']);
 
-        return response()->json([
-            'status' => true,
-            'data'   => $userAssignment,
-        ]);
+        return $this->success($userAssignment);
     }
 
     /**
      * Update the specified user assignment in storage.
      */
-    public function update(Request $request, UserAssignment $userAssignment)
+    public function update(Request $request, UserAssignment $userAssignment): JsonResponse
     {
         // Validate input data
         $validated = $request->validate([
@@ -95,23 +89,16 @@ class UserAssignmentController extends Controller
 
         $userAssignment->load(['user', 'class', 'department', 'instrument']);
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'User assignment updated successfully.',
-            'data'    => $userAssignment,
-        ]);
+        return $this->success($userAssignment, 'User assignment updated successfully');
     }
 
     /**
      * Remove the specified user assignment from storage.
      */
-    public function destroy(UserAssignment $userAssignment)
+    public function destroy(UserAssignment $userAssignment): JsonResponse
     {
         $userAssignment->delete();
 
-        return response()->json([
-            'status'  => true,
-            'message' => 'User assignment deleted successfully.',
-        ]);
+        return $this->success(null, 'User assignment deleted successfully', 204);
     }
 }
