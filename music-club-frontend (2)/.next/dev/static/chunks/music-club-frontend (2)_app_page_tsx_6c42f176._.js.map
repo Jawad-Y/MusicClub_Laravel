@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///D:/programming/MusicClub-Complete/music-club-frontend%20%282%29/app/page.tsx"],"sourcesContent":["\"use client\"\n\nimport { useEffect } from \"react\"\nimport { useRouter } from \"next/navigation\"\nimport { useAuth } from \"@/lib/auth-context\"\n\nexport default function HomePage() {\n  const { isAuthenticated, isLoading } = useAuth()\n  const router = useRouter()\n\n  useEffect(() => {\n    if (!isLoading) {\n      if (isAuthenticated) {\n        router.push(\"/home\")\n      } else {\n        router.push(\"/login\")\n      }\n    }\n  }, [isAuthenticated, isLoading, router])\n\n  return (\n    <div className=\"min-h-screen flex items-center justify-center bg-slate-900\">\n      <div className=\"text-slate-400\">Loading...</div>\n    </div>\n  )\n}\n"],"names":[],"mappings":";;;;;AAEA;AACA;AACA;;;AAJA;;;;AAMe,SAAS;;IACtB,MAAM,EAAE,eAAe,EAAE,SAAS,EAAE,GAAG,IAAA,2KAAO;IAC9C,MAAM,SAAS,IAAA,wLAAS;IAExB,IAAA,gNAAS;8BAAC;YACR,IAAI,CAAC,WAAW;gBACd,IAAI,iBAAiB;oBACnB,OAAO,IAAI,CAAC;gBACd,OAAO;oBACL,OAAO,IAAI,CAAC;gBACd;YACF;QACF;6BAAG;QAAC;QAAiB;QAAW;KAAO;IAEvC,qBACE,mOAAC;QAAI,WAAU;kBACb,cAAA,mOAAC;YAAI,WAAU;sBAAiB;;;;;;;;;;;AAGtC;GAnBwB;;QACiB,2KAAO;QAC/B,wLAAS;;;KAFF"}}]
-}
