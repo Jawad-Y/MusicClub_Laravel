@@ -20,7 +20,7 @@ class HomeworkController extends Controller
         $user = $request->user();
         $homework = Homework::accessibleBy($user)
             ->with(['trainingSession.class', 'homeworkSubmissions'])
-            ->paginate(15);
+            ->get();
         
         return $this->success($homework);
     }

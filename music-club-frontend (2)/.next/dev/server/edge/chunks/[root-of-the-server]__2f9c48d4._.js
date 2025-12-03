@@ -27,13 +27,13 @@ function middleware(request) {
     const token = request.cookies.get("auth_token")?.value;
     const isLoginPage = request.nextUrl.pathname === "/login";
     const isRootPage = request.nextUrl.pathname === "/";
-    const isDashboard = request.nextUrl.pathname.startsWith("/dashboard");
-    // Allow access to login page without token
-    if (isLoginPage || isRootPage) {
+    const isPublicRoute = isLoginPage || isRootPage;
+    // Allow access to login page and root without token
+    if (isPublicRoute) {
         return __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$esm$2f$server$2f$web$2f$exports$2f$index$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["NextResponse"].next();
     }
-    // Protect dashboard routes
-    if (isDashboard && !token) {
+    // Protect all authenticated routes
+    if (!token) {
         return __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$esm$2f$server$2f$web$2f$exports$2f$index$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["NextResponse"].redirect(new URL("/login", request.url));
     }
     return __TURBOPACK__imported__module__$5b$project$5d2f$music$2d$club$2d$frontend__$28$2$292f$node_modules$2f$next$2f$dist$2f$esm$2f$server$2f$web$2f$exports$2f$index$2e$js__$5b$middleware$2d$edge$5d$__$28$ecmascript$29$__["NextResponse"].next();

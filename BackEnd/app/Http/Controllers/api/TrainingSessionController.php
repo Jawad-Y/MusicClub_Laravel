@@ -20,7 +20,7 @@ class TrainingSessionController extends Controller
         $user = $request->user();
         $sessions = TrainingSession::accessibleBy($user)
             ->with(['class', 'trainer'])
-            ->paginate(15);
+            ->get();
         
         return $this->success($sessions);
     }

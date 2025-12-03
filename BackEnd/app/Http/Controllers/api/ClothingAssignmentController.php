@@ -27,7 +27,7 @@ class ClothingAssignmentController extends Controller
             $query->whereIn('user_id', $accessibleUserIds);
         }
 
-        $assignments = $query->paginate(15);
+        $assignments = $query->get();
         
         return $this->success($assignments);
     }

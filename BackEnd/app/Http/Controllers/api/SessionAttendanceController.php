@@ -20,7 +20,7 @@ class SessionAttendanceController extends Controller
         $user = $request->user();
         $attendances = SessionAttendance::accessibleBy($user)
             ->with(['session.class', 'trainee'])
-            ->paginate(15);
+            ->get();
         
         return $this->success($attendances);
     }

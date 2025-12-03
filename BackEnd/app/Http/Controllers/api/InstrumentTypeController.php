@@ -29,8 +29,7 @@ class InstrumentTypeController extends Controller
             $query = $query->where('name', 'LIKE', "%$search%");
         }
 
-        $perPage = $request->get('per_page', 10);
-        $instrumentTypes = $query->paginate($perPage);
+        $instrumentTypes = $query->get();
 
         return $this->success($instrumentTypes);
     }

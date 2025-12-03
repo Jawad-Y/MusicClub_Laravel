@@ -308,7 +308,7 @@ function LoginPage() {
         try {
             await login(email, password);
             // Use window.location for full page reload to ensure middleware runs
-            window.location.href = "/dashboard";
+            window.location.href = "/home";
         } catch (err) {
             setError(err.message || err.body?.message || "Invalid email or password");
         } finally{

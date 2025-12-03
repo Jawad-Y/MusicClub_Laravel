@@ -19,7 +19,7 @@ class InstrumentController extends Controller
     
     public function index(Request $request): JsonResponse
     {
-        $query = Instrument::with('type');
+        $query = Instrument::with(['type', 'instrument_type']);
 
         if ($request->has('type_id')) {
             $query->where('instrument_type_id', $request->type_id);
@@ -48,7 +48,7 @@ class InstrumentController extends Controller
 
     public function show($id): JsonResponse
     {
-        $instrument = Instrument::with('type')->findOrFail($id);
+        $instrument = Instrument::with(['type', 'instrument_type'])->findOrFail($id);
 
         return $this->success($instrument);
     }
@@ -65,7 +65,7 @@ class InstrumentController extends Controller
         ]);
 
         $instrument = Instrument::create($validated);
-        $instrument->load('type');
+        $instrument->load(['type', 'instrument_type']);
 
         return $this->success($instrument, 'Instrument created successfully', 201);
     }
@@ -84,7 +84,7 @@ class InstrumentController extends Controller
         ]);
 
         $instrument->update($validated);
-        $instrument->load('type');
+        $instrument->load(['type', 'instrument_type']);
 
         return $this->success($instrument, 'Instrument updated successfully');
     }

@@ -38,7 +38,7 @@ class ClothingItemController extends Controller
         }
 
         $items = $query->orderBy('category')
-            ->paginate($limit, ['id','category','size','quantity']);
+            ->get(['id','category','size','quantity']);
 
         return $this->success($items);
     }

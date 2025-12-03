@@ -17,7 +17,7 @@ class EventController extends Controller
      */
     public function index(): JsonResponse
     {
-        $events = Event::paginate(15);
+        $events = Event::all();
         return $this->success($events);
     }
 

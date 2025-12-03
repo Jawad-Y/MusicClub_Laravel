@@ -51,9 +51,7 @@ class InstrumentMaintenanceController extends Controller
             $query->whereBetween('date', [$request->start_date, $request->end_date]);
         }
 
-        $perPage = (int) ($request->per_page ?? 10);
-
-        $maintenances = $query->orderBy('date', 'desc')->paginate($perPage);
+        $maintenances = $query->orderBy('date', 'desc')->get();
 
         return $this->success($maintenances);
     }
@@ -156,7 +154,7 @@ class InstrumentMaintenanceController extends Controller
                       ->orWhere('notes', 'LIKE', "%{$q}%");
             });
 
-        $maintenances = $query->orderBy('date', 'desc')->paginate($perPage);
+        $maintenances = $query->orderBy('date', 'desc')->get();
 
         return $this->success($maintenances);
     }

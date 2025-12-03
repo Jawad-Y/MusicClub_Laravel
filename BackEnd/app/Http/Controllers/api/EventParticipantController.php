@@ -27,7 +27,7 @@ class EventParticipantController extends Controller
             'event:id,title,date',
             'user:id,full_name,email'
         ])->orderBy('id', 'desc')
-          ->paginate($limit);
+          ->get();
 
         return $this->success($participants);
     }
@@ -110,7 +110,7 @@ class EventParticipantController extends Controller
         $participants = EventParticipant::with('user:id,full_name,email')
             ->where('event_id', $eventId)
             ->orderBy('id', 'desc')
-            ->paginate($limit);
+            ->get();
 
         return $this->success($participants, 'Event participants retrieved successfully');
     }
@@ -124,7 +124,7 @@ class EventParticipantController extends Controller
         $events = EventParticipant::with('event:id,title,date')
             ->where('user_id', $userId)
             ->orderBy('id', 'desc')
-            ->paginate($limit);
+            ->get();
 
         return $this->success($events, 'User events retrieved successfully');
     }

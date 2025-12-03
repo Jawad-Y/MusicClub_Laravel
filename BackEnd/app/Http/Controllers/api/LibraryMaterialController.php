@@ -40,9 +40,9 @@ class LibraryMaterialController extends Controller
         }
 
         $materials = $query->orderBy('uploaded_at', 'desc')
-            ->paginate($limit, ['id','title','description','file_url','instrument_type_id','uploaded_by','uploaded_at']);
+            ->get(['id','title','description','file_url','instrument_type_id','uploaded_by','uploaded_at']);
 
-        $materials->getCollection()->transform(function($material) {
+        $materials->transform(function($material) {
             if ($material->file_url) {
                 $material->file_url = asset('storage/' . $material->file_url);
             }

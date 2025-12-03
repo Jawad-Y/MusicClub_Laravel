@@ -11,20 +11,20 @@ use Illuminate\Database\Eloquent\Builder;
 class Homework extends Model
 {
     protected $fillable = [
+        'session_id',
         'assign_scope',
         'description',
         'due_date',
-        'training_sessions_id',
     ];
 
     public function trainingSession(): BelongsTo
     {
-        return $this->belongsTo(TrainingSession::class , 'training_sessions_id');
+        return $this->belongsTo(TrainingSession::class , 'session_id');
     }
 
     public function homeworkSubmissions(): HasMany
     {
-        return $this->hasMany(HomeworkSubmission::class,);
+        return $this->hasMany(HomeworkSubmission::class);
     }
 
     /**

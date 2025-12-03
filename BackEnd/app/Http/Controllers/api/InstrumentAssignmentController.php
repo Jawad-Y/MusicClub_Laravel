@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class InstrumentAssignmentController extends Controller
 {
@@ -46,7 +47,7 @@ class InstrumentAssignmentController extends Controller
             });
         }
 
-        $assignments = $query->paginate($request->per_page ?? 15);
+        $assignments = $query->get();
 
         return $this->success($assignments);
     }
@@ -73,6 +74,11 @@ class InstrumentAssignmentController extends Controller
             return $this->error('Instrument not available', 422);
         }
 
+        // Normalize datetime fields to MySQL format if ISO strings were provided
+        if (!empty($validated['assigned_at'])) {
+            $validated['assigned_at'] = Carbon::parse($validated['assigned_at'])->toDateTimeString();
+        }
+
         $assignment = InstrumentAssignment::create($validated);
 
         Instrument::where('id', $validated['instrument_id'])
@@ -91,6 +97,19 @@ class InstrumentAssignmentController extends Controller
             'assigned_at' => 'sometimes|date',
             'returned_at' => 'sometimes|date|nullable',
         ]);
+
+        // Normalize incoming ISO datetime strings to MySQL format
+        if (array_key_exists('assigned_at', $validated) && $validated['assigned_at'] !== null) {
+            $validated['assigned_at'] = Carbon::parse($validated['assigned_at'])->toDateTimeString();
+        }
+
+        if (array_key_exists('returned_at', $validated) && $validated['returned_at'] !== null) {
+            $validated['returned_at'] = Carbon::parse($validated['returned_at'])->toDateTimeString();
+            
+            // Update instrument condition to 'available' when returned
+            Instrument::where('id', $assignment->instrument_id)
+                ->update(['condition' => 'available']);
+        }
 
         $assignment->update($validated);
         $assignment->load(['instrument', 'user:id,full_name,email']);

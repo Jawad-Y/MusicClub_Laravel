@@ -15,15 +15,13 @@ class UserController extends Controller
     use ApiResponse;
 
     /**
-     * Display a paginated list of users.
+     * Display a list of users.
      */
     public function index(Request $request): JsonResponse
     {
-        $perPage = $request->get('per_page', 15);
-        
         $users = User::with('role')
             ->orderBy('id', 'desc')
-            ->paginate($perPage);
+            ->get();
 
         return $this->success($users);
     }

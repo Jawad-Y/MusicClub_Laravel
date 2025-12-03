@@ -20,6 +20,11 @@ class Instrument extends Model
         return $this->belongsTo(InstrumentType::class, 'instrument_type_id');
     }
 
+    public function instrument_type(): BelongsTo
+    {
+        return $this->belongsTo(InstrumentType::class, 'instrument_type_id');
+    }
+
     public function assignments(): HasMany
     {
         return $this->hasMany(InstrumentAssignment::class, 'instrument_id');
