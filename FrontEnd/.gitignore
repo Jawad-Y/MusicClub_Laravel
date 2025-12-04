@@ -1,14 +1,3 @@
-# OS generated files
-Thumbs.db
-Desktop.ini
-.DS_Store
-
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-*.log
 
 # Node dependencies
 node_modules/
@@ -18,24 +7,6 @@ node_modules/
 /vendor/
 BackEnd/vendor/
 
-# Laravel specific
-/.env
-/.env.local
-/.env.*
-/.phpunit.result.cache
-/.php_cs.cache
-
-/storage/*.key
-/storage/framework/*
-/storage/logs/*
-# keep the gitignore placeholders
-!/storage/framework/.gitignore
-!/storage/logs/.gitignore
-
-/public/storage
-/public/hot
-/storage/app/public
-
 # Build outputs
 /.next/
 /out/
@@ -44,43 +15,3 @@ BackEnd/vendor/
 /.vite/
 /.turbo/
 /.vercel/
-
-# Frontend (next) lockfiles sometimes large or machine-specific
-# keep pnpm lock if you want, but ignore local package-locks
-package-lock.json
-pnpm-lock.yaml
-
-# IDEs and editors
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.user
-*.sln
-*.swp
-
-# Certificates and keys
-*.pem
-*.key
-
-# Misc
-.env.backup
-.env.local.php
-.env.testing
-
-# Coverage reports
-coverage/
-coverage-*
-
-# Composer PHAR
-composer.phar
-
-# Temporary files
-tmp/
-temp/
-
-# OS temp
-~$*
-
-# Allow overrides
-!.gitignore
