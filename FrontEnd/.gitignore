@@ -21,7 +21,6 @@ BackEnd/vendor/
 # Laravel specific
 /.env
 /.env.local
-/.env.*
 /.phpunit.result.cache
 /.php_cs.cache
 
