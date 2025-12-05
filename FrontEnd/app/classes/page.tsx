@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -85,14 +85,23 @@ export default function ClassesPage() {
   })
   const router = useRouter()
   const { toast } = useToast()
-  const { isLeader, isDepartmentLeader } = useAuth()
+  const { isLeader, isDepartmentLeader, isClassLeader, user } = useAuth()
+
+  const visibleClasses = useMemo(
+    () => (isClassLeader() ? classes.filter((c) => c.class_leader_id === user?.id) : classes),
+    [classes, isClassLeader, user?.id]
+  )
 
   useEffect(() => {
     fetchClasses()
-    fetchDepartments()
+    // Don't request departments if the current user is a class leader
+    // (class leaders shouldn't see the Departments list in the nav)
+    if (!isClassLeader()) {
+      fetchDepartments()
+    }
     fetchUsers()
     fetchClassMembers()
-  }, [])
+  }, [isClassLeader, user?.id])
 
   const fetchClasses = async () => {
     try {
@@ -170,7 +179,6 @@ export default function ClassesPage() {
       })
     }
   }
-
   const handleMemberSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
@@ -308,7 +316,7 @@ export default function ClassesPage() {
                               <SelectValue placeholder="Select a class" />
                             </SelectTrigger>
                             <SelectContent>
-                              {classes.map((cls) => (
+                              {visibleClasses.map((cls) => (
                                 <SelectItem key={cls.id} value={cls.id.toString()}>
                                   {cls.class_name}
                                 </SelectItem>
@@ -400,7 +408,7 @@ export default function ClassesPage() {
                           <SelectValue placeholder="Select a department" />
                         </SelectTrigger>
                         <SelectContent>
-                          {departments.map((dept) => (
+                            {departments.map((dept) => (
                             <SelectItem key={dept.id} value={dept.id.toString()}>
                               {dept.department_name}
                             </SelectItem>
@@ -444,7 +452,7 @@ export default function ClassesPage() {
               <div className="text-center py-8 text-muted-foreground">Loading...</div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {classes.length === 0 ? (
+                {visibleClasses.length === 0 ? (
                   <Card className="col-span-full">
                     <CardContent className="flex flex-col items-center justify-center py-12">
                       <GraduationCap className="h-12 w-12 text-muted-foreground mb-4" />
@@ -452,7 +460,7 @@ export default function ClassesPage() {
                     </CardContent>
                   </Card>
                 ) : (
-                  classes.map((classItem) => (
+                  visibleClasses.map((classItem) => (
                     <Card key={classItem.id} className="hover:border-primary/30 transition-colors">
                       <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                         <div className="space-y-1 flex-1">
