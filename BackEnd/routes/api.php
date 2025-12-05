@@ -54,8 +54,8 @@ Route::middleware('auth:sanctum')->group(function () {
     'myclasses' => 'myclasses'
     ])
         ->middleware('class.access')
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader')
-        ->middlewareFor(['update'],'role:class leader');
+        ->middlewareFor(['store', 'destroy'], 'role:Admin,leader,department leader')
+        ->middlewareFor(['update'], 'role:Admin,leader,department leader,class leader');
 
     // Class member routes
     Route::apiResource('classmembers', ClassMemberController::class)
