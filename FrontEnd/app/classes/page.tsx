@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -85,14 +85,27 @@ export default function ClassesPage() {
   })
   const router = useRouter()
   const { toast } = useToast()
-  const { isLeader, isDepartmentLeader } = useAuth()
+  const { isLeader, isDepartmentLeader, isClassLeader, user } = useAuth()
+
+  const visibleClasses = useMemo(
+    () => (isClassLeader() ? classes.filter((c) => c.class_leader_id === user?.id) : classes),
+    [classes, isClassLeader, user?.id]
+  )
+
+  const canManageClasses = useMemo(() => isLeader() || isDepartmentLeader(), [isLeader, isDepartmentLeader])
 
   useEffect(() => {
     fetchClasses()
-    fetchDepartments()
+    // Only request departments after we know the current `user`.
+    // If `user` is not yet loaded, skip — otherwise an initial false
+    // `isClassLeader()` could cause the frontend to call the endpoint
+    // and receive a 403 before auth resolves.
+    if (user && !isClassLeader()) {
+      fetchDepartments()
+    }
     fetchUsers()
     fetchClassMembers()
-  }, [])
+  }, [isClassLeader, user])
 
   const fetchClasses = async () => {
     try {
@@ -170,7 +183,6 @@ export default function ClassesPage() {
       })
     }
   }
-
   const handleMemberSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
@@ -275,89 +287,91 @@ export default function ClassesPage() {
             <p className="text-muted-foreground mt-1">Manage training classes and their members</p>
           </div>
           <div className="flex gap-2">
-            {(isLeader() || isDepartmentLeader()) && (
-              <>
-                <Dialog
-                  open={isMemberDialogOpen}
-                  onOpenChange={(open) => {
-                    setIsMemberDialogOpen(open)
-                    if (!open) resetMemberForm()
-                  }}
-                >
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="gap-2 bg-transparent">
-                      <UserPlus className="h-4 w-4" />
-                      Add Member
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <form onSubmit={handleMemberSubmit}>
-                      <DialogHeader>
-                        <DialogTitle>Add Class Member</DialogTitle>
-                        <DialogDescription>Assign a user to a class as trainer or trainee</DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="member_class_id">Class</Label>
-                          <Select
-                            value={memberFormData.class_id}
-                            onValueChange={(value) => setMemberFormData({ ...memberFormData, class_id: value })}
-                            required
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a class" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {classes.map((cls) => (
-                                <SelectItem key={cls.id} value={cls.id.toString()}>
-                                  {cls.class_name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="member_user_id">User</Label>
-                          <Select
-                            value={memberFormData.user_id}
-                            onValueChange={(value) => setMemberFormData({ ...memberFormData, user_id: value })}
-                            required
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a user" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {users.map((user) => (
-                                <SelectItem key={user.id} value={user.id.toString()}>
-                                  {user.full_name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="member_role">Role</Label>
-                          <Select
-                            value={memberFormData.role}
-                            onValueChange={(value) => setMemberFormData({ ...memberFormData, role: value })}
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="trainer">Trainer</SelectItem>
-                              <SelectItem value="trainee">Trainee</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+            {(canManageClasses || isClassLeader()) && (
+              <Dialog
+                open={isMemberDialogOpen}
+                onOpenChange={(open) => {
+                  setIsMemberDialogOpen(open)
+                  if (!open) resetMemberForm()
+                }}
+              >
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="gap-2 bg-transparent">
+                    <UserPlus className="h-4 w-4" />
+                    Add Member
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <form onSubmit={handleMemberSubmit}>
+                    <DialogHeader>
+                      <DialogTitle>Add Class Member</DialogTitle>
+                      <DialogDescription>Assign a user to a class as trainer or trainee</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="member_class_id">Class</Label>
+                        <Select
+                          value={memberFormData.class_id}
+                          onValueChange={(value) => setMemberFormData({ ...memberFormData, class_id: value })}
+                          required
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a class" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {visibleClasses.map((cls) => (
+                              <SelectItem key={cls.id} value={cls.id.toString()}>
+                                {cls.class_name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
-                      <DialogFooter>
-                        <Button type="submit">Add Member</Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
+                      <div className="grid gap-2">
+                        <Label htmlFor="member_user_id">User</Label>
+                        <Select
+                          value={memberFormData.user_id}
+                          onValueChange={(value) => setMemberFormData({ ...memberFormData, user_id: value })}
+                          required
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a user" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {users.map((user) => (
+                              <SelectItem key={user.id} value={user.id.toString()}>
+                                {user.full_name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="member_role">Role</Label>
+                        <Select
+                          value={memberFormData.role}
+                          onValueChange={(value) => setMemberFormData({ ...memberFormData, role: value })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="trainer">Trainer</SelectItem>
+                            <SelectItem value="trainee">Trainee</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit">Add Member</Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            )}
 
+            {canManageClasses && (
+              <>
                 <Dialog
                   open={isDialogOpen}
                   onOpenChange={(open) => {
@@ -369,71 +383,71 @@ export default function ClassesPage() {
                     <Button className="gap-2">
                       <Plus className="h-4 w-4" />
                       Add Class
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <form onSubmit={handleSubmit}>
-                  <DialogHeader>
-                    <DialogTitle>{editingClass ? "Edit Class" : "Add New Class"}</DialogTitle>
-                    <DialogDescription>
-                      {editingClass ? "Update class information" : "Create a new training class"}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="class_name">Class Name</Label>
-                      <Input
-                        id="class_name"
-                        value={formData.class_name}
-                        onChange={(e) => setFormData({ ...formData, class_name: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="department_id">Department</Label>
-                      <Select
-                        value={formData.department_id}
-                        onValueChange={(value) => setFormData({ ...formData, department_id: value })}
-                        required
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {departments.map((dept) => (
-                            <SelectItem key={dept.id} value={dept.id.toString()}>
-                              {dept.department_name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="class_leader_id">Class Leader (Optional)</Label>
-                      <Select
-                        value={formData.class_leader_id}
-                        onValueChange={(value) => setFormData({ ...formData, class_leader_id: value })}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a leader" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="0">No Leader</SelectItem>
-                          {filterClassLeaders(users).map((user) => (
-                            <SelectItem key={user.id} value={user.id.toString()}>
-                              {user.full_name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">{editingClass ? "Update Class" : "Create Class"}</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <form onSubmit={handleSubmit}>
+                      <DialogHeader>
+                        <DialogTitle>{editingClass ? "Edit Class" : "Add New Class"}</DialogTitle>
+                        <DialogDescription>
+                          {editingClass ? "Update class information" : "Create a new training class"}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="class_name">Class Name</Label>
+                          <Input
+                            id="class_name"
+                            value={formData.class_name}
+                            onChange={(e) => setFormData({ ...formData, class_name: e.target.value })}
+                            required
+                          />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="department_id">Department</Label>
+                          <Select
+                            value={formData.department_id}
+                            onValueChange={(value) => setFormData({ ...formData, department_id: value })}
+                            required
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a department" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {departments.map((dept) => (
+                                <SelectItem key={dept.id} value={dept.id.toString()}>
+                                  {dept.department_name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="class_leader_id">Class Leader (Optional)</Label>
+                          <Select
+                            value={formData.class_leader_id}
+                            onValueChange={(value) => setFormData({ ...formData, class_leader_id: value })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a leader" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="0">No Leader</SelectItem>
+                              {filterClassLeaders(users).map((user) => (
+                                <SelectItem key={user.id} value={user.id.toString()}>
+                                  {user.full_name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit">{editingClass ? "Update Class" : "Create Class"}</Button>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
               </>
             )}
           </div>
@@ -444,7 +458,7 @@ export default function ClassesPage() {
               <div className="text-center py-8 text-muted-foreground">Loading...</div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {classes.length === 0 ? (
+                {visibleClasses.length === 0 ? (
                   <Card className="col-span-full">
                     <CardContent className="flex flex-col items-center justify-center py-12">
                       <GraduationCap className="h-12 w-12 text-muted-foreground mb-4" />
@@ -452,7 +466,7 @@ export default function ClassesPage() {
                     </CardContent>
                   </Card>
                 ) : (
-                  classes.map((classItem) => (
+                  visibleClasses.map((classItem) => (
                     <Card key={classItem.id} className="hover:border-primary/30 transition-colors">
                       <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                         <div className="space-y-1 flex-1">
@@ -487,7 +501,7 @@ export default function ClassesPage() {
                               <ChevronRight className="h-3 w-3 mr-1" />
                               View Details
                             </Button>
-                            {(isLeader() || isDepartmentLeader()) && (
+                            {canManageClasses && (
                               <>
                                 <Button
                                   variant="outline"

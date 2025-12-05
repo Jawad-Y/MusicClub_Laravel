@@ -24,6 +24,7 @@ import { Pencil, Trash2, Search, UserPlus, Eye, ArrowUpDown, Filter } from "luci
 import apiClient from "@/lib/api-client"
 import { useToast } from "@/hooks/use-toast"
 import { extractArrayFromResponse } from "@/lib/api-utils"
+import { useAuth } from "@/lib/auth-context"
 
 interface User {
   id: number
@@ -68,6 +69,7 @@ export default function UsersPage() {
   })
   const { toast } = useToast()
   const router = useRouter()
+  const { user, isClassLeader } = useAuth()
 
   useEffect(() => {
     fetchUsers()
@@ -114,9 +116,11 @@ export default function UsersPage() {
       if (editingUser) {
         const updateData = { ...data }
         if (!updateData.password) {
-          delete updateData.password
+          const { password, ...dataWithoutPassword } = updateData
+          await apiClient.updateUser(editingUser.id, dataWithoutPassword)
+        } else {
+          await apiClient.updateUser(editingUser.id, updateData)
         }
-        await apiClient.updateUser(editingUser.id, updateData)
         toast({
           title: "Success",
           description: "User updated successfully",
@@ -252,27 +256,28 @@ export default function UsersPage() {
             <h1 className="text-3xl font-bold text-foreground">Users & Roles</h1>
             <p className="text-muted-foreground mt-1">Manage system users and their roles</p>
           </div>
-          <Dialog
-            open={isDialogOpen}
-            onOpenChange={(open) => {
-              setIsDialogOpen(open)
-              if (!open) resetForm()
-            }}
-          >
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                <UserPlus className="h-4 w-4" />
-                Add User
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
-              <form onSubmit={handleSubmit}>
-                <DialogHeader>
-                  <DialogTitle>{editingUser ? "Edit User" : "Add New User"}</DialogTitle>
-                  <DialogDescription>
-                    {editingUser ? "Update user information" : "Create a new user account"}
-                  </DialogDescription>
-                </DialogHeader>
+          {!isClassLeader() && (
+            <Dialog
+              open={isDialogOpen}
+              onOpenChange={(open) => {
+                setIsDialogOpen(open)
+                if (!open) resetForm()
+              }}
+            >
+              <DialogTrigger asChild>
+                <Button className="gap-2">
+                  <UserPlus className="h-4 w-4" />
+                  Add User
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[500px]">
+                <form onSubmit={handleSubmit}>
+                  <DialogHeader>
+                    <DialogTitle>{editingUser ? "Edit User" : "Add New User"}</DialogTitle>
+                    <DialogDescription>
+                      {editingUser ? "Update user information" : "Create a new user account"}
+                    </DialogDescription>
+                  </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
                     <Label htmlFor="full_name">Full Name</Label>
@@ -351,7 +356,8 @@ export default function UsersPage() {
                 </DialogFooter>
               </form>
             </DialogContent>
-          </Dialog>
+            </Dialog>
+          )}
         </div>
 
         <Card>
@@ -493,12 +499,16 @@ export default function UsersPage() {
                                     <Button variant="ghost" size="icon" onClick={() => handleViewProfile(user)} title="View Profile">
                                       <Eye className="h-4 w-4" />
                                     </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => handleEdit(user)}>
-                                      <Pencil className="h-4 w-4" />
-                                    </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => handleDelete(user.id)}>
-                                      <Trash2 className="h-4 w-4 text-destructive" />
-                                    </Button>
+                                    {!isClassLeader() && (
+                                      <>
+                                        <Button variant="ghost" size="icon" onClick={() => handleEdit(user)}>
+                                          <Pencil className="h-4 w-4" />
+                                        </Button>
+                                        <Button variant="ghost" size="icon" onClick={() => handleDelete(user.id)}>
+                                          <Trash2 className="h-4 w-4 text-destructive" />
+                                        </Button>
+                                      </>
+                                    )}
                                   </div>
                                 </TableCell>
                               </TableRow>

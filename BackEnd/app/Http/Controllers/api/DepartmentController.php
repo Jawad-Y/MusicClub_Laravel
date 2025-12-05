@@ -25,6 +25,14 @@ class DepartmentController extends Controller
             $query->where('leader_id', $request->input('_department_leader_id'));
         }
         
+        // If class leader, only show departments that contain their classes
+        if ($request->has('_class_leader_filter')) {
+            $userId = $request->user()->id;
+            $query->whereHas('classes', function ($q) use ($userId) {
+                $q->where('class_leader_id', $userId);
+            });
+        }
+        
         $departments = $query->orderBy('id', 'asc')->get();
 
         return $this->success($departments);

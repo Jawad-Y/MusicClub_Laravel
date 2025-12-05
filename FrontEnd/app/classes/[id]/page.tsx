@@ -108,7 +108,9 @@ export default function ClassDetailsPage() {
   const isLeader = user?.role?.role_name?.toLowerCase() === "leader"
   const isDeptLeader = user?.role?.role_name?.toLowerCase() === "department leader"
   const isClassLeader = user?.role?.role_name?.toLowerCase() === "class leader"
-  const canManage = isLeader || isDeptLeader || isClassLeader || isTrainer
+  // Class leaders should be local managers only for the class they lead.
+  const isLocalClassLeader = isClassLeader && (classData?.class_leader_id === user?.id || classData?.class_leader?.id === user?.id)
+  const canManage = isLeader || isDeptLeader || isTrainer || !!isLocalClassLeader
   const canAccess = canManage || isEnrolled
 
   useEffect(() => {
