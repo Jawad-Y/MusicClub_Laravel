@@ -23,7 +23,6 @@ import { FileText, Plus, Pencil, Trash2, Download } from "lucide-react"
 import apiClient from "@/lib/api-client"
 import { extractArrayFromResponse } from "@/lib/api-utils"
 import { useToast } from "@/hooks/use-toast"
-import { useAuth } from "@/lib/auth-context"
 
 interface InstrumentType {
   id: number
@@ -59,34 +58,17 @@ export default function LibraryPage() {
   const [groupBy, setGroupBy] = useState<"none" | "type">("none")
   const [typeFilter, setTypeFilter] = useState<string>("all")
   const { toast } = useToast()
-  const auth = useAuth()
-
-  // Roles allowed to manage library / fetch instrument types
-  const canManage =
-    auth.isLeader?.() ||
-    auth.isDepartmentLeader?.() ||
-    (typeof auth.hasRole === "function" && auth.hasRole("Admin"))
 
   useEffect(() => {
     fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const fetchData = async () => {
-    setIsLoading(true)
     try {
-      // fetch materials always (viewers need materials)
-      const materialsPromise = apiClient.getLibraryMaterials().catch(() => ({ data: [] }))
-
-      // instrument types only fetched if allowed (prevents forbidden calls for trainers)
-      const typesPromise = canManage
-        ? apiClient.getInstrumentTypes().catch((err: any) => {
-            console.warn("Failed to fetch instrument types (allowed only for certain roles):", err)
-            return { data: [] }
-          })
-        : Promise.resolve({ data: [] })
-
-      const [materialsRes, typesRes] = await Promise.all([materialsPromise, typesPromise])
+      const [materialsRes, typesRes] = await Promise.all([
+        apiClient.getLibraryMaterials(),
+        apiClient.getInstrumentTypes(),
+      ])
 
       setMaterials(extractArrayFromResponse(materialsRes))
       setInstrumentTypes(extractArrayFromResponse(typesRes))
@@ -95,9 +77,9 @@ export default function LibraryPage() {
         status: error?.status,
         statusText: error?.statusText,
         body: error?.body,
-        message: error?.body?.message,
+        message: error?.body?.message
       })
-      // Don't show toast for 403 - navigation should prevent access; otherwise notify
+      // Don't show toast for 403 - navigation should prevent access
       if (error?.status !== 403) {
         toast({
           title: "Error",
@@ -112,19 +94,12 @@ export default function LibraryPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!canManage) {
-      toast({ title: "Forbidden", description: "You don't have permission to manage materials", variant: "destructive" })
-      return
-    }
-
     try {
       const data = {
         title: formData.title,
         description: formData.description,
         file_url: formData.file_url,
-        instrument_type_id: formData.instrument_type_id && formData.instrument_type_id !== "0"
-          ? Number.parseInt(formData.instrument_type_id)
-          : null,
+        instrument_type_id: formData.instrument_type_id ? Number.parseInt(formData.instrument_type_id) : null,
         uploaded_at: new Date().toISOString(),
       }
 
@@ -139,38 +114,28 @@ export default function LibraryPage() {
       resetForm()
       fetchData()
     } catch (error: any) {
-      console.error("Save material error:", error)
-      toast({ title: "Error", description: error?.message || "Failed to save material", variant: "destructive" })
+      toast({ title: "Error", description: error.message || "Failed to save material", variant: "destructive" })
     }
   }
 
   const handleEdit = (material: LibraryMaterial) => {
-    if (!canManage) {
-      toast({ title: "Forbidden", description: "You don't have permission to edit materials", variant: "destructive" })
-      return
-    }
     setEditingMaterial(material)
     setFormData({
       title: material.title,
       description: material.description || "",
       file_url: material.file_url || "",
-      instrument_type_id: material.instrument_type_id?.toString() || "0",
+      instrument_type_id: material.instrument_type_id?.toString() || "0", // Updated default value to '0'
     })
     setIsDialogOpen(true)
   }
 
   const handleDelete = async (id: number) => {
-    if (!canManage) {
-      toast({ title: "Forbidden", description: "You don't have permission to delete materials", variant: "destructive" })
-      return
-    }
     if (!confirm("Are you sure you want to delete this material?")) return
     try {
       await apiClient.deleteLibraryMaterial(id)
       toast({ title: "Success", description: "Material deleted successfully" })
       fetchData()
     } catch (error) {
-      console.error("Delete material error:", error)
       toast({ title: "Error", description: "Failed to delete material", variant: "destructive" })
     }
   }
@@ -181,7 +146,7 @@ export default function LibraryPage() {
       title: "",
       description: "",
       file_url: "",
-      instrument_type_id: "0",
+      instrument_type_id: "0", // Updated default value to '0'
     })
   }
 
@@ -189,8 +154,9 @@ export default function LibraryPage() {
     .filter((material) => {
       const matchesSearch =
         material.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (material.description?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
-      const matchesType = typeFilter === "all" || (material.instrument_type_id?.toString() === typeFilter)
+        material.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesType =
+        typeFilter === "all" || material.instrument_type_id?.toString() === typeFilter
       return matchesSearch && matchesType
     })
     .sort((a, b) => {
@@ -229,90 +195,86 @@ export default function LibraryPage() {
             <h1 className="text-3xl font-bold text-foreground">Library</h1>
             <p className="text-muted-foreground mt-1">Educational materials and resources for music learning</p>
           </div>
-
-          {/* Only show Add Material to roles that can manage */}
-          {canManage && (
-            <Dialog
-              open={isDialogOpen}
-              onOpenChange={(open) => {
-                setIsDialogOpen(open)
-                if (!open) resetForm()
-              }}
-            >
-              <DialogTrigger asChild>
-                <Button className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Material
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px]">
-                <form onSubmit={handleSubmit}>
-                  <DialogHeader>
-                    <DialogTitle>{editingMaterial ? "Edit Library Material" : "Add New Library Material"}</DialogTitle>
-                    <DialogDescription>
-                      {editingMaterial ? "Update material information" : "Add a new educational resource"}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="title">Title</Label>
-                      <Input
-                        id="title"
-                        value={formData.title}
-                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                        required
-                        placeholder="e.g., Beginner Violin Exercises"
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea
-                        id="description"
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Describe the material..."
-                        rows={3}
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="instrument_type_id">Instrument Type (Optional)</Label>
-                      <Select
-                        value={formData.instrument_type_id}
-                        onValueChange={(value) => setFormData({ ...formData, instrument_type_id: value })}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select an instrument type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="0">No specific type</SelectItem>
-                          {instrumentTypes.map((type) => (
-                            <SelectItem key={type.id} value={type.id.toString()}>
-                              {type.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="file_url">File URL</Label>
-                      <Input
-                        id="file_url"
-                        value={formData.file_url}
-                        onChange={(e) => setFormData({ ...formData, file_url: e.target.value })}
-                        placeholder="https://example.com/material.pdf"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Upload your file to cloud storage and paste the link here
-                      </p>
-                    </div>
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => {
+              setIsDialogOpen(open)
+              if (!open) resetForm()
+            }}
+          >
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                Add Material
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <form onSubmit={handleSubmit}>
+                <DialogHeader>
+                  <DialogTitle>{editingMaterial ? "Edit Library Material" : "Add New Library Material"}</DialogTitle>
+                  <DialogDescription>
+                    {editingMaterial ? "Update material information" : "Add a new educational resource"}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="title">Title</Label>
+                    <Input
+                      id="title"
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      required
+                      placeholder="e.g., Beginner Violin Exercises"
+                    />
                   </div>
-                  <DialogFooter>
-                    <Button type="submit">{editingMaterial ? "Update Material" : "Add Material"}</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
-          )}
+                  <div className="grid gap-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      placeholder="Describe the material..."
+                      rows={3}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="instrument_type_id">Instrument Type (Optional)</Label>
+                    <Select
+                      value={formData.instrument_type_id}
+                      onValueChange={(value) => setFormData({ ...formData, instrument_type_id: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select an instrument type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="0">No specific type</SelectItem> {/* Updated value prop to '0' */}
+                        {instrumentTypes.map((type) => (
+                          <SelectItem key={type.id} value={type.id.toString()}>
+                            {type.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="file_url">File URL</Label>
+                    <Input
+                      id="file_url"
+                      value={formData.file_url}
+                      onChange={(e) => setFormData({ ...formData, file_url: e.target.value })}
+                      placeholder="https://example.com/material.pdf"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Upload your file to cloud storage and paste the link here
+                    </p>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button type="submit">{editingMaterial ? "Update Material" : "Add Material"}</Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="space-y-4">
@@ -425,23 +387,17 @@ export default function LibraryPage() {
                                     </a>
                                   </Button>
                                 )}
-
-                                {/* Edit/Delete only for allowed roles */}
-                                {canManage && (
-                                  <>
-                                    <Button variant="outline" size="sm" onClick={() => handleEdit(material)}>
-                                      <Pencil className="h-3 w-3" />
-                                    </Button>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      className="text-destructive hover:bg-destructive/10 bg-transparent"
-                                      onClick={() => handleDelete(material.id)}
-                                    >
-                                      <Trash2 className="h-3 w-3" />
-                                    </Button>
-                                  </>
-                                )}
+                                <Button variant="outline" size="sm" onClick={() => handleEdit(material)}>
+                                  <Pencil className="h-3 w-3" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  className="text-destructive hover:bg-destructive/10 bg-transparent"
+                                  onClick={() => handleDelete(material.id)}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
                               </div>
                             </div>
                           </CardContent>

@@ -7,7 +7,6 @@ import { TrendingUp, Star, Award } from "lucide-react"
 import apiClient from "@/lib/api-client"
 import { extractArrayFromResponse } from "@/lib/api-utils"
 import { useToast } from "@/hooks/use-toast"
-import { useAuth } from "@/lib/auth-context" 
 
 interface PerformanceReview {
   id: number
@@ -30,21 +29,17 @@ export default function PerformancePage() {
   const [reviews, setReviews] = useState<PerformanceReview[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToast()
-  const { user } = useAuth() // get the current trainer
 
   useEffect(() => {
-    if (user) fetchReviews()
-  }, [user])
+    fetchReviews()
+  }, [])
 
   const fetchReviews = async () => {
     try {
       const response = await apiClient.getPerformanceReviews()
-      const allReviews = extractArrayFromResponse(response)
-      // Filter only the reviews for this trainer
-      const trainerReviews = allReviews.filter((r: PerformanceReview) => r.trainer_id === user?.id)
-      setReviews(trainerReviews)
+      setReviews(extractArrayFromResponse(response))
     } catch (error) {
-      console.error("[v0] Error fetching reviews:", error)
+      console.error("[v0] Error fetching reviews:", error?.status, error?.statusText, error?.body || error)
       toast({
         title: "Error",
         description: "Failed to load performance reviews",
