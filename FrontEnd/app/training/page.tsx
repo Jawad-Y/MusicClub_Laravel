@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -54,6 +54,9 @@ interface Class {
 interface User {
   id: number
   full_name: string
+  role?: string
+  // optional helper boolean some backends use
+  is_admin?: boolean
 }
 
 interface SessionAttendance {
@@ -90,7 +93,9 @@ export default function TrainingPage() {
     location: "",
     description: "",
   })
-  
+
+  const [currentUser, setCurrentUser] = useState<User | null>(null)
+
   const { toast } = useToast()
 
   // Helper: parse a date-only string (YYYY-MM-DD) into local Date, return null if invalid
@@ -119,8 +124,61 @@ export default function TrainingPage() {
   useEffect(() => {
     fetchData()
   }, [])
-  const fetchData = async () => {
+
+  // Attempt to detect current user from a few common places.
+  // Adapt this to your project's actual auth mechanism if you already have a hook.
+  const detectCurrentUser = async (): Promise<User | null> => {
+    // 1) Try apiClient methods if present
     try {
+      // many projects name this differently; try a couple of possibilities safely
+      if (typeof (apiClient as any).getCurrentUser === "function") {
+        const res = await (apiClient as any).getCurrentUser()
+        // extractArrayFromResponse is for arrays; assume single object
+        return res?.data ?? res
+      }
+      if (typeof (apiClient as any).getMe === "function") {
+        const res = await (apiClient as any).getMe()
+        return res?.data ?? res
+      }
+      if (typeof (apiClient as any).getProfile === "function") {
+        const res = await (apiClient as any).getProfile()
+        return res?.data ?? res
+      }
+    } catch (err) {
+      // don't fail hard — we'll try other fallbacks
+      console.warn("detectCurrentUser: apiClient methods failed", err)
+    }
+
+    // 2) Try localStorage fallback: sometimes the app saves the user under 'currentUser' or 'user'
+    try {
+      const raw = typeof window !== "undefined" ? (localStorage.getItem("currentUser") ?? localStorage.getItem("user") ?? localStorage.getItem("me")) : null
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (parsed && parsed.id) return parsed
+      }
+    } catch (err) {
+      /* ignore */
+    }
+
+    // 3) Not found
+    return null
+  }
+
+  const fetchData = async () => {
+    setIsLoading(true)
+    try {
+      const detectedUser = await detectCurrentUser()
+      if (!detectedUser) {
+        // Not a fatal error, but let devs know filtering won't apply
+        console.warn("[TrainingPage] current user not detected; trainer-only filtering won't apply.")
+        toast({
+          title: "Note",
+          description: "Current user not detected — sessions might show all entries. Check authentication config.",
+          // neutral style
+        })
+      }
+      setCurrentUser(detectedUser)
+
       const [sessionsRes, classesRes, usersRes, attendancesRes] = await Promise.all([
         apiClient.getTrainingSessions(),
         apiClient.getClasses(),
@@ -143,6 +201,18 @@ export default function TrainingPage() {
       setIsLoading(false)
     }
   }
+
+  const isAdmin = useMemo(() => {
+    if (!currentUser) return false
+    // some backends use role === 'admin', some use is_admin
+    return currentUser.role === "admin" || currentUser.is_admin === true
+  }, [currentUser])
+
+  // Filter sessions client-side to show only the trainer's own sessions, unless admin
+  const visibleSessions = useMemo(() => {
+    if (isAdmin || !currentUser) return sessions
+    return sessions.filter((s) => Number(s.trainer_id) === Number(currentUser.id))
+  }, [sessions, currentUser, isAdmin])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -168,9 +238,13 @@ export default function TrainingPage() {
     }
   }
 
-  
-
   const handleEdit = (session: TrainingSession) => {
+    // guard: only allow editing if owner or admin
+    if (!isAdmin && currentUser && Number(session.trainer_id) !== Number(currentUser.id)) {
+      toast({ title: "Access denied", description: "You can only edit your own sessions", variant: "destructive" })
+      return
+    }
+
     setEditingSession(session)
     setFormData({
       class_id: session.class_id.toString(),
@@ -186,6 +260,17 @@ export default function TrainingPage() {
   }
 
   const handleDelete = async (id: number) => {
+    // guard: ensure user owns the session or is admin
+    const session = sessions.find(s => s.id === id)
+    if (!session) {
+      toast({ title: "Error", description: "Session not found", variant: "destructive" })
+      return
+    }
+    if (!isAdmin && currentUser && Number(session.trainer_id) !== Number(currentUser.id)) {
+      toast({ title: "Access denied", description: "You can only delete your own sessions", variant: "destructive" })
+      return
+    }
+
     if (!confirm("Are you sure you want to delete this session?")) return
     try {
       await apiClient.deleteTrainingSession(id)
@@ -200,7 +285,7 @@ export default function TrainingPage() {
     setEditingSession(null)
     setFormData({
       class_id: "",
-      trainer_id: "",
+      trainer_id: currentUser ? String(currentUser.id) : "",
       subject: "",
       date: "",
       start_time: "",
@@ -231,10 +316,10 @@ export default function TrainingPage() {
     return { present, absent, late, total: sessionAttendances.length }
   }
 
-  // Precompute upcoming sessions (date-only comparison)
+  // Precompute upcoming sessions (date-only comparison) from visibleSessions
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  const upcomingSessions = sessions
+  const upcomingSessions = visibleSessions
     .filter((s) => {
       const sessionDate = parseDateOnly(s.date)
       return sessionDate ? sessionDate >= today : false
@@ -242,7 +327,23 @@ export default function TrainingPage() {
     .sort((a, b) => (parseDateOnly(a.date)?.getTime() ?? 0) - (parseDateOnly(b.date)?.getTime() ?? 0))
 
   // Sessions without a valid date (TBA) — show separately so they don't silently disappear
-  const upcomingTbaSessions = sessions.filter((s) => !parseDateOnly(s.date))
+  const upcomingTbaSessions = visibleSessions.filter((s) => !parseDateOnly(s.date))
+
+  // Click handler that guards navigation so trainer cannot open others' sessions
+  const handleCardClick = (session: TrainingSession) => {
+    if (!isAdmin && currentUser && Number(session.trainer_id) !== Number(currentUser.id)) {
+      toast({ title: "Access denied", description: "You can't view other trainers' sessions", variant: "destructive" })
+      return
+    }
+    router.push(`/training/${session.id}`)
+  }
+
+  // ensure form pre-fills trainer_id for non-admin users when opening create dialog
+  useEffect(() => {
+    if (!isAdmin && currentUser) {
+      setFormData((f) => ({ ...f, trainer_id: String(currentUser.id) }))
+    }
+  }, [currentUser, isAdmin])
 
   return (
     <DashboardLayout>
@@ -297,22 +398,32 @@ export default function TrainingPage() {
                       </div>
                       <div className="grid gap-2">
                         <Label htmlFor="trainer_id">Trainer</Label>
-                        <Select
-                          value={formData.trainer_id}
-                          onValueChange={(value) => setFormData({ ...formData, trainer_id: value })}
-                          required
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a trainer" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {users.map((user) => (
-                              <SelectItem key={user.id} value={user.id.toString()}>
-                                {user.full_name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+
+                        {isAdmin ? (
+                          <Select
+                            value={formData.trainer_id}
+                            onValueChange={(value) => setFormData({ ...formData, trainer_id: value })}
+                            required
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a trainer" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {users.map((user) => (
+                                <SelectItem key={user.id} value={user.id.toString()}>
+                                  {user.full_name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          // non-admin trainers can only create sessions for themselves
+                          <Input
+                            value={currentUser ? currentUser.full_name : "Unknown trainer"}
+                            readOnly
+                            aria-readonly
+                          />
+                        )}
                       </div>
                     </div>
                     <div className="grid gap-2">
@@ -402,15 +513,14 @@ export default function TrainingPage() {
               <div className="text-center py-8 text-muted-foreground">Loading...</div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                
+
                 {upcomingSessions.map((session) => {
                     const stats = getAttendanceStats(session.id)
                     return (
                       <Card 
                         key={session.id} 
                         className="hover:border-primary/30 transition-colors cursor-pointer"
-                        onClick={() => router.push(`/training/${session.id}`)}
+                        onClick={() => handleCardClick(session)}
                       >
                         <CardHeader>
                           <div className="flex items-start justify-between">
@@ -468,6 +578,7 @@ export default function TrainingPage() {
                                   e.stopPropagation()
                                   handleEdit(session)
                                 }}
+                                disabled={!isAdmin && currentUser ? Number(session.trainer_id) !== Number(currentUser.id) : false}
                               >
                                 <Pencil className="h-3 w-3 mr-1" />
                                 Edit
@@ -480,6 +591,7 @@ export default function TrainingPage() {
                                   e.stopPropagation()
                                   handleDelete(session.id)
                                 }}
+                                disabled={!isAdmin && currentUser ? Number(session.trainer_id) !== Number(currentUser.id) : false}
                               >
                                 <Trash2 className="h-3 w-3" />
                               </Button>
@@ -503,11 +615,11 @@ export default function TrainingPage() {
 
           <TabsContent value="all" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {sessions.map((session) => (
+              {visibleSessions.map((session) => (
                 <Card 
                   key={session.id} 
                   className="hover:border-primary/30 transition-colors cursor-pointer"
-                  onClick={() => router.push(`/training/${session.id}`)}
+                  onClick={() => handleCardClick(session)}
                 >
                   <CardHeader>
                 <CardTitle className="text-lg">{session.subject}</CardTitle>
@@ -529,7 +641,7 @@ export default function TrainingPage() {
 
           <TabsContent value="attendance" className="space-y-4">
             <div className="space-y-4">
-              {sessions.length === 0 ? (
+              {visibleSessions.length === 0 ? (
                 <Card>
                   <CardContent>
                     <p className="text-center py-8 text-muted-foreground">No sessions available</p>
@@ -537,7 +649,7 @@ export default function TrainingPage() {
                 </Card>
               ) : (
                 // Render each session as its own group, sorted by date
-                sessions
+                visibleSessions
                   .slice()
                   .sort((a, b) => (parseDateOnly(a.date)?.getTime() ?? 0) - (parseDateOnly(b.date)?.getTime() ?? 0))
                   .map((session) => {
@@ -589,6 +701,7 @@ export default function TrainingPage() {
                                   e.stopPropagation()
                                   handleEdit(session)
                                 }}
+                                disabled={!isAdmin && currentUser ? Number(session.trainer_id) !== Number(currentUser.id) : false}
                               >
                                 <Pencil className="h-3 w-3 mr-1" />
                                 Edit
@@ -601,6 +714,7 @@ export default function TrainingPage() {
                                   e.stopPropagation()
                                   handleDelete(session.id)
                                 }}
+                                disabled={!isAdmin && currentUser ? Number(session.trainer_id) !== Number(currentUser.id) : false}
                               >
                                 <Trash2 className="h-3 w-3" />
                               </Button>

@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
             'full_name' => 'Mike Trainer',
             'email' => 'mike.trainer@musicclub.com',
             'phone' => '555-0004',
-            'role_id' => 3,
+            'role_id' => 7,
             'status' => 'active',
             'password' => Hash::make('password'),
         ]);
@@ -53,7 +53,7 @@ class UserSeeder extends Seeder
             'full_name' => 'Emma Trainer',
             'email' => 'emma.trainer@musicclub.com',
             'phone' => '555-0005',
-            'role_id' => 3,
+            'role_id' => 7,
             'status' => 'active',
             'password' => Hash::make('password'),
         ]);
