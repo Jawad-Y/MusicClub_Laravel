@@ -37,8 +37,8 @@ import {
 
 const navigationItems = [
   { name: "Dashboard", href: "/home", icon: LayoutDashboard, roles: ["leader", "department leader", "class leader", "trainer", "trainee", "inventory manager"] },
-  { name: "Users & Roles", href: "/users", icon: Users, roles: ["leader", "department leader", "individual affair"] },
-  { name: "Departments", href: "/departments", icon: Building2, roles: ["leader", "department leader"] },
+  { name: "Users & Roles", href: "/users", icon: Users, roles: ["leader", "class leader"] },
+  { name: "Departments", href: "/departments", icon: Building2, roles: ["leader", "department leader", "class leader", "trainer", "trainee", "individual affair"] },
   { name: "Classes", href: "/classes", icon: GraduationCap, roles: ["leader", "department leader", "class leader", "trainer"] },
   { name: "Instruments", href: "/instruments", icon: Guitar, roles: ["leader", "inventory manager"] },
   { name: "Clothing", href: "/clothing", icon: Shirt, roles: ["leader", "inventory manager"] },
