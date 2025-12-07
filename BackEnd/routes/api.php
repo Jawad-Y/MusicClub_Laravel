@@ -37,8 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [AuthController::class, 'me']);
 
     // User routes
+    // Allow all authenticated users to update (their own profile)
+    // Controller will check if they're updating themselves or have permission to edit others
     Route::apiResource('users', UserController::class)
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,individual affair');
+        ->middlewareFor(['store', 'destroy'], 'role:Admin,leader,individual affair');
 
     // Role routes
     Route::apiResource('roles', RoleController::class)

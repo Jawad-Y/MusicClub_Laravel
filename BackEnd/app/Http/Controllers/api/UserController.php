@@ -102,65 +102,96 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user): JsonResponse
     {
-        // Validate incoming data
-        $validated = $request->validate([
-            'full_name' => ['required', 'string', 'max:100'],
-            'email'     => ['required', 'email', 'max:150', 'unique:users,email,' . $user->id],
-            'phone'     => ['nullable', 'string', 'max:30'],
-            'role_id'   => ['required', 'exists:roles,id'],
-            'status'    => ['required', 'in:active,inactive'],
-            'password'  => ['nullable', 'string', 'min:6'],
-        ]);
-
-        // Check role-based restrictions for user updates
         $currentUser = $request->user();
         $currentUserRole = strtolower($currentUser->role->role_name ?? '');
-        $targetRole = Role::find($validated['role_id']);
-        $targetRoleName = strtolower($targetRole->role_name ?? '');
-        $existingUserRole = strtolower($user->role->role_name ?? '');
+        $isUpdatingSelf = $currentUser->id === $user->id;
         
-        // Only Leader can assign Leader role
-        if ($targetRoleName === 'leader' && $currentUserRole !== 'leader') {
+        // Check if user has permission to edit this profile
+        $canEditOthers = in_array($currentUserRole, ['leader', 'individual affair']);
+        
+        if (!$isUpdatingSelf && !$canEditOthers) {
             return response()->json([
                 'status' => false,
-                'message' => 'Only Leader can assign Leader role.',
+                'message' => 'You can only update your own profile.',
             ], 403);
         }
-        
-        // Only Leader and Individual Affair can assign Department Leader role
-        if ($targetRoleName === 'department leader' && !in_array($currentUserRole, ['leader', 'individual affair'])) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Only Leader and Individual Affair can assign Department Leader role.',
-            ], 403);
-        }
-        
-        // Individual Affair cannot assign Admin role
-        if ($currentUserRole === 'individual affair') {
-            if ($targetRoleName === 'admin') {
+
+        // Different validation rules based on who is updating
+        if ($isUpdatingSelf && !$canEditOthers) {
+            // Regular users can only update their own basic info (no role/status changes)
+            $validated = $request->validate([
+                'full_name' => ['required', 'string', 'max:100'],
+                'email'     => ['required', 'email', 'max:150', 'unique:users,email,' . $user->id],
+                'phone'     => ['nullable', 'string', 'max:30'],
+                'password'  => ['nullable', 'string', 'min:6'],
+            ]);
+            
+            $user->full_name = $validated['full_name'];
+            $user->email     = $validated['email'];
+            $user->phone     = $validated['phone'] ?? null;
+            
+            if (!empty($validated['password'])) {
+                $user->password = Hash::make($validated['password']);
+            }
+        } else {
+            // Leader or Individual Affair updating any user (including themselves)
+            $validated = $request->validate([
+                'full_name' => ['required', 'string', 'max:100'],
+                'email'     => ['required', 'email', 'max:150', 'unique:users,email,' . $user->id],
+                'phone'     => ['nullable', 'string', 'max:30'],
+                'role_id'   => ['required', 'exists:roles,id'],
+                'status'    => ['required', 'in:active,inactive'],
+                'password'  => ['nullable', 'string', 'min:6'],
+            ]);
+
+            // Check role-based restrictions for user updates
+            $targetRole = Role::find($validated['role_id']);
+            $targetRoleName = strtolower($targetRole->role_name ?? '');
+            $existingUserRole = strtolower($user->role->role_name ?? '');
+            
+            // Only Leader can assign Leader role
+            if ($targetRoleName === 'leader' && $currentUserRole !== 'leader') {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Individual Affair cannot assign Admin role.',
+                    'message' => 'Only Leader can assign Leader role.',
                 ], 403);
             }
             
-            // Also prevent updating users who are already Admin or Leader
-            if (in_array($existingUserRole, ['admin', 'leader'])) {
+            // Only Leader and Individual Affair can assign Department Leader role
+            if ($targetRoleName === 'department leader' && !in_array($currentUserRole, ['leader', 'individual affair'])) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Individual Affair cannot update users with Admin or Leader roles.',
+                    'message' => 'Only Leader and Individual Affair can assign Department Leader role.',
                 ], 403);
             }
-        }
+            
+            // Individual Affair cannot assign Admin role
+            if ($currentUserRole === 'individual affair') {
+                if ($targetRoleName === 'admin') {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Individual Affair cannot assign Admin role.',
+                    ], 403);
+                }
+                
+                // Also prevent updating users who are already Admin or Leader
+                if (in_array($existingUserRole, ['admin', 'leader'])) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Individual Affair cannot update users with Admin or Leader roles.',
+                    ], 403);
+                }
+            }
 
-        $user->full_name = $validated['full_name'];
-        $user->email     = $validated['email'];
-        $user->phone     = $validated['phone'] ?? null;
-        $user->role_id   = $validated['role_id'];
-        $user->status    = $validated['status'];
+            $user->full_name = $validated['full_name'];
+            $user->email     = $validated['email'];
+            $user->phone     = $validated['phone'] ?? null;
+            $user->role_id   = $validated['role_id'];
+            $user->status    = $validated['status'];
 
-        if (!empty($validated['password'])) {
-            $user->password = Hash::make($validated['password']);
+            if (!empty($validated['password'])) {
+                $user->password = Hash::make($validated['password']);
+            }
         }
 
         $user->save();

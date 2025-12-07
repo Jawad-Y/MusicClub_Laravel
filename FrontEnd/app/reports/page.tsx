@@ -97,9 +97,16 @@ export default function ReportsPage() {
       link.click()
       link.remove()
       window.URL.revokeObjectURL(url)
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Failed to export ${format}:`, error)
-      alert(`Failed to export ${format}`)
+      // If backend returned structured error, show useful message
+      if (error && typeof error === "object" && (error.status || error.body)) {
+        const status = error.status || "unknown"
+        const body = typeof error.body === "string" ? error.body : JSON.stringify(error.body)
+        alert(`Export failed (status: ${status}). ${body?.slice ? body.slice(0, 300) : ""}`)
+      } else {
+        alert(`Failed to export ${format}. See console for details.`)
+      }
     }
   }
 

@@ -37,21 +37,30 @@ class CheckClassAccess
             return $next($request);
         }
 
-        // Get class parameter from route (could be ID, model instance, or collection)
+        // Get class parameter from route (handle both 'myclasses' and 'class')
         $routeParam = $request->route('myclasses') ?? $request->route('class');
 
         if ($routeParam) {
-            // Normalize to a `Clas` model instance and ID
+            // Normalize route parameter into a Clas model instance
             if ($routeParam instanceof Clas) {
                 $class = $routeParam;
-                $classId = $class->id;
             } elseif ($routeParam instanceof \Illuminate\Support\Collection) {
-                $class = $routeParam->first();
-                $classId = $class->id ?? null;
+                $first = $routeParam->first();
+                if ($first instanceof Clas) {
+                    $class = $first;
+                } elseif (is_object($first) && isset($first->id)) {
+                    $class = Clas::find($first->id);
+                } else {
+                    $class = Clas::find($first);
+                }
+            } elseif (is_object($routeParam) && isset($routeParam->id)) {
+                $class = Clas::find($routeParam->id);
+            } elseif (is_array($routeParam)) {
+                $id = $routeParam[0] ?? null;
+                $class = $id ? Clas::find($id) : null;
             } else {
-                // Could be numeric ID or an object with an 'id' property
-                $classId = is_object($routeParam) && isset($routeParam->id) ? $routeParam->id : $routeParam;
-                $class = Clas::find($classId);
+                // assume scalar id
+                $class = Clas::find($routeParam);
             }
 
             if (!$class) {
