@@ -37,11 +37,22 @@ class CheckClassAccess
             return $next($request);
         }
 
-        // Get class ID from route parameter (handle both 'myclasses' and 'class')
-        $classId = $request->route('myclasses') ?? $request->route('class');
+        // Get class parameter from route (could be ID, model instance, or collection)
+        $routeParam = $request->route('myclasses') ?? $request->route('class');
 
-        if ($classId) {
-            $class = Clas::find($classId);
+        if ($routeParam) {
+            // Normalize to a `Clas` model instance and ID
+            if ($routeParam instanceof Clas) {
+                $class = $routeParam;
+                $classId = $class->id;
+            } elseif ($routeParam instanceof \Illuminate\Support\Collection) {
+                $class = $routeParam->first();
+                $classId = $class->id ?? null;
+            } else {
+                // Could be numeric ID or an object with an 'id' property
+                $classId = is_object($routeParam) && isset($routeParam->id) ? $routeParam->id : $routeParam;
+                $class = Clas::find($classId);
+            }
 
             if (!$class) {
                 return response()->json([
@@ -74,8 +85,9 @@ class CheckClassAccess
             }
             // Trainers can only access classes they teach
             elseif ($userRole === 'trainer') {
-                $isTrainer = TrainingSession::where('class_id', $classId)
-                    ->where('trainer_id', $user->id)
+                $isTrainer = $user->classMembers()
+                    ->where('classes.id', $class->id)
+                    ->wherePivot('role', 'trainer')
                     ->exists();
 
                 if (!$isTrainer) {
@@ -88,7 +100,7 @@ class CheckClassAccess
             // Regular members/trainees can only access classes they're enrolled in
             else {
                 $isMember = $user->classMembers()
-                    ->where('classes.id', $classId)
+                    ->where('classes.id', $class->id)
                     ->exists();
 
                 if (!$isMember) {
@@ -110,9 +122,9 @@ class CheckClassAccess
                 $request->merge(['_filter_class_leader_id' => $user->id]);
             } elseif ($userRole === 'trainer') {
                 // Only show classes they teach
-                $classIds = TrainingSession::where('trainer_id', $user->id)
-                    ->distinct()
-                    ->pluck('class_id')
+                $classIds = $user->classMembers()
+                    ->wherePivot('role', 'trainer')
+                    ->pluck('classes.id')
                     ->toArray();
                 $request->merge(['_filter_class_ids' => $classIds]);
             } else {

@@ -30,11 +30,16 @@ class ClassLeaderSeeder extends Seeder
         ];
 
         foreach ($classLeaders as $leader) {
-            
-            User::firstOrCreate(
-                ['email' => $leader['email']],
-                $leader
-            );
+            $user = User::where('email', $leader['email'])->first();
+
+            if ($user) {
+                $user->update([
+                    'full_name' => $leader['full_name'],
+                    'phone' => $leader['phone'],
+                    'role_id' => $leader['role_id'],
+                    'status' => $leader['status'],
+                ]);
+            }
         }
     }
 }
