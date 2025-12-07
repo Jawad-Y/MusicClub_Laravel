@@ -1,6 +1,6 @@
 # Music Club Management System
 
-A comprehensive Laravel-based web application for managing music club operations, including instruments, classes, events, memberships, and more.
+A comprehensive full-stack web application for managing music club operations, including instruments, classes, events, memberships, and more. Built with a Laravel backend API and a Next.js frontend.
 
 ## Features
 
@@ -16,14 +16,19 @@ A comprehensive Laravel-based web application for managing music club operations
 
 ## Requirements
 
+### Backend (Laravel)
 - **PHP**: >= 8.2
 - **Composer**: Latest version
-- **Node.js**: >= 18.x
-- **NPM**: >= 9.x
 - **Database**: MySQL 5.7+ / PostgreSQL 12+ / SQLite 3.8.8+
 - **Web Server**: Apache / Nginx
 
+### Frontend (Next.js)
+- **Node.js**: >= 18.x
+- **pnpm**: >= 8.x (recommended) or npm >= 9.x
+
 ## Installation
+
+### Backend Setup
 
 ### 1. Clone the Repository
 
@@ -35,16 +40,11 @@ cd MusicClub_Laravel
 ### 2. Install PHP Dependencies
 
 ```bash
+cd BackEnd
 composer install
 ```
 
-### 3. Install Node.js Dependencies
-
-```bash
-npm install
-```
-
-### 4. Environment Configuration
+### 3. Environment Configuration
 
 Copy the example environment file and generate application key:
 
@@ -53,7 +53,7 @@ copy .env.example .env
 php artisan key:generate
 ```
 
-### 5. Configure Database
+### 4. Configure Database
 
 Edit the `.env` file and set your database credentials:
 
@@ -66,7 +66,7 @@ DB_USERNAME=your_username
 DB_PASSWORD=your_password
 ```
 
-### 6. Run Database Migrations
+### 5. Run Database Migrations
 
 Create the database tables:
 
@@ -74,7 +74,7 @@ Create the database tables:
 php artisan migrate
 ```
 
-### 7. (Optional) Seed the Database
+### 6. (Optional) Seed the Database
 
 If you want to populate the database with sample data:
 
@@ -82,37 +82,49 @@ If you want to populate the database with sample data:
 php artisan db:seed
 ```
 
-### 8. Build Frontend Assets
+### 7. Start the Backend Server
 
-For development:
 ```bash
+php artisan serve
+```
+
+The API will be available at `http://localhost:8000`
+
+### Frontend Setup
+
+### 1. Install Frontend Dependencies
+
+```bash
+cd ../FrontEnd
+pnpm install
+# or
+npm install
+```
+
+### 2. Environment Configuration
+
+Create a `.env.local` file in the FrontEnd directory:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000/api
+```
+
+### 3. Start the Development Server
+
+```bash
+pnpm dev
+# or
 npm run dev
 ```
 
-For production:
+The frontend will be available at `http://localhost:3000`
+
+### 4. Build for Production
+
 ```bash
+pnpm build
+# or
 npm run build
-```
-
-### 9. Start the Development Server
-
-```bash
-php artisan serve
-```
-
-The application will be available at `http://localhost:8000`
-
-## Running Both Servers Concurrently
-
-To run both the Laravel development server and Vite asset server simultaneously:
-
-```bash
-php artisan serve
-```
-
-In a separate terminal:
-```bash
-npm run dev
 ```
 
 ## API Endpoints
@@ -130,42 +142,78 @@ The application provides RESTful API endpoints for all resources:
 
 ## Project Structure
 
+### Backend (Laravel)
 ```
-app/
-├── Http/Controllers/    # API Controllers
-├── Models/             # Eloquent Models
-├── Policies/           # Authorization Policies
-├── Exports/            # Excel Export Classes
-config/                 # Configuration files
-database/
-├── migrations/         # Database migrations
-├── seeders/           # Database seeders
-resources/
-├── js/                # JavaScript files
-├── css/               # CSS files
-└── views/             # Blade templates
-routes/
-├── api.php            # API routes
-└── web.php            # Web routes
+BackEnd/
+├── app/
+│   ├── Http/Controllers/    # API Controllers
+│   ├── Models/             # Eloquent Models
+│   ├── Policies/           # Authorization Policies
+│   └── Exports/            # Excel Export Classes
+├── config/                 # Configuration files
+├── database/
+│   ├── migrations/         # Database migrations
+│   └── seeders/           # Database seeders
+├── routes/
+│   ├── api.php            # API routes
+│   └── web.php            # Web routes
+└── tests/                 # PHPUnit tests
+```
+
+### Frontend (Next.js)
+```
+FrontEnd/
+├── app/                   # Next.js App Router pages
+│   ├── classes/          # Classes management
+│   ├── clothing/         # Clothing assignment
+│   ├── departments/      # Department management
+│   ├── events/           # Event management
+│   ├── homework/         # Homework system
+│   ├── instruments/      # Instrument tracking
+│   ├── library/          # Library management
+│   ├── login/            # Authentication
+│   ├── performance/      # Performance reviews
+│   ├── profile/          # User profiles
+│   ├── reports/          # Reporting
+│   ├── training/         # Training modules
+│   └── users/            # User management
+├── components/            # Reusable React components
+│   └── ui/               # UI component library
+├── lib/                  # Utility functions
+│   ├── api-client.ts     # API integration
+│   ├── auth-context.tsx  # Authentication context
+│   └── utils.ts          # Helper functions
+└── hooks/                # Custom React hooks
 ```
 
 ## Technologies Used
 
+### Backend
 - **Framework**: Laravel 12
-- **Frontend**: Vite, Tailwind CSS 4.0
 - **Authentication**: Laravel Sanctum
 - **Export**: Maatwebsite Excel
 - **Database**: Eloquent ORM
 - **Testing**: PHPUnit
 
+### Frontend
+- **Framework**: Next.js 14+ (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **State Management**: React Context API
+- **API Client**: Fetch API with custom utilities
+
 ## Quick Start Guide
 
 For a fresh installation on Windows:
 
+### Backend
 ```powershell
+# Navigate to backend
+cd BackEnd
+
 # Install dependencies
 composer install
-npm install
 
 # Setup environment
 copy .env.example .env
@@ -174,11 +222,28 @@ php artisan key:generate
 # Configure database in .env, then migrate
 php artisan migrate
 
-# Build assets and start server
-npm run dev
-# In another terminal:
+# Start server
 php artisan serve
 ```
+
+### Frontend
+```powershell
+# Navigate to frontend (from project root)
+cd FrontEnd
+
+# Install dependencies
+pnpm install
+
+# Create environment file
+echo "NEXT_PUBLIC_API_URL=http://localhost:8000/api" > .env.local
+
+# Start development server
+pnpm dev
+```
+
+Now visit:
+- Frontend: `http://localhost:3000`
+- Backend API: `http://localhost:8000`
 
 ## Contributing
 
