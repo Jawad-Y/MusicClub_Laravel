@@ -44,7 +44,7 @@ const navigationItems = [
   { name: "Clothing", href: "/clothing", icon: Shirt, roles: ["leader", "inventory manager"] },
   { name: "Training Sessions", href: "/training", icon: BookOpen, roles: ["leader", "department leader", "class leader", "trainer"] },
   { name: "Homework", href: "/homework", icon: ClipboardList, roles: ["leader", "department leader", "class leader", "trainer"] },
-  { name: "Events", href: "/events", icon: Calendar, roles: ["leader", "class leader"] },
+  { name: "Events", href: "/events", icon: Calendar, roles: ["leader", "class leader", "department leader"] },
   { name: "Library", href: "/library", icon: FileText, roles: ["leader", "trainer"] },
   { name: "Performance", href: "/performance", icon: TrendingUp, roles: ["leader", "trainer"] },
   { name: "Reports", href: "/reports", icon: BarChart3, roles: ["leader", "department leader"] },
