@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Builder;
 trait HasRoleScopes
 {
     /**
+     * Check if the user is an Admin (top level)
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role && strtolower($this->role->role_name) === 'admin';
+    }
+
+    /**
      * Check if the user is a Leader (top level)
      */
     public function isLeader(): bool
@@ -63,12 +71,20 @@ trait HasRoleScopes
     }
 
     /**
+     * Check if the user is an Individual Affair
+     */
+    public function isIndividualAffair(): bool
+    {
+        return $this->role && strtolower($this->role->role_name) === 'individual affair';
+    }
+
+    /**
      * Get all department IDs this user can access
      */
     public function getAccessibleDepartmentIds(): array
     {
-        if ($this->isLeader()) {
-            // Leaders can access all departments
+        if ($this->isAdmin() || $this->isLeader() || $this->isIndividualAffair()) {
+            // Admin, Leaders and Individual Affairs can access all departments
             return \App\Models\Department::pluck('id')->toArray();
         }
 
@@ -90,8 +106,8 @@ trait HasRoleScopes
      */
     public function getAccessibleClassIds(): array
     {
-        if ($this->isLeader()) {
-            // Leaders can access all classes
+        if ($this->isAdmin() || $this->isLeader() || $this->isIndividualAffair()) {
+            // Admin, Leaders and Individual Affairs can access all classes
             return \App\Models\Clas::pluck('id')->toArray();
         }
 
@@ -119,8 +135,8 @@ trait HasRoleScopes
      */
     public function getAccessibleUserIds(): array
     {
-        if ($this->isLeader()) {
-            // Leaders can access all users
+        if ($this->isAdmin() || $this->isLeader() || $this->isIndividualAffair()) {
+            // Admin, Leaders and Individual Affairs can access all users
             return \App\Models\User::pluck('id')->toArray();
         }
 
@@ -167,7 +183,7 @@ trait HasRoleScopes
             return $query->whereRaw('1 = 0'); // No access
         }
 
-        if ($user->isLeader()) {
+        if ($user->isAdmin() || $user->isLeader() || $user->isIndividualAffair()) {
             return $query; // Full access
         }
 

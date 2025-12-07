@@ -16,10 +16,15 @@ class UserController extends Controller
 
     /**
      * Display a list of users.
+     * Admins are completely hidden from all users (including other admins in the API)
      */
     public function index(Request $request): JsonResponse
     {
-        $users = User::with('role')
+        $currentUser = $request->user();
+        
+        // Filter out admin users - they are invisible to everyone
+        $users = User::accessibleBy($currentUser)
+            ->with('role')
             ->orderBy('id', 'desc')
             ->get();
 
@@ -47,30 +52,28 @@ class UserController extends Controller
         $targetRole = Role::find($validated['role_id']);
         $targetRoleName = strtolower($targetRole->role_name ?? '');
         
-        // Only Leader can create users with Leader role
-        if ($targetRoleName === 'leader' && $currentUserRole !== 'leader') {
+        // CRITICAL: Nobody can create admin users - admins are completely invisible
+        if ($targetRoleName === 'admin') {
             return response()->json([
                 'status' => false,
-                'message' => 'Only Leader can create users with Leader role.',
+                'message' => 'Admin role cannot be assigned.',
             ], 403);
         }
         
-        // Only Leader and Individual Affair can create Department Leader
-        if ($targetRoleName === 'department leader' && !in_array($currentUserRole, ['leader', 'individual affair'])) {
+        // Only Admin and Leader can create users with Leader role
+        if ($targetRoleName === 'leader' && !in_array($currentUserRole, ['admin', 'leader'])) {
             return response()->json([
                 'status' => false,
-                'message' => 'Only Leader and Individual Affair can create users with Department Leader role.',
+                'message' => 'Only Admin and Leader can create users with Leader role.',
             ], 403);
         }
         
-        // Individual Affair cannot create Admin
-        if ($currentUserRole === 'individual affair') {
-            if ($targetRoleName === 'admin') {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Individual Affair cannot create users with Admin role.',
-                ], 403);
-            }
+        // Only Admin, Leader and Individual Affair can create Department Leader
+        if ($targetRoleName === 'department leader' && !in_array($currentUserRole, ['admin', 'leader', 'individual affair'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Only Admin, Leader and Individual Affair can create users with Department Leader role.',
+            ], 403);
         }
 
         $user = User::create([
@@ -89,10 +92,19 @@ class UserController extends Controller
 
     /**
      * Display the specified user.
+     * Prevent viewing admin users - they are invisible
      */
     public function show(User $user): JsonResponse
     {
         $user->load('role');
+        
+        // Block viewing admin users
+        if (strtolower($user->role->role_name ?? '') === 'admin') {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found.',
+            ], 404);
+        }
 
         return $this->success($user);
     }
@@ -102,65 +114,110 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user): JsonResponse
     {
-        // Validate incoming data
-        $validated = $request->validate([
-            'full_name' => ['required', 'string', 'max:100'],
-            'email'     => ['required', 'email', 'max:150', 'unique:users,email,' . $user->id],
-            'phone'     => ['nullable', 'string', 'max:30'],
-            'role_id'   => ['required', 'exists:roles,id'],
-            'status'    => ['required', 'in:active,inactive'],
-            'password'  => ['nullable', 'string', 'min:6'],
-        ]);
-
-        // Check role-based restrictions for user updates
         $currentUser = $request->user();
         $currentUserRole = strtolower($currentUser->role->role_name ?? '');
-        $targetRole = Role::find($validated['role_id']);
-        $targetRoleName = strtolower($targetRole->role_name ?? '');
+        $isUpdatingSelf = $currentUser->id === $user->id;
+        
+        // CRITICAL: Prevent editing admin users - they are invisible and untouchable
         $existingUserRole = strtolower($user->role->role_name ?? '');
-        
-        // Only Leader can assign Leader role
-        if ($targetRoleName === 'leader' && $currentUserRole !== 'leader') {
+        if ($existingUserRole === 'admin') {
             return response()->json([
                 'status' => false,
-                'message' => 'Only Leader can assign Leader role.',
-            ], 403);
+                'message' => 'User not found.',
+            ], 404);
         }
         
-        // Only Leader and Individual Affair can assign Department Leader role
-        if ($targetRoleName === 'department leader' && !in_array($currentUserRole, ['leader', 'individual affair'])) {
+        // Check if user has permission to edit this profile
+        $canEditOthers = in_array($currentUserRole, ['admin', 'leader', 'individual affair']);
+        
+        if (!$isUpdatingSelf && !$canEditOthers) {
             return response()->json([
                 'status' => false,
-                'message' => 'Only Leader and Individual Affair can assign Department Leader role.',
+                'message' => 'You can only update your own profile.',
             ], 403);
         }
-        
-        // Individual Affair cannot assign Admin role
-        if ($currentUserRole === 'individual affair') {
+
+        // Different validation rules based on who is updating
+        if ($isUpdatingSelf && !$canEditOthers) {
+            // Regular users can only update their own basic info (no role/status changes)
+            $validated = $request->validate([
+                'full_name' => ['required', 'string', 'max:100'],
+                'email'     => ['required', 'email', 'max:150', 'unique:users,email,' . $user->id],
+                'phone'     => ['nullable', 'string', 'max:30'],
+                'password'  => ['nullable', 'string', 'min:6'],
+            ]);
+            
+            $user->full_name = $validated['full_name'];
+            $user->email     = $validated['email'];
+            $user->phone     = $validated['phone'] ?? null;
+            
+            if (!empty($validated['password'])) {
+                $user->password = Hash::make($validated['password']);
+            }
+        } elseif ($isUpdatingSelf && $canEditOthers) {
+            // Leader or Individual Affair updating their OWN profile (basic info only, no role/status change)
+            $validated = $request->validate([
+                'full_name' => ['required', 'string', 'max:100'],
+                'email'     => ['required', 'email', 'max:150', 'unique:users,email,' . $user->id],
+                'phone'     => ['nullable', 'string', 'max:30'],
+                'password'  => ['nullable', 'string', 'min:6'],
+            ]);
+            
+            $user->full_name = $validated['full_name'];
+            $user->email     = $validated['email'];
+            $user->phone     = $validated['phone'] ?? null;
+            
+            if (!empty($validated['password'])) {
+                $user->password = Hash::make($validated['password']);
+            }
+        } else {
+            // Leader or Individual Affair updating OTHER users
+            $validated = $request->validate([
+                'full_name' => ['required', 'string', 'max:100'],
+                'email'     => ['required', 'email', 'max:150', 'unique:users,email,' . $user->id],
+                'phone'     => ['nullable', 'string', 'max:30'],
+                'role_id'   => ['required', 'exists:roles,id'],
+                'status'    => ['required', 'in:active,inactive'],
+                'password'  => ['nullable', 'string', 'min:6'],
+            ]);
+
+            // Check role-based restrictions for user updates
+            $targetRole = Role::find($validated['role_id']);
+            $targetRoleName = strtolower($targetRole->role_name ?? '');
+            
+            // CRITICAL: Nobody can assign admin role - admins are invisible
             if ($targetRoleName === 'admin') {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Individual Affair cannot assign Admin role.',
+                    'message' => 'Admin role cannot be assigned.',
                 ], 403);
             }
             
-            // Also prevent updating users who are already Admin or Leader
-            if (in_array($existingUserRole, ['admin', 'leader'])) {
+            // Only Admin and Leader can assign Leader role
+            if ($targetRoleName === 'leader' && !in_array($currentUserRole, ['admin', 'leader'])) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Individual Affair cannot update users with Admin or Leader roles.',
+                    'message' => 'Only Admin and Leader can assign Leader role.',
                 ], 403);
             }
-        }
+            
+            // Only Admin, Leader and Individual Affair can assign Department Leader role
+            if ($targetRoleName === 'department leader' && !in_array($currentUserRole, ['admin', 'leader', 'individual affair'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Only Admin, Leader and Individual Affair can assign Department Leader role.',
+                ], 403);
+            }
 
-        $user->full_name = $validated['full_name'];
-        $user->email     = $validated['email'];
-        $user->phone     = $validated['phone'] ?? null;
-        $user->role_id   = $validated['role_id'];
-        $user->status    = $validated['status'];
+            $user->full_name = $validated['full_name'];
+            $user->email     = $validated['email'];
+            $user->phone     = $validated['phone'] ?? null;
+            $user->role_id   = $validated['role_id'];
+            $user->status    = $validated['status'];
 
-        if (!empty($validated['password'])) {
-            $user->password = Hash::make($validated['password']);
+            if (!empty($validated['password'])) {
+                $user->password = Hash::make($validated['password']);
+            }
         }
 
         $user->save();
@@ -171,9 +228,18 @@ class UserController extends Controller
 
     /**
      * Soft delete the specified user.
+     * Prevent deleting admin users - they are invisible
      */
     public function destroy(User $user): JsonResponse
     {
+        // CRITICAL: Prevent deleting admin users
+        if (strtolower($user->role->role_name ?? '') === 'admin') {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found.',
+            ], 404);
+        }
+        
         $user->delete();
 
         return $this->success(null, 'User deleted successfully', 204);

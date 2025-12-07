@@ -468,23 +468,66 @@ class ApiClient {
 
   // Export endpoints for instruments
   async exportInstrumentsExcel() {
-    const response = await fetch(`${this.baseUrl}/instruments/export-excel`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-      },
-    })
-    if (!response.ok) throw new Error("Export failed")
-    return await response.blob()
+    try {
+      const response = await fetch(`${this.baseUrl}/instruments/export-excel`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          Accept:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/octet-stream, */*",
+        },
+        // keep CORS mode default; backend should allow the origin
+      })
+
+      if (!response.ok) {
+        // Try to parse error body for debugging
+        let body: any = null
+        try {
+          body = await response.json()
+        } catch (e) {
+          try {
+            body = await response.text()
+          } catch (e2) {
+            body = null
+          }
+        }
+        throw { status: response.status, statusText: response.statusText, body }
+      }
+
+      return await response.blob()
+    } catch (err) {
+      throw err
+    }
   }
 
   async exportInstrumentsCsv() {
-    const response = await fetch(`${this.baseUrl}/instruments/export-csv`, {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-      },
-    })
-    if (!response.ok) throw new Error("Export failed")
-    return await response.blob()
+    try {
+      const response = await fetch(`${this.baseUrl}/instruments/export-csv`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          Accept: "text/csv, application/octet-stream, */*",
+        },
+      })
+
+      if (!response.ok) {
+        let body: any = null
+        try {
+          body = await response.json()
+        } catch (e) {
+          try {
+            body = await response.text()
+          } catch (e2) {
+            body = null
+          }
+        }
+        throw { status: response.status, statusText: response.statusText, body }
+      }
+
+      return await response.blob()
+    } catch (err) {
+      throw err
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth-context"
 import { api } from "@/lib/api-client"
 import { Button } from "@/components/ui/button"
@@ -17,9 +17,9 @@ export default function ProfilePage() {
   const { user, setUser } = useAuth()
   const [loading, setLoading] = useState(false)
   const [profileData, setProfileData] = useState({
-    name: user?.name || "",
-    email: user?.email || "",
-    phone_number: user?.phone_number || "",
+    full_name: "",
+    email: "",
+    phone: "",
   })
   const [passwordData, setPasswordData] = useState({
     current_password: "",
@@ -27,15 +27,75 @@ export default function ProfilePage() {
     password_confirmation: "",
   })
 
+  // Sync form data with user data when user changes
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        full_name: user?.full_name || "",
+        email: user?.email || "",
+        phone: (user as any)?.phone || user?.phone_number || "",
+      })
+    }
+  }, [user])
+
   const handleUpdateProfile = async () => {
     try {
       setLoading(true)
-      const response = await api.put(`/users/${user?.id}`, profileData)
-      setUser(response.data)
-      alert("Profile updated successfully!")
+      // Construct payload with multiple field keys to be compatible with backend
+      const payload: any = {
+        // preferred keys
+        full_name: (profileData as any).full_name,
+        email: (profileData as any).email,
+        // include both possible phone fields
+        phone: (profileData as any).phone,
+        phone_number: (profileData as any).phone,
+        // also include legacy 'name' in case backend expects it
+        name: (profileData as any).full_name,
+      }
+
+      const response = await api.updateUser(user?.id, payload)
+
+      // apiClient returns parsed body (often an ApiResponse). Handle common shapes.
+      const success = response?.success === true || (response as any)?.data
+      const updatedUser = (response as any)?.data || response
+      if (success) {
+        setUser(updatedUser)
+        alert("Profile updated successfully!")
+      } else {
+        console.error("Unexpected response updating profile:", response)
+        alert("Failed to update profile")
+      }
     } catch (error) {
       console.error("Failed to update profile:", error)
-      alert("Failed to update profile")
+      // If error is a structured object from api-client, show details
+      if (error && typeof error === "object") {
+        const status = (error as any).status || "unknown"
+        const body = (error as any).body || (error as any).message || JSON.stringify(error)
+        // Try extract validation messages
+        let message = `Status: ${status}`
+        try {
+          if (body && typeof body === "object") {
+            if (body.errors) {
+              const errs = Object.values(body.errors)
+                .flat()
+                .slice(0, 5)
+                .join("; ")
+              message += ` - ${errs}`
+            } else if (body.message) {
+              message += ` - ${body.message}`
+            } else {
+              message += ` - ${JSON.stringify(body)}`
+            }
+          } else {
+            message += ` - ${body}`
+          }
+        } catch (e) {
+          message += " - Failed to parse error body"
+        }
+        alert(`Failed to update profile: ${message}`)
+      } else {
+        alert("Failed to update profile")
+      }
     } finally {
       setLoading(false)
     }
@@ -89,7 +149,7 @@ export default function ProfilePage() {
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Role:</span>
-                <Badge variant="outline">{user?.role?.name}</Badge>
+                <Badge variant="outline">{user?.role?.role_name}</Badge>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -111,7 +171,7 @@ export default function ProfilePage() {
                   <User className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium">Full Name</span>
                 </div>
-                <p className="text-sm text-muted-foreground">{user?.name}</p>
+                <p className="text-sm text-muted-foreground">{user?.full_name}</p>
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
@@ -125,7 +185,7 @@ export default function ProfilePage() {
                   <Phone className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium">Phone</span>
                 </div>
-                <p className="text-sm text-muted-foreground">{user?.phone_number || "Not set"}</p>
+                <p className="text-sm text-muted-foreground">{(user as any)?.phone || user?.phone_number || "Not set"}</p>
               </div>
             </div>
           </CardContent>
@@ -142,11 +202,11 @@ export default function ProfilePage() {
 
             <TabsContent value="profile" className="space-y-4 mt-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="full_name">Full Name</Label>
                 <Input
-                  id="name"
-                  value={profileData.name}
-                  onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                  id="full_name"
+                  value={(profileData as any).full_name}
+                  onChange={(e) => setProfileData({ ...profileData, full_name: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
@@ -162,8 +222,8 @@ export default function ProfilePage() {
                 <Label htmlFor="phone">Phone Number</Label>
                 <Input
                   id="phone"
-                  value={profileData.phone_number}
-                  onChange={(e) => setProfileData({ ...profileData, phone_number: e.target.value })}
+                  value={(profileData as any).phone}
+                  onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
                 />
               </div>
               <Button onClick={handleUpdateProfile} disabled={loading}>

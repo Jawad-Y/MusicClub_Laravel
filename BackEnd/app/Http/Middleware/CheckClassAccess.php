@@ -37,11 +37,42 @@ class CheckClassAccess
             return $next($request);
         }
 
-        // Get class ID from route parameter (handle both 'myclasses' and 'class')
-        $classId = $request->route('myclasses') ?? $request->route('class');
+        // Individual Affair: read-only access to all classes (can view/list but cannot modify)
+        if ($userRole === 'individual affair') {
+            if ($request->isMethod('GET') || $request->isMethod('HEAD')) {
+                return $next($request);
+            }
+            return response()->json([
+                'status' => false,
+                'message' => 'You do not have permission to modify class resources.',
+            ], 403);
+        }
 
-        if ($classId) {
-            $class = Clas::find($classId);
+        // Get class parameter from route (handle both 'myclasses' and 'class')
+        $routeParam = $request->route('myclasses') ?? $request->route('class');
+
+        if ($routeParam) {
+            // Normalize route parameter into a Clas model instance
+            if ($routeParam instanceof Clas) {
+                $class = $routeParam;
+            } elseif ($routeParam instanceof \Illuminate\Support\Collection) {
+                $first = $routeParam->first();
+                if ($first instanceof Clas) {
+                    $class = $first;
+                } elseif (is_object($first) && isset($first->id)) {
+                    $class = Clas::find($first->id);
+                } else {
+                    $class = Clas::find($first);
+                }
+            } elseif (is_object($routeParam) && isset($routeParam->id)) {
+                $class = Clas::find($routeParam->id);
+            } elseif (is_array($routeParam)) {
+                $id = $routeParam[0] ?? null;
+                $class = $id ? Clas::find($id) : null;
+            } else {
+                // assume scalar id
+                $class = Clas::find($routeParam);
+            }
 
             if (!$class) {
                 return response()->json([
@@ -74,8 +105,9 @@ class CheckClassAccess
             }
             // Trainers can only access classes they teach
             elseif ($userRole === 'trainer') {
-                $isTrainer = TrainingSession::where('class_id', $classId)
-                    ->where('trainer_id', $user->id)
+                $isTrainer = $user->classMembers()
+                    ->where('classes.id', $class->id)
+                    ->wherePivot('role', 'trainer')
                     ->exists();
 
                 if (!$isTrainer) {
@@ -88,7 +120,7 @@ class CheckClassAccess
             // Regular members/trainees can only access classes they're enrolled in
             else {
                 $isMember = $user->classMembers()
-                    ->where('classes.id', $classId)
+                    ->where('classes.id', $class->id)
                     ->exists();
 
                 if (!$isMember) {
@@ -110,9 +142,9 @@ class CheckClassAccess
                 $request->merge(['_filter_class_leader_id' => $user->id]);
             } elseif ($userRole === 'trainer') {
                 // Only show classes they teach
-                $classIds = TrainingSession::where('trainer_id', $user->id)
-                    ->distinct()
-                    ->pluck('class_id')
+                $classIds = $user->classMembers()
+                    ->wherePivot('role', 'trainer')
+                    ->pluck('classes.id')
                     ->toArray();
                 $request->merge(['_filter_class_ids' => $classIds]);
             } else {

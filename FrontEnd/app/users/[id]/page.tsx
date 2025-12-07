@@ -23,6 +23,7 @@ import {
 } from "lucide-react"
 import apiClient from "@/lib/api-client"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/lib/auth-context"
 
 export default function UserProfilePage() {
   const params = useParams()
@@ -34,12 +35,18 @@ export default function UserProfilePage() {
   const [attendanceHistory, setAttendanceHistory] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToast()
+  const { user: currentUser, hasRole } = useAuth()
+
+  // Determine what sections this user can see
+  const canViewClasses = !hasRole('inventory manager')
+  const canViewClothing = hasRole('leader') || hasRole('inventory manager') || hasRole('individual affair')
+  const canViewAttendance = !hasRole('inventory manager')
 
   useEffect(() => {
     fetchUserData()
-    fetchEnrolledClasses()
-    fetchClothingAssignments()
-    fetchAttendanceHistory()
+    if (canViewClasses) fetchEnrolledClasses()
+    if (canViewClothing) fetchClothingAssignments()
+    if (canViewAttendance) fetchAttendanceHistory()
   }, [userId])
 
   const fetchUserData = async () => {
@@ -64,20 +71,23 @@ export default function UserProfilePage() {
     try {
       const membersResponse = await apiClient.getClassMembers()
       if (membersResponse.success && membersResponse.data) {
-        const userClasses = membersResponse.data.filter((m: any) => m.user_id === userId)
+        const membersData = Array.isArray(membersResponse.data) ? membersResponse.data : []
+        const userClasses = membersData.filter((m: any) => m.user_id === userId)
 
         // Fetch full class details
         const classesResponse = await apiClient.getClasses()
         if (classesResponse.success && classesResponse.data) {
+          const classesData = Array.isArray(classesResponse.data) ? classesResponse.data : []
           const enrolledClassesData = userClasses.map((member: any) => ({
             ...member,
-            class: classesResponse.data.find((c: any) => c.id === member.class_id),
+            class: classesData.find((c: any) => c.id === member.class_id),
           }))
           setEnrolledClasses(enrolledClassesData)
         }
       }
     } catch (error) {
       console.error("[v0] Error fetching enrolled classes:", error)
+      setEnrolledClasses([])
     }
   }
 
@@ -85,11 +95,13 @@ export default function UserProfilePage() {
     try {
       const response = await apiClient.getClothingAssignments()
       if (response.success && response.data) {
-        const userAssignments = response.data.filter((a: any) => a.user_id === userId)
+        const assignmentsData = Array.isArray(response.data) ? response.data : []
+        const userAssignments = assignmentsData.filter((a: any) => a.user_id === userId)
         setClothingAssignments(userAssignments)
       }
     } catch (error) {
       console.error("[v0] Error fetching clothing assignments:", error)
+      setClothingAssignments([])
     }
   }
 
@@ -97,11 +109,13 @@ export default function UserProfilePage() {
     try {
       const response = await apiClient.getSessionAttendances()
       if (response.success && response.data) {
-        const userAttendance = response.data.filter((a: any) => a.user_id === userId)
+        const attendanceData = Array.isArray(response.data) ? response.data : []
+        const userAttendance = attendanceData.filter((a: any) => a.user_id === userId)
         setAttendanceHistory(userAttendance)
       }
     } catch (error) {
       console.error("[v0] Error fetching attendance:", error)
+      setAttendanceHistory([])
     }
   }
 
@@ -198,14 +212,14 @@ export default function UserProfilePage() {
           </CardContent>
         </Card>
 
-        <Tabs defaultValue="classes" className="space-y-4">
+        <Tabs defaultValue={canViewClasses ? "classes" : canViewClothing ? "clothing" : "attendance"} className="space-y-4">
           <TabsList>
-            <TabsTrigger value="classes">Enrolled Classes</TabsTrigger>
-            <TabsTrigger value="clothing">Clothing Assignments</TabsTrigger>
-            <TabsTrigger value="attendance">Attendance History</TabsTrigger>
+            {canViewClasses && <TabsTrigger value="classes">Enrolled Classes</TabsTrigger>}
+            {canViewClothing && <TabsTrigger value="clothing">Clothing Assignments</TabsTrigger>}
+            {canViewAttendance && <TabsTrigger value="attendance">Attendance History</TabsTrigger>}
           </TabsList>
 
-          <TabsContent value="classes" className="space-y-4">
+          {canViewClasses && <TabsContent value="classes" className="space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle>Enrolled Classes</CardTitle>
@@ -249,9 +263,9 @@ export default function UserProfilePage() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent>}
 
-          <TabsContent value="clothing" className="space-y-4">
+          {canViewClothing && <TabsContent value="clothing" className="space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle>Clothing Assignments</CardTitle>
@@ -301,9 +315,9 @@ export default function UserProfilePage() {
                   )}
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent>}
 
-          <TabsContent value="attendance" className="space-y-4">
+          {canViewAttendance && <TabsContent value="attendance" className="space-y-4">
             <Card>
               <CardHeader>
                 <CardTitle>Attendance History</CardTitle>
@@ -339,7 +353,7 @@ export default function UserProfilePage() {
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent>}
         </Tabs>
       </div>
     </DashboardLayout>

@@ -70,6 +70,8 @@ export default function UsersPage() {
   const { toast } = useToast()
   const router = useRouter()
   const { user, isClassLeader } = useAuth()
+  const restrictedRoles = ["inventory manager", "trainer", "department leader"]
+  const isRestrictedRole = restrictedRoles.includes(user?.role?.role_name?.toLowerCase() || "")
 
   useEffect(() => {
     fetchUsers()
@@ -80,7 +82,12 @@ export default function UsersPage() {
     try {
       const response = await apiClient.getUsers()
       if (response.success && response.data) {
-        setUsers(extractArrayFromResponse(response))
+        const allUsers = extractArrayFromResponse(response)
+        // Filter out admin users from frontend display - double protection
+        const nonAdminUsers = allUsers.filter(
+          (u: User) => u.role?.role_name?.toLowerCase() !== 'admin'
+        )
+        setUsers(nonAdminUsers)
       }
     } catch (error: any) {
       console.error("[v0] Error fetching users:", error?.status, error?.statusText, error?.body || error)
@@ -98,7 +105,12 @@ export default function UsersPage() {
     try {
       const response = await apiClient.getRoles()
       if (response.success && response.data) {
-        setRoles(extractArrayFromResponse(response))
+        const allRoles = extractArrayFromResponse(response)
+        // Filter out admin role from dropdown - users should never see or select it
+        const nonAdminRoles = allRoles.filter(
+          (r: Role) => r.role_name?.toLowerCase() !== 'admin'
+        )
+        setRoles(nonAdminRoles)
       }
     } catch (error: any) {
       console.error("[v0] Error fetching roles:", error?.status, error?.statusText, error?.body || error)
@@ -256,7 +268,7 @@ export default function UsersPage() {
             <h1 className="text-3xl font-bold text-foreground">Users & Roles</h1>
             <p className="text-muted-foreground mt-1">Manage system users and their roles</p>
           </div>
-          {!isClassLeader() && (
+          {!isClassLeader() && !isRestrictedRole && (
             <Dialog
               open={isDialogOpen}
               onOpenChange={(open) => {
@@ -499,7 +511,7 @@ export default function UsersPage() {
                                     <Button variant="ghost" size="icon" onClick={() => handleViewProfile(user)} title="View Profile">
                                       <Eye className="h-4 w-4" />
                                     </Button>
-                                    {!isClassLeader() && (
+                                    {!isClassLeader() && !isRestrictedRole && (
                                       <>
                                         <Button variant="ghost" size="icon" onClick={() => handleEdit(user)}>
                                           <Pencil className="h-4 w-4" />

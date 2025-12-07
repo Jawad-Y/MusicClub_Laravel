@@ -24,7 +24,11 @@ class Clas extends Model
 
     public function classLeader(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'class_leader_id'); 
+        // Exclude admin users from class leader relationship
+        return $this->belongsTo(User::class, 'class_leader_id')
+            ->whereHas('role', function($q) {
+                $q->whereRaw('LOWER(role_name) != ?', ['admin']);
+            });
     }
     
     public function members(): BelongsToMany
@@ -43,7 +47,7 @@ class Clas extends Model
             return $query->whereRaw('1 = 0'); // No access
         }
 
-        if ($user->isLeader()) {
+        if ($user->isAdmin() || $user->isLeader()) {
             return $query; // Full access to all classes
         }
 

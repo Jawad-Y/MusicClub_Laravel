@@ -74,7 +74,7 @@ class TrainingSession extends Model
             return $query->whereRaw('1 = 0');
         }
 
-        if ($user->isLeader()) {
+        if ($user->isAdmin() || $user->isLeader() || $user->isIndividualAffair()) {
             return $query; // Full access
         }
 

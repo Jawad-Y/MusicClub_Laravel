@@ -16,11 +16,12 @@ export const filterUsersByRole = (users: User[], roleName: string): User[] => {
 }
 
 export const filterLeaders = (users: User[]): User[] => {
-  return filterUsersByRole(users, "leader")
+  // Only Leaders - admins are invisible
+  return filterByRoles(users, ["leader"])
 }
 
 export const filterDepartmentLeaders = (users: User[]): User[] => {
-  // Allow both Leaders and Department Leaders to be assigned as department leaders
+  // Leaders and Department Leaders only - admins are invisible
   return filterByRoles(users, ["leader", "department leader"])
 }
 

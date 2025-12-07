@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use App\Models\Department;
+use Illuminate\Support\Facades\Log;
 
 class CheckDepartmentAccess
 {
@@ -35,6 +36,17 @@ class CheckDepartmentAccess
             return $next($request);
         }
 
+        // Individual Affair: read-only access to all departments (can view/list but cannot modify)
+        if ($userRole === 'individual affair') {
+            if ($request->isMethod('GET') || $request->isMethod('HEAD')) {
+                return $next($request);
+            }
+            return response()->json([
+                'status' => false,
+                'message' => 'You do not have permission to modify department resources.',
+            ], 403);
+        }
+
         // Get department ID from route parameter
         $departmentId = $request->route('department');
         
@@ -56,6 +68,18 @@ class CheckDepartmentAccess
                         'message' => 'You can only access your own department.',
                     ], 403);
                 }
+            } elseif (in_array($userRole, ['trainer', 'trainee'])) {
+                // Trainers and trainees can only access departments of classes they are members of
+                $hasAccess = $user->classMembers()
+                    ->where('department_id', $departmentId)
+                    ->exists();
+
+                if (!$hasAccess) {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'You can only access departments of classes you are enrolled in.',
+                    ], 403);
+                }
             } else {
                 // Regular users are not allowed to access department resources
                 return response()->json([
@@ -63,12 +87,27 @@ class CheckDepartmentAccess
                     'message' => 'You do not have permission to access department resources.',
                 ], 403);
             }
-                                                                                                                                                                                        } else {
+        } else {
             // For index/list requests (no specific department ID)
             // Department leaders should only see their own department
             if ($userRole === 'department leader') {
                 // Store user ID in request for controller to filter
                 $request->merge(['_department_leader_id' => $user->id]);
+            } elseif (in_array($userRole, ['trainer', 'trainee'])) {
+                // Trainers and trainees should only see departments of their enrolled classes
+                $departmentIds = $user->classMembers()
+                    ->pluck('department_id')
+                    ->unique()
+                    ->toArray();
+                
+                Log::info('Department Access Filter', [
+                    'user_id' => $user->id,
+                    'user_role' => $userRole,
+                    'class_count' => $user->classMembers()->count(),
+                    'department_ids' => $departmentIds
+                ]);
+                
+                $request->merge(['_accessible_department_ids' => $departmentIds]);
             } elseif (!in_array($userRole, ['admin', 'leader'])) {
                 // Regular users cannot list departments
                 return response()->json([

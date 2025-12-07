@@ -22,8 +22,8 @@ class UserSeeder extends Seeder
 
         // Manager users
         User::create([
-            'full_name' => 'John Manager',
-            'email' => 'john.manager@musicclub.com',
+            'full_name' => 'John leader',
+            'email' => 'john.leader@musicclub.com',
             'phone' => '555-0002',
             'role_id' => 2,
             'status' => 'active',
@@ -31,18 +31,18 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'full_name' => 'Sarah Manager',
-            'email' => 'sarah.manager@musicclub.com',
+            'full_name' => 'Sarah dep',
+            'email' => 'sarah.dep@musicclub.com',
             'phone' => '555-0003',
-            'role_id' => 2,
+            'role_id' => 3,
             'status' => 'active',
             'password' => Hash::make('password'),
         ]);
 
         // Trainer users
         User::create([
-            'full_name' => 'Mike Trainer',
-            'email' => 'mike.trainer@musicclub.com',
+            'full_name' => 'Mike dep',
+            'email' => 'mike.dep@musicclub.com',
             'phone' => '555-0004',
             'role_id' => 3,
             'status' => 'active',
@@ -50,36 +50,60 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'full_name' => 'Emma Trainer',
+            'full_name' => 'Emma class',
+            'email' => 'emma.classleader@musicclub.com',
+            'phone' => '555-0005',
+            'role_id' => 4,
+            'status' => 'active',
+            'password' => Hash::make('password'),
+        ]);
+                User::create([
+            'full_name' => 'inventory',
+            'email' => 'emma2.inv@musicclub.com',
+            'phone' => '555-0025',
+            'role_id' => 5,
+            'status' => 'active',
+            'password' => Hash::make('password'),
+        ]); 
+       User::create([
+            'full_name' => 'Affair',
+            'email' => 'emma2.aff@musicclub.com',
+            'phone' => '555-0025',
+            'role_id' => 6,
+            'status' => 'active',
+            'password' => Hash::make('password'),
+        ]);
+
+                User::create([
+            'full_name' => 'Emma trainer',
             'email' => 'emma.trainer@musicclub.com',
             'phone' => '555-0005',
-            'role_id' => 3,
+            'role_id' => 7,
+            'status' => 'active',
+            'password' => Hash::make('password'),
+        ]);
+                User::create([
+            'full_name' => 'Emma2 trainer',
+            'email' => 'emma2.trainer@musicclub.com',
+            'phone' => '555-0025',
+            'role_id' => 7,
             'status' => 'active',
             'password' => Hash::make('password'),
         ]);
 
         // Trainee users
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             User::create([
                 'full_name' => "Trainee User $i",
                 'email' => "trainee$i@musicclub.com",
                 'phone' => '555-001' . str_pad($i, 2, '0', STR_PAD_LEFT),
-                'role_id' => 4,
+                'role_id' => 8,
                 'status' => 'active',
                 'password' => Hash::make('password'),
             ]);
         }
 
-        // Member users
-        for ($i = 1; $i <= 5; $i++) {
-            User::create([
-                'full_name' => "Member User $i",
-                'email' => "member$i@musicclub.com",
-                'phone' => '555-002' . str_pad($i, 2, '0', STR_PAD_LEFT),
-                'role_id' => 5,
-                'status' => 'active',
-                'password' => Hash::make('password'),
-            ]);
-        }
+        
+        
     }
 }

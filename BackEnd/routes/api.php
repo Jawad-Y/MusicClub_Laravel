@@ -37,8 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('me', [AuthController::class, 'me']);
 
     // User routes
+    // Allow all authenticated users to update (their own profile)
+    // Controller will check if they're updating themselves or have permission to edit others
     Route::apiResource('users', UserController::class)
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,individual affair');
+        ->middlewareFor(['store', 'destroy'], 'role:Admin,leader,individual affair');
 
     // Role routes
     Route::apiResource('roles', RoleController::class)
@@ -112,10 +114,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('session-attendances', SessionAttendanceController::class)
         ->only(['index', 'show']); // All authenticated users including trainees
     
+    // Trainees can update their own attendance (for confirmation)
     Route::apiResource('session-attendances', SessionAttendanceController::class)
-        ->except(['index', 'show'])
+        ->only(['update'])
+        ->middleware('class.access');
+    
+    Route::apiResource('session-attendances', SessionAttendanceController::class)
+        ->only(['store', 'destroy'])
         ->middleware('class.access')
-        ->middlewareFor(['store', 'update', 'destroy'], 'role:Admin,leader,department leader,class leader,trainer');
+        ->middlewareFor(['store', 'destroy'], 'role:Admin,leader,department leader,class leader,trainer');
 
     // Homework routes - Trainees can view homework for their classes
     Route::apiResource('homeworks', HomeworkController::class)
