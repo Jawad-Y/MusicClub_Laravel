@@ -96,13 +96,36 @@ export default function TrainingSessionDetailPage() {
       ])
 
       if (sessionRes.success && sessionRes.data) {
-        setSession(sessionRes.data)
+        const sessionData = sessionRes.data
         
         // Filter class members for this session's class
         const allMembers = extractArrayFromResponse(membersRes)
         const sessionMembers = allMembers.filter(
-          (m: ClassMember) => m.class_id === sessionRes.data.class_id && m.role === 'trainee'
+          (m: ClassMember) => m.class_id === sessionData.class_id && m.role === 'trainee'
         )
+        
+        // Check access for trainers and trainees
+        const userRole = user?.role?.role_name?.toLowerCase()
+        const isTrainerOrTrainee = userRole === 'trainer' || userRole === 'trainee'
+        
+        if (isTrainerOrTrainee) {
+          // Check if user is enrolled in this session's class
+          const isEnrolled = allMembers.some(
+            (m: ClassMember) => m.class_id === sessionData.class_id && m.user_id === user?.id
+          )
+          
+          if (!isEnrolled) {
+            toast({
+              title: "Access Denied",
+              description: "You can only access training sessions for classes you are enrolled in",
+              variant: "destructive",
+            })
+            router.push('/training')
+            return
+          }
+        }
+        
+        setSession(sessionData)
         setClassMembers(sessionMembers)
 
         // Filter attendances for this session

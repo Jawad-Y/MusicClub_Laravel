@@ -72,8 +72,11 @@ export default function DepartmentsPage() {
   const fetchDepartments = async () => {
     try {
       const response = await apiClient.getDepartments()
+      console.log("[DEBUG] Departments response:", response)
       if (response.success && response.data) {
-        setDepartments(extractArrayFromResponse(response))
+        const depts = extractArrayFromResponse(response)
+        console.log("[DEBUG] Extracted departments:", depts)
+        setDepartments(depts)
       }
     } catch (error: any) {
       console.error("[v0] Error fetching departments:", {
