@@ -37,11 +37,31 @@ class CheckClassAccess
             return $next($request);
         }
 
-        // Get class ID from route parameter (handle both 'myclasses' and 'class')
-        $classId = $request->route('myclasses') ?? $request->route('class');
+        // Get class parameter from route (handle both 'myclasses' and 'class')
+        $routeParam = $request->route('myclasses') ?? $request->route('class');
 
-        if ($classId) {
-            $class = Clas::find($classId);
+        if ($routeParam) {
+            // Normalize route parameter into a Clas model instance
+            if ($routeParam instanceof Clas) {
+                $class = $routeParam;
+            } elseif ($routeParam instanceof \Illuminate\Support\Collection) {
+                $first = $routeParam->first();
+                if ($first instanceof Clas) {
+                    $class = $first;
+                } elseif (is_object($first) && isset($first->id)) {
+                    $class = Clas::find($first->id);
+                } else {
+                    $class = Clas::find($first);
+                }
+            } elseif (is_object($routeParam) && isset($routeParam->id)) {
+                $class = Clas::find($routeParam->id);
+            } elseif (is_array($routeParam)) {
+                $id = $routeParam[0] ?? null;
+                $class = $id ? Clas::find($id) : null;
+            } else {
+                // assume scalar id
+                $class = Clas::find($routeParam);
+            }
 
             if (!$class) {
                 return response()->json([
@@ -74,7 +94,7 @@ class CheckClassAccess
             }
             // Trainers can only access classes they teach
             elseif ($userRole === 'trainer') {
-                $isTrainer = TrainingSession::where('class_id', $classId)
+                $isTrainer = TrainingSession::where('class_id', $class->id)
                     ->where('trainer_id', $user->id)
                     ->exists();
 
@@ -88,7 +108,7 @@ class CheckClassAccess
             // Regular members/trainees can only access classes they're enrolled in
             else {
                 $isMember = $user->classMembers()
-                    ->where('classes.id', $classId)
+                    ->where('classes.id', $class->id)
                     ->exists();
 
                 if (!$isMember) {

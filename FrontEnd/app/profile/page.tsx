@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth-context"
 import { api } from "@/lib/api-client"
 import { Button } from "@/components/ui/button"
@@ -17,15 +17,26 @@ export default function ProfilePage() {
   const { user, setUser } = useAuth()
   const [loading, setLoading] = useState(false)
   const [profileData, setProfileData] = useState({
-    full_name: user?.full_name || "",
-    email: user?.email || "",
-    phone: (user as any)?.phone || user?.phone_number || "",
+    full_name: "",
+    email: "",
+    phone: "",
   })
   const [passwordData, setPasswordData] = useState({
     current_password: "",
     password: "",
     password_confirmation: "",
   })
+
+  // Sync form data with user data when user changes
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        full_name: user?.full_name || "",
+        email: user?.email || "",
+        phone: (user as any)?.phone || user?.phone_number || "",
+      })
+    }
+  }, [user])
 
   const handleUpdateProfile = async () => {
     try {
