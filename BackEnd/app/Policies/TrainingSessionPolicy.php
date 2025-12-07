@@ -18,6 +18,12 @@ class TrainingSessionPolicy
             return true;
         }
 
+        // Individual Affair can view all training sessions (read-only)
+        $roleName = strtolower($user->role->role_name ?? '');
+        if ($roleName === 'individual affair') {
+            return true;
+        }
+
         return false;
     }
 
@@ -42,6 +48,12 @@ class TrainingSessionPolicy
         if ($user->isTrainer()) {
             $classIds = $user->classMembers()->pluck('classes.id')->toArray();
             return in_array($trainingSession->class_id, $classIds);
+        }
+
+        // Individual Affair can view any training session
+        $roleName = strtolower($user->role->role_name ?? '');
+        if ($roleName === 'individual affair') {
+            return true;
         }
 
         return false;

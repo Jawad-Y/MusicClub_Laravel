@@ -60,12 +60,40 @@ class SessionAttendanceController extends Controller
      */
     public function update(Request $request, SessionAttendance $sessionAttendance): JsonResponse
     {
-        $validated = $request->validate([
-            'session_id'    => 'sometimes|exists:training_sessions,id',
-            'trainee_id'    => 'sometimes|exists:users,id',
-            'status'        => 'sometimes|string',
-            'confirmation'  => 'sometimes|string',
-        ]);
+        $user = $request->user();
+        $userRole = strtolower($user->role->role_name ?? '');
+        
+        // Check if user has permission to update this attendance
+        $canUpdate = in_array($userRole, ['leader', 'department leader', 'class leader', 'trainer', 'individual affair']);
+        
+        // Trainees can only update their own attendance (for confirmation)
+        if ($userRole === 'trainee') {
+            if ($sessionAttendance->trainee_id !== $user->id) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'You can only update your own attendance records.',
+                ], 403);
+            }
+            
+            // Trainees can only update confirmation and set status to 'pending' when confirming
+            $validated = $request->validate([
+                'confirmation' => 'nullable|string',
+                'status' => 'nullable|in:pending',
+            ]);
+        } else if (!$canUpdate) {
+            return response()->json([
+                'status' => false,
+                'message' => 'You do not have permission to update attendance records.',
+            ], 403);
+        } else {
+            // Other authorized roles can update all fields
+            $validated = $request->validate([
+                'session_id'    => 'sometimes|exists:training_sessions,id',
+                'trainee_id'    => 'sometimes|exists:users,id',
+                'status'        => 'sometimes|string',
+                'confirmation'  => 'sometimes|string',
+            ]);
+        }
 
         $sessionAttendance->update($validated);
 

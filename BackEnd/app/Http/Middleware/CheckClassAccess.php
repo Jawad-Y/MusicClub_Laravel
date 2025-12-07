@@ -37,6 +37,17 @@ class CheckClassAccess
             return $next($request);
         }
 
+        // Individual Affair: read-only access to all classes (can view/list but cannot modify)
+        if ($userRole === 'individual affair') {
+            if ($request->isMethod('GET') || $request->isMethod('HEAD')) {
+                return $next($request);
+            }
+            return response()->json([
+                'status' => false,
+                'message' => 'You do not have permission to modify class resources.',
+            ], 403);
+        }
+
         // Get class parameter from route (handle both 'myclasses' and 'class')
         $routeParam = $request->route('myclasses') ?? $request->route('class');
 

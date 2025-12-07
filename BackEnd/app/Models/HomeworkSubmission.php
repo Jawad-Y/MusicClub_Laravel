@@ -37,7 +37,7 @@ class HomeworkSubmission extends Model
             return $query->whereRaw('1 = 0');
         }
 
-        if ($user->isLeader()) {
+        if ($user->isAdmin() || $user->isLeader()) {
             return $query; // Full access
         }
 

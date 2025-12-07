@@ -64,6 +64,20 @@ class User extends Authenticatable
         return $this->hasMany(Membership::class);
     }
 
+    /**
+     * Scope to filter users accessible by the given user
+     * Admins are NEVER visible to anyone (complete invisibility)
+     */
+    public function scopeAccessibleBy($query, User $user)
+    {
+        // Filter out all admin users - they should be completely invisible
+        $query->whereHas('role', function($q) {
+            $q->whereRaw('LOWER(role_name) != ?', ['admin']);
+        });
+
+        return $query;
+    }
+
     // Helper method to check if user can create accounts
     public function canCreateAccounts(): bool
     {

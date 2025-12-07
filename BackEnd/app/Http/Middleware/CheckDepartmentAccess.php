@@ -36,6 +36,17 @@ class CheckDepartmentAccess
             return $next($request);
         }
 
+        // Individual Affair: read-only access to all departments (can view/list but cannot modify)
+        if ($userRole === 'individual affair') {
+            if ($request->isMethod('GET') || $request->isMethod('HEAD')) {
+                return $next($request);
+            }
+            return response()->json([
+                'status' => false,
+                'message' => 'You do not have permission to modify department resources.',
+            ], 403);
+        }
+
         // Get department ID from route parameter
         $departmentId = $request->route('department');
         

@@ -21,7 +21,11 @@ class Department extends Model
 
     public function leader()
     {
-        return $this->belongsTo(User::class, 'leader_id');
+        // Exclude admin users from leader relationship
+        return $this->belongsTo(User::class, 'leader_id')
+            ->whereHas('role', function($q) {
+                $q->whereRaw('LOWER(role_name) != ?', ['admin']);
+            });
     }
 
     public function userAssignments()
@@ -43,7 +47,7 @@ class Department extends Model
             return $query->whereRaw('1 = 0'); // No access
         }
 
-        if ($user->isLeader()) {
+        if ($user->isAdmin() || $user->isLeader()) {
             return $query; // Full access to all departments
         }
 

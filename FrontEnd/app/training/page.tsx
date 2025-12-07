@@ -240,7 +240,7 @@ export default function TrainingPage() {
   const userRole = user?.role?.role_name?.toLowerCase()
   const isTrainer = userRole === 'trainer'
   const isTrainee = userRole === 'trainee'
-  const isLeader = userRole === 'leader' || userRole === 'admin'
+  const isLeader = userRole === 'leader'
   const isDeptLeader = userRole === 'department leader'
   const isClassLeader = userRole === 'class leader'
 

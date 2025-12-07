@@ -29,6 +29,7 @@ interface AuthContextType {
   setUser: (user: User | null) => void
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  isAdmin: () => boolean
   isLeader: () => boolean
   isDepartmentLeader: () => boolean
   isClassLeader: () => boolean
@@ -118,6 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const isAdmin = () => user?.role?.role_name?.toLowerCase() === "admin"
   const isLeader = () => user?.role?.role_name?.toLowerCase() === "leader"
   const isDepartmentLeader = () => user?.role?.role_name?.toLowerCase() === "department leader"
   const isClassLeader = () => user?.role?.role_name?.toLowerCase() === "class leader"
@@ -134,6 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser: handleSetUser,
         login,
         logout,
+        isAdmin,
         isLeader,
         isDepartmentLeader,
         isClassLeader,

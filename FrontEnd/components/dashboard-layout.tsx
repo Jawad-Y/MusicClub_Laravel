@@ -36,19 +36,19 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 const navigationItems = [
-  { name: "Dashboard", href: "/home", icon: LayoutDashboard, roles: ["leader", "department leader", "class leader", "trainer", "trainee", "inventory manager"] },
-  { name: "Users & Roles", href: "/users", icon: Users, roles: ["leader", "class leader"] },
-  { name: "Departments", href: "/departments", icon: Building2, roles: ["leader", "department leader", "class leader", "trainer", "trainee", "individual affair"] },
-  { name: "Classes", href: "/classes", icon: GraduationCap, roles: ["leader", "department leader", "class leader", "trainer"] },
-  { name: "Instruments", href: "/instruments", icon: Guitar, roles: ["leader", "inventory manager"] },
-  { name: "Clothing", href: "/clothing", icon: Shirt, roles: ["leader", "inventory manager"] },
-  { name: "Training Sessions", href: "/training", icon: BookOpen, roles: ["leader", "department leader", "class leader", "trainer"] },
-  { name: "Homework", href: "/homework", icon: ClipboardList, roles: ["leader", "department leader", "class leader", "trainer"] },
-  { name: "Events", href: "/events", icon: Calendar, roles: ["leader", "class leader", "department leader"] },
-  { name: "Library", href: "/library", icon: FileText, roles: ["leader", "trainer"] },
-  { name: "Performance", href: "/performance", icon: TrendingUp, roles: ["leader", "trainer"] },
-  { name: "Reports", href: "/reports", icon: BarChart3, roles: ["leader", "department leader"] },
-  { name: "Profile", href: "/profile", icon: UserCircle, roles: ["leader", "department leader", "class leader", "trainer", "trainee", "inventory manager"] },
+  { name: "Dashboard", href: "/home", icon: LayoutDashboard, roles: ["admin","leader", "department leader", "class leader", "trainer", "trainee", "inventory manager", "individual affair"] },
+  { name: "Users & Roles", href: "/users", icon: Users, roles: ["admin","leader", "class leader", "individual affair","inventory manager"] },
+  { name: "Departments", href: "/departments", icon: Building2, roles: ["admin","leader", "department leader", "class leader", "trainer", "trainee", "individual affair"] },
+  { name: "Classes", href: "/classes", icon: GraduationCap, roles: ["admin","leader", "department leader", "class leader", "trainer","trainee", "individual affair"] },
+  { name: "Instruments", href: "/instruments", icon: Guitar, roles: ["admin","leader", "inventory manager"] },
+  { name: "Clothing", href: "/clothing", icon: Shirt, roles: ["admin","leader", "inventory manager"] },
+  { name: "Training Sessions", href: "/training", icon: BookOpen, roles: ["admin","leader", "department leader", "class leader", "trainer", "individual affair"] },
+  { name: "Homework", href: "/homework", icon: ClipboardList, roles: ["admin","leader", "department leader", "class leader", "trainer"] },
+  { name: "Events", href: "/events", icon: Calendar, roles: ["admin","leader", "class leader", "department leader", "individual affair"] },
+  { name: "Library", href: "/library", icon: FileText, roles: ["admin","leader", "trainer", "individual affair"] },
+  { name: "Performance", href: "/performance", icon: TrendingUp, roles: ["admin","leader", "trainer"] },
+  { name: "Reports", href: "/reports", icon: BarChart3, roles: ["admin","leader", "department leader", "inventory manager" , "individual affair"] },
+  { name: "Profile", href: "/profile", icon: UserCircle, roles: ["admin","leader", "department leader", "class leader", "trainer", "trainee", "inventory manager", , "individual affair"] },
 ]
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
