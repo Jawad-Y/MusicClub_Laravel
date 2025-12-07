@@ -7,6 +7,7 @@ use App\Http\Traits\ApiResponse;
 use App\Models\Department;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DepartmentController extends Controller
 {
@@ -20,9 +21,34 @@ class DepartmentController extends Controller
         // Load departments with their leader relation (if defined in the model)
         $query = Department::with('leader');
         
+        Log::info('Department Index Request', [
+            'has_department_leader_id' => $request->has('_department_leader_id'),
+            'has_accessible_department_ids' => $request->has('_accessible_department_ids'),
+            'accessible_department_ids' => $request->input('_accessible_department_ids'),
+            'has_class_leader_filter' => $request->has('_class_leader_filter'),
+        ]);
+        
         // If department leader, only show their own department
         if ($request->has('_department_leader_id')) {
             $query->where('leader_id', $request->input('_department_leader_id'));
+        }
+        
+        // If trainer or trainee, only show departments of their enrolled classes
+        if ($request->has('_accessible_department_ids')) {
+            $departmentIds = $request->input('_accessible_department_ids');
+            if (empty($departmentIds)) {
+                // If user has no classes, return empty array
+                return $this->success([]);
+            }
+            $query->whereIn('id', $departmentIds);
+        }
+        
+        // If class leader, only show departments that contain their classes
+        if ($request->has('_class_leader_filter')) {
+            $userId = $request->user()->id;
+            $query->whereHas('classes', function ($q) use ($userId) {
+                $q->where('class_leader_id', $userId);
+            });
         }
         
         $departments = $query->orderBy('id', 'asc')->get();

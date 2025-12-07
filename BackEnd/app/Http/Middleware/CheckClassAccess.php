@@ -94,8 +94,9 @@ class CheckClassAccess
             }
             // Trainers can only access classes they teach
             elseif ($userRole === 'trainer') {
-                $isTrainer = TrainingSession::where('class_id', $class->id)
-                    ->where('trainer_id', $user->id)
+                $isTrainer = $user->classMembers()
+                    ->where('classes.id', $class->id)
+                    ->wherePivot('role', 'trainer')
                     ->exists();
 
                 if (!$isTrainer) {
@@ -130,9 +131,9 @@ class CheckClassAccess
                 $request->merge(['_filter_class_leader_id' => $user->id]);
             } elseif ($userRole === 'trainer') {
                 // Only show classes they teach
-                $classIds = TrainingSession::where('trainer_id', $user->id)
-                    ->distinct()
-                    ->pluck('class_id')
+                $classIds = $user->classMembers()
+                    ->wherePivot('role', 'trainer')
+                    ->pluck('classes.id')
                     ->toArray();
                 $request->merge(['_filter_class_ids' => $classIds]);
             } else {

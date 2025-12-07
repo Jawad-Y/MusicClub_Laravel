@@ -7,6 +7,23 @@ node_modules/
 /vendor/
 BackEnd/vendor/
 
+# Laravel specific
+/.env
+/.env.local
+/.phpunit.result.cache
+/.php_cs.cache
+
+/storage/*.key
+/storage/framework/*
+/storage/logs/*
+# keep the gitignore placeholders
+!/storage/framework/.gitignore
+!/storage/logs/.gitignore
+
+/public/storage
+/public/hot
+/storage/app/public
+
 # Build outputs
 /.next/
 /out/

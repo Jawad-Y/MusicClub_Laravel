@@ -25,6 +25,7 @@ import { BookOpen, Plus, Pencil, Trash2, CalendarIcon, Clock, MapPin, CheckCircl
 import apiClient from "@/lib/api-client"
 import { extractArrayFromResponse } from "@/lib/api-utils"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/lib/auth-context"
 
 interface TrainingSession {
   id: number
@@ -71,10 +72,12 @@ interface SessionAttendance {
 
 export default function TrainingPage() {
   const router = useRouter()
+  const { user } = useAuth()
   const [sessions, setSessions] = useState<TrainingSession[]>([])
   const [classes, setClasses] = useState<Class[]>([])
   const [users, setUsers] = useState<User[]>([])
   const [attendances, setAttendances] = useState<SessionAttendance[]>([])
+  const [classMembers, setClassMembers] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [expandedSessions, setExpandedSessions] = useState<Set<number>>(new Set())
@@ -121,17 +124,19 @@ export default function TrainingPage() {
   }, [])
   const fetchData = async () => {
     try {
-      const [sessionsRes, classesRes, usersRes, attendancesRes] = await Promise.all([
+      const [sessionsRes, classesRes, usersRes, attendancesRes, membersRes] = await Promise.all([
         apiClient.getTrainingSessions(),
         apiClient.getClasses(),
         apiClient.getUsers(),
         apiClient.getSessionAttendances(),
+        apiClient.getClassMembers(),
       ])
 
       setSessions(extractArrayFromResponse(sessionsRes))
       setClasses(extractArrayFromResponse(classesRes))
       setUsers(extractArrayFromResponse(usersRes))
       setAttendances(extractArrayFromResponse(attendancesRes))
+      setClassMembers(extractArrayFromResponse(membersRes))
     } catch (error: any) {
       console.error("[v0] Error fetching data:", error?.status, error?.statusText, error?.body || error)
       toast({
@@ -231,10 +236,30 @@ export default function TrainingPage() {
     return { present, absent, late, total: sessionAttendances.length }
   }
 
+  // Determine user's enrolled class IDs
+  const userRole = user?.role?.role_name?.toLowerCase()
+  const isTrainer = userRole === 'trainer'
+  const isTrainee = userRole === 'trainee'
+  const isLeader = userRole === 'leader' || userRole === 'admin'
+  const isDeptLeader = userRole === 'department leader'
+  const isClassLeader = userRole === 'class leader'
+
+  // Get enrolled class IDs for trainers and trainees
+  const enrolledClassIds = (isTrainer || isTrainee)
+    ? classMembers
+        .filter((m) => m.user_id === user?.id)
+        .map((m) => m.class_id)
+    : []
+
+  // Filter sessions based on user role
+  const filteredSessions = (isTrainer || isTrainee)
+    ? sessions.filter((s) => enrolledClassIds.includes(s.class_id))
+    : sessions
+
   // Precompute upcoming sessions (date-only comparison)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-  const upcomingSessions = sessions
+  const upcomingSessions = filteredSessions
     .filter((s) => {
       const sessionDate = parseDateOnly(s.date)
       return sessionDate ? sessionDate >= today : false
@@ -242,7 +267,7 @@ export default function TrainingPage() {
     .sort((a, b) => (parseDateOnly(a.date)?.getTime() ?? 0) - (parseDateOnly(b.date)?.getTime() ?? 0))
 
   // Sessions without a valid date (TBA) — show separately so they don't silently disappear
-  const upcomingTbaSessions = sessions.filter((s) => !parseDateOnly(s.date))
+  const upcomingTbaSessions = filteredSessions.filter((s) => !parseDateOnly(s.date))
 
   return (
     <DashboardLayout>
@@ -503,7 +528,7 @@ export default function TrainingPage() {
 
           <TabsContent value="all" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {sessions.map((session) => (
+              {filteredSessions.map((session) => (
                 <Card 
                   key={session.id} 
                   className="hover:border-primary/30 transition-colors cursor-pointer"
@@ -529,7 +554,7 @@ export default function TrainingPage() {
 
           <TabsContent value="attendance" className="space-y-4">
             <div className="space-y-4">
-              {sessions.length === 0 ? (
+              {filteredSessions.length === 0 ? (
                 <Card>
                   <CardContent>
                     <p className="text-center py-8 text-muted-foreground">No sessions available</p>
@@ -537,7 +562,7 @@ export default function TrainingPage() {
                 </Card>
               ) : (
                 // Render each session as its own group, sorted by date
-                sessions
+                filteredSessions
                   .slice()
                   .sort((a, b) => (parseDateOnly(a.date)?.getTime() ?? 0) - (parseDateOnly(b.date)?.getTime() ?? 0))
                   .map((session) => {
