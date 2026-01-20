@@ -14,18 +14,6 @@ A comprehensive full-stack web application for managing music club operations, i
 - **Clothing Assignment**: Manage uniform and clothing inventory
 - **Export Functionality**: Export data to Excel and CSV formats
 
-## Requirements
-
-### Backend (Laravel)
-- **PHP**: >= 8.2
-- **Composer**: Latest version
-- **Database**: MySQL 5.7+ / PostgreSQL 12+ / SQLite 3.8.8+
-- **Web Server**: Apache / Nginx
-
-### Frontend (Next.js)
-- **Node.js**: >= 18.x
-- **pnpm**: >= 8.x (recommended) or npm >= 9.x
-
 ## Installation
 
 ### Backend Setup
@@ -62,8 +50,8 @@ DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=music_club
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
+DB_USERNAME=
+DB_PASSWORD=
 ```
 
 ### 5. Run Database Migrations
@@ -127,19 +115,6 @@ pnpm build
 npm run build
 ```
 
-## API Endpoints
-
-The application provides RESTful API endpoints for all resources:
-
-- `/api/instruments` - Instrument management
-- `/api/instrument-types` - Instrument type management
-- `/api/classes` - Class management
-- `/api/events` - Event management
-- `/api/memberships` - Membership management
-- `/api/users` - User management
-- And more...
-
-
 ## Project Structure
 
 ### Backend (Laravel)
@@ -148,15 +123,12 @@ BackEnd/
 ├── app/
 │   ├── Http/Controllers/    # API Controllers
 │   ├── Models/             # Eloquent Models
-│   ├── Policies/           # Authorization Policies
-│   └── Exports/            # Excel Export Classes
 ├── config/                 # Configuration files
 ├── database/
 │   ├── migrations/         # Database migrations
 │   └── seeders/           # Database seeders
 ├── routes/
 │   ├── api.php            # API routes
-│   └── web.php            # Web routes
 └── tests/                 # PHPUnit tests
 ```
 
@@ -185,78 +157,3 @@ FrontEnd/
 │   └── utils.ts          # Helper functions
 └── hooks/                # Custom React hooks
 ```
-
-## Technologies Used
-
-### Backend
-- **Framework**: Laravel 12
-- **Authentication**: Laravel Sanctum
-- **Export**: Maatwebsite Excel
-- **Database**: Eloquent ORM
-- **Testing**: PHPUnit
-
-### Frontend
-- **Framework**: Next.js 14+ (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **UI Components**: shadcn/ui
-- **State Management**: React Context API
-- **API Client**: Fetch API with custom utilities
-
-## Quick Start Guide
-
-For a fresh installation on Windows:
-
-### Backend
-```powershell
-# Navigate to backend
-cd BackEnd
-
-# Install dependencies
-composer install
-
-# Setup environment
-copy .env.example .env
-php artisan key:generate
-
-# Configure database in .env, then migrate
-php artisan migrate
-
-# Start server
-php artisan serve
-```
-
-### Frontend
-```powershell
-# Navigate to frontend (from project root)
-cd FrontEnd
-
-# Install dependencies
-pnpm install
-
-# Create environment file
-echo "NEXT_PUBLIC_API_URL=http://localhost:8000/api" > .env.local
-
-# Start development server
-pnpm dev
-```
-
-Now visit:
-- Frontend: `http://localhost:3000`
-- Backend API: `http://localhost:8000`
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## Support
-
-For issues and questions, please open an issue on the GitHub repository.
